@@ -9,11 +9,23 @@ import './Home.css'
 const Home = props => {
   return (
     <>
-      <h1>Hello and welcome!</h1>
-      <p>This is a full MERN-stack app, whether you like it or not!</p>
-      <p>
-        Check out the <Link to="/messages">messages page</Link>.
-      </p>
+    <div class="">
+    <form action="get">
+    <div class="statistics-home">
+     <h3>Upcoming Chorses</h3>
+     <ul id="chorses"></ul>
+     <h3>Upcoming Payments</h3>
+     <ul id="payments"></ul>
+     </div>
+    </form>
+    </div>
+
+    <div class="buttons-home">
+      <a href="default.asp">Skill Swap</a>
+      <a href="default.asp">Chores</a>
+      <a href="default.asp">Payments</a>
+      <a href="default.asp">Compatibility Finder</a>
+    </div>
     </>
   )
 }

@@ -7,6 +7,7 @@ import AddChore from './AddChore';
 import Header from './Header';
 import Footer from './Footer';
 
+
 const App = props => {
   return (
     <div className="App">

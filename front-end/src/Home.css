@@ -1,1 +1,23 @@
-/* Home component styles */
+.buttons-home{
+    display: grid;
+    justify-content: center;
+    gap: 12px;
+}
+
+.buttons-home a {
+    background-color: #d7dfff;
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 6px;
+    width: 200px;
+    justify-content: center;
+
+}
+
+.statistics-home {
+    display: inline-flex;
+    justify-content: center;
+}
