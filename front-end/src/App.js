@@ -6,6 +6,7 @@ import Chores from './Chores';
 import AddChore from './AddChore';
 import Header from './Header';
 import Footer from './Footer';
+import Landing from './Landing';
 import Payments from './Payments.js'
 
 
@@ -18,6 +19,8 @@ const App = props => {
           <Routes>
             {/* a route for the home page */}
             <Route path="/" element={<Home />} />
+            <Route path="/landing" element={<Landing />} />
+            
             {/* a route for the chores page */}
             <Route path="/chores" element={<Chores />} />
             {/* a route for the add chore page */}
