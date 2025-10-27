@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Home';
 import Header from './Header';
 import Footer from './Footer';
+import Landing from './Landing';
 
 const App = props => {
   return (
@@ -13,7 +14,9 @@ const App = props => {
         <main className="App-main">
           <Routes>
             {/* a route for the home page */}
-            <Route path="/" element={<Landing />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/landing" element={<Landing />} />
+            
 
           </Routes>
         </main>

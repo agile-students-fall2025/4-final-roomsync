@@ -7,7 +7,7 @@ export default function Landing() {
     <>
      <div class="intro">
      <h1>Welcome to RoomSync</h1>
-     <h3>Living with roommates can be a rewarding experience, but it often comes with significant friction. RoomSync is here for you:</h2>
+     <h3>Living with roommates can be a rewarding experience, but it often comes with significant friction. RoomSync is here for you:</h3>
      <ul>
         <li>Chore and expense tracking</li>
         <li>Finding a compatible roommate</li>
