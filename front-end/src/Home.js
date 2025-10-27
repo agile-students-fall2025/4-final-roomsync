@@ -22,7 +22,7 @@ const Home = props => {
 
     <div class="buttons-home">
       <a href="default.asp">Skill Swap</a>
-      <a href="default.asp">Chores</a>
+      <a href="/chores">Chores</a>
       <a href="default.asp">Payments</a>
       <a href="default.asp">Compatibility Finder</a>
     </div>
