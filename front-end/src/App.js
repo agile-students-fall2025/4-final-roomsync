@@ -13,7 +13,7 @@ const App = props => {
         <main className="App-main">
           <Routes>
             {/* a route for the home page */}
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Landing />} />
 
           </Routes>
         </main>
