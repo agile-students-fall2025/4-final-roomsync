@@ -8,6 +8,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Landing from './Landing';
 import Payments from './Payments.js'
+import Events from './Events';
 
 
 const App = props => {
@@ -26,6 +27,7 @@ const App = props => {
             {/* a route for the add chore page */}
             <Route path="/chores/add" element={<AddChore />} />
             <Route path="/Payments" element={<Payments />} />
+            <Route path="/events" element={<Events />} />
 
           </Routes>
         </main>
