@@ -40,6 +40,28 @@ const Payments = (props) => {
 
   const totalFor = (items) => items.reduce((sum, itm) => sum + (Number(itm.amount) || 0), 0).toFixed(2);
 
+  const calculateBalance = (userId) => {
+    let totalPaid = 0;
+    let totalOwed = 0;
+
+    expenses.forEach(expense => {
+      if (!expense.cleared) {
+        if (expense.paidBy === userId) {
+          totalPaid += expense.amount;
+        }
+
+        if (expense.owedBy.includes(userId)) {
+          const share = expense.amount / expense.owedBy.length;
+          totalOwed += share;
+        }
+      }
+    });
+
+    return (totalPaid - totalOwed).toFixed(2);
+  };
+
+  const userBalance = calculateBalance(user.id);
+
   return (
     <>
       <div style={{
@@ -59,6 +81,13 @@ const Payments = (props) => {
         }}>
           Current User: {user.name}
         </h2>
+        <div style={{ marginTop: "10px", fontSize: "16px" }}>
+          {userBalance >= 0 ? (
+            <span style={{ color: "#2d5016" }}>You are owed: ${userBalance}</span>
+          ) : (
+            <span style={{ color: "#8b0000" }}>You owe: ${Math.abs(userBalance)}</span>
+          )}
+        </div>
       </div>
 
       <ul className="Payments-list">
