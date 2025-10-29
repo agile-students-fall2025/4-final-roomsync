@@ -53,3 +53,18 @@
   color: red;
   font-weight: 500;
 }
+
+.EditButton {
+  margin-top: 10px;
+  padding: 6px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.EditButton:hover {
+  background-color: #45a049;
+}

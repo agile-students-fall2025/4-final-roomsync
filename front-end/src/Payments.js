@@ -72,6 +72,9 @@ const Payments = (props) => {
                     <div>Paid by: {getRoommateName(expense.paidBy)}</div>
                     <div>Owed by: {expense.owedBy.map(id => getRoommateName(id)).join(", ")}</div>
                     <div className={expense.cleared ? "Cleared" : "NotCleared"}>Status: {expense.cleared ? "Cleared" : "Not cleared"}</div>
+                    <Link to={`/payments/${expense.id}`}>
+                      <button className="EditButton">Edit</button>
+                    </Link>
                   </div>
                 ))}
             </li>
