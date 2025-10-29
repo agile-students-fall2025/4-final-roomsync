@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Payments.css";
-import { user, roommates } from "./users";
+import { user, roommates, getRoommateName } from "./users";
 
 const Payments = (props) => {
   // categories table
@@ -13,13 +13,13 @@ const Payments = (props) => {
 
   // expenses table
   const [expenses, setExpenses] = useState([
-    { id: 1, name: "Pay electricity bill", amount: 120.5, createdAt: "2025-10-20", cleared: false, categoryId: 1 },
-    { id: 2, name: "Refill water filter", amount: 35.0, createdAt: "2025-10-18", cleared: true, categoryId: 1 },
-    { id: 3, name: "Buy milk", amount: 4.25, createdAt: "2025-10-25", cleared: true, categoryId: 2 },
-    { id: 4, name: "Buy vegetables", amount: 18.6, createdAt: "2025-10-26", cleared: false, categoryId: 2 },
-    { id: 5, name: "Restock snacks", amount: 22.4, createdAt: "2025-10-23", cleared: false, categoryId: 2 },
-    { id: 6, name: "Change air filter", amount: 15.0, createdAt: "2025-10-21", cleared: false, categoryId: 3 },
-    { id: 7, name: "Check smoke detector", amount: 10.0, createdAt: "2025-10-19", cleared: true, categoryId: 3 },
+    { id: 1, name: "Pay electricity bill", amount: 120.5, createdAt: "2025-10-20", cleared: false, categoryId: 1, paidBy: 1, owedBy: [1, 2, 3, 4, 5] },
+    { id: 2, name: "Refill water filter", amount: 35.0, createdAt: "2025-10-18", cleared: true, categoryId: 1, paidBy: 2, owedBy: [1, 2, 3] },
+    { id: 3, name: "Buy milk", amount: 4.25, createdAt: "2025-10-25", cleared: true, categoryId: 2, paidBy: 3, owedBy: [1, 3, 4] },
+    { id: 4, name: "Buy vegetables", amount: 18.6, createdAt: "2025-10-26", cleared: false, categoryId: 2, paidBy: 1, owedBy: [1, 2, 5] },
+    { id: 5, name: "Restock snacks", amount: 22.4, createdAt: "2025-10-23", cleared: false, categoryId: 2, paidBy: 4, owedBy: [1, 2, 3, 4] },
+    { id: 6, name: "Change air filter", amount: 15.0, createdAt: "2025-10-21", cleared: false, categoryId: 3, paidBy: 5, owedBy: [1, 2, 3, 4, 5] },
+    { id: 7, name: "Check smoke detector", amount: 10.0, createdAt: "2025-10-19", cleared: true, categoryId: 3, paidBy: 2, owedBy: [2, 3, 5] },
   ]);
 
   // list of categoryId that is collapsed
@@ -68,8 +68,9 @@ const Payments = (props) => {
                 categoryExpenses.map((expense) => (
                   <div key={expense.id} className="PaymentItem">
                     <strong>{expense.name}</strong>
-                    <div>Assigned to: {expense.assignedTo ?? "-"}</div>
-                    <div>Amount: {expense.amount}$</div>
+                    <div>Amount: ${expense.amount}</div>
+                    <div>Paid by: {getRoommateName(expense.paidBy)}</div>
+                    <div>Owed by: {expense.owedBy.map(id => getRoommateName(id)).join(", ")}</div>
                     <div className={expense.cleared ? "Cleared" : "NotCleared"}>Status: {expense.cleared ? "Cleared" : "Not cleared"}</div>
                   </div>
                 ))}
