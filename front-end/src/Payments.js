@@ -1,20 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Payments.css";
+import { user, roommates } from "./users";
 
 const Payments = (props) => {
-  // Current user
-  const currentUser = { id: 1, name: "Brian" };
-
-  // Roommate list
-  const roommates = [
-    { id: 1, name: "Brian" },
-    { id: 2, name: "Ginny" },
-    { id: 3, name: "Jacob" },
-    { id: 4, name: "Amish" },
-    { id: 5, name: "Eslem" },
-  ];
-
   // categories table
   const [categories, setCategories] = useState([
     { id: 1, name: "Utility" },
