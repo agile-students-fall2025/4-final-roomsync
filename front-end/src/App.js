@@ -26,9 +26,8 @@ const App = props => {
             <Route path="/chores" element={<Chores />} />
             {/* a route for the add chore page */}
             <Route path="/chores/add" element={<AddChore />} />
-            <Route path="/Payments" element={<Payments />} />
+            <Route path="/payments" element={<Payments />} />
             <Route path="/events" element={<Events />} />
-
           </Routes>
         </main>
         <Footer />
