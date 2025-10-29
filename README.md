@@ -44,3 +44,21 @@ Nexus is a mobile-friendly web application with three core modules that work tog
 *   Skill Offer/Want Listings
 *   Internal Messaging System
 
+**4. Team**
+
+* **Sprint 0 Roles**
+  * **Product Owner:** Brian Chen
+  * **Scrum Master:** Jacob Kang
+
+* **Sprint 1 Roles**
+  * **Product Owner:** Ginny 
+  * **Scrum Master:** Eslem Varank
+
+* **Developers**
+  * Eslem Varank
+  * Amish Vandse
+  * Jacob Kang
+  * Ginny
+  * Brian Chen
+
+_Note: Scrum Master and Product Owner roles rotate each sprint so everyone gets experience in each role._
