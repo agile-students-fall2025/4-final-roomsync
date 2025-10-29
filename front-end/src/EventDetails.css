@@ -1,0 +1,125 @@
+.EventDetails-container {
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .EventDetails-loading {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+  }
+  
+  .EventDetails-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+  }
+  
+  .Back-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    color: #333;
+    width: 40px;
+    text-align: left;
+  }
+  
+  .Back-button:hover {
+    color: #666;
+  }
+  
+  .EventDetails-header h1 {
+    font-size: 1.8rem;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+  }
+  
+  .EventDetails-section {
+    margin-bottom: 3rem;
+  }
+  
+  .EventDetails-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #333;
+  }
+  
+  .form-group {
+    margin-bottom: 2rem;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    font-weight: normal;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  
+  .form-group input:focus:not(.disabled) {
+    border-bottom-color: #4A90E2;
+  }
+  
+  .form-group input.disabled {
+    color: #666;
+    cursor: not-allowed;
+  }
+  
+  .attendance-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+  
+  .attendance-checkbox input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+  }
+  
+  .attendance-checkbox label {
+    font-size: 1.1rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .Save-button {
+    width: 100%;
+    padding: 1rem;
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .Save-button:hover {
+    background-color: #357ABD;
+  }
+  
+  .EventDetails-notice {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 1rem;
+  }
