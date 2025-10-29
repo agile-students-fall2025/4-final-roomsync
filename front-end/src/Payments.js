@@ -3,6 +3,18 @@ import { Link } from "react-router-dom";
 import "./Payments.css";
 
 const Payments = (props) => {
+  // Current user
+  const currentUser = { id: 1, name: "Brian" };
+
+  // Roommate list
+  const roommates = [
+    { id: 1, name: "Brian" },
+    { id: 2, name: "Ginny" },
+    { id: 3, name: "Jacob" },
+    { id: 4, name: "Amish" },
+    { id: 5, name: "Eslem" },
+  ];
+
   //Temperary data
   const [payments, setPayments] = useState([
     {
