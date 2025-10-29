@@ -60,6 +60,10 @@ const Payments = (props) => {
 
   return (
     <>
+      <div style={{ margin: "20px", padding: "10px", backgroundColor: "#f0f0f0", borderRadius: "8px" }}>
+        <h3>Current User: {currentUser.name}</h3>
+      </div>
+
       <ul className="Payments-list">
         {payments.map((paymentCategory) => {
           const isCollapsed = collapsedIds.has(paymentCategory.id);
