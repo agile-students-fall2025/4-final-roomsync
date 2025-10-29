@@ -21,8 +21,7 @@ const Events = props => {
   const [selectedEventId, setSelectedEventId] = useState(1) 
 
   const handleEdit = (eventId) => {
-    
-    navigate(`/events/edit/${eventId}`)
+    navigate(`/events/${eventId}`)
   }
 
   const handleEventClick = (eventId) => {
@@ -47,7 +46,8 @@ const Events = props => {
               className={`Event-item ${selectedEventId === event.id ? 'selected' : ''}`}
               onClick={() => handleEventClick(event.id)}
             >
-              <span className="Event-name">Event Name</span>
+              <span className="Event-name">{event.name}</span>
+              <span className="Event-date">{event.date}</span>
               <button 
                 className="Edit-button"
                 onClick={(e) => {
@@ -71,7 +71,8 @@ const Events = props => {
               className={`Event-item ${selectedEventId === event.id ? 'selected' : ''}`}
               onClick={() => handleEventClick(event.id)}
             >
-              <span className="Event-name">Event Name</span>
+              <span className="Event-name">{event.name}</span>
+              <span className="Event-date">{event.date}</span>
               <button 
                 className="Edit-button"
                 onClick={(e) => {
