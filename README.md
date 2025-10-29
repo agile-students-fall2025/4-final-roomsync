@@ -1,5 +1,7 @@
 # RoomSync
 
+[Link to our Repo](https://github.com/agile-students-fall2025/4-final-roomsync)
+
 ### **Project Proposal**
 
 **1. Introduction & Problem Statement**
@@ -55,10 +57,10 @@ Nexus is a mobile-friendly web application with three core modules that work tog
   * **Scrum Master:** Eslem Varank
 
 * **Developers**
-  * Eslem Varank
-  * Amish Vandse
-  * Jacob Kang
-  * Ginny
-  * Brian Chen
+  * [Eslem Varank](https://github.com/eselmsenavarank)
+  * [Amish Vandse](https://github.com/AmishVandse1)
+  * [Jacob Kang](https://github.com/jkang2003)
+  * [Ginny](https://github.com/ginny1536)
+  * [Brian Chen](https://github.com/shrimpforfree)
 
 _Note: Scrum Master and Product Owner roles rotate each sprint so everyone gets experience in each role._
