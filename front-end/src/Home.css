@@ -18,6 +18,25 @@
 }
 
 .statistics-home {
-    display: inline-flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
+  gap: 2rem; /* spacing between boxes */
+}
+
+.statistics-home .stats {
+  background: #f7f7f7; /* optional: make boxes visible */
+  padding: 1rem;
+  border-radius: 8px;
+  min-width: 200px;
+  text-align: center;
+}
+
+.statistics-home ul {
+  list-style: none; /* remove bullet points */
+  padding: 0;
+  margin: 0;
+}
+
+.statistics-home li {
+  margin: 0.3rem 0;
 }
