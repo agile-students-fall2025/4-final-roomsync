@@ -30,7 +30,6 @@ const App = props => {
             <Route path="/payments" element={<Payments />} />
             <Route path="/events" element={<Events />} />
             <Route path="/events/:eventId" element={<EventDetails />} />
-
           </Routes>
         </main>
         <Footer />
