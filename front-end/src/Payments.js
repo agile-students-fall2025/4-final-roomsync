@@ -42,8 +42,23 @@ const Payments = (props) => {
 
   return (
     <>
-      <div style={{ margin: "20px", padding: "10px", backgroundColor: "#f0f0f0", borderRadius: "8px" }}>
-        <h3>Current User: {user.name}</h3>
+      <div style={{
+        margin: "20px auto",
+        padding: "20px",
+        backgroundColor: "#ffffff",
+        borderRadius: "8px",
+        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+        border: "1px solid #ddd",
+        maxWidth: "1200px"
+      }}>
+        <h2 style={{
+          margin: "0",
+          fontSize: "20px",
+          color: "#333",
+          fontWeight: "600"
+        }}>
+          Current User: {user.name}
+        </h2>
       </div>
 
       <ul className="Payments-list">
@@ -57,24 +72,37 @@ const Payments = (props) => {
                 onClick={() => toggleCategory(category.id)}
                 aria-expanded={!isCollapsed}
                 className="CategoryHeader"
-                style={{ all: "unset", cursor: "pointer", display: "block" }}
               >
                 <div>Category: {category.name}</div>
                 <div>Amount: {totalFor(categoryExpenses)}$</div>
-                <div style={{ fontSize: 12, color: "#666" }}>{isCollapsed ? "Click to expand" : "Click to collapse"}</div>
+                <div style={{ fontSize: 13, color: "#7f8c8d", fontWeight: "normal" }}>{isCollapsed ? "Click to expand ▼" : "Click to collapse ▲"}</div>
               </button>
 
               {!isCollapsed &&
                 categoryExpenses.map((expense) => (
                   <div key={expense.id} className="PaymentItem">
-                    <strong>{expense.name}</strong>
-                    <div>Amount: ${expense.amount}</div>
-                    <div>Paid by: {getRoommateName(expense.paidBy)}</div>
-                    <div>Owed by: {expense.owedBy.map(id => getRoommateName(id)).join(", ")}</div>
-                    <div className={expense.cleared ? "Cleared" : "NotCleared"}>Status: {expense.cleared ? "Cleared" : "Not cleared"}</div>
-                    <Link to={`/payments/${expense.id}`}>
-                      <button className="EditButton">Edit</button>
-                    </Link>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div style={{ flex: 1 }}>
+                        <strong>
+                          {expense.name} - ${expense.amount}
+                          <span style={{ marginLeft: "10px" }} className={expense.cleared ? "Cleared" : "NotCleared"}>
+                            {expense.cleared ? "Cleared" : "Not cleared"}
+                          </span>
+                        </strong>
+                        <span style={{ marginLeft: "15px", fontSize: "14px" }}>
+                          Paid by: <span style={{ color: expense.paidBy === user.id ? "#1a5490" : "inherit" }}>{getRoommateName(expense.paidBy)}</span> •
+                          Owed by: {expense.owedBy.map((id, index) => (
+                            <span key={id}>
+                              <span style={{ color: id === user.id ? "#1a5490" : "inherit" }}>{getRoommateName(id)}</span>
+                              {index < expense.owedBy.length - 1 ? ", " : ""}
+                            </span>
+                          ))}
+                        </span>
+                      </div>
+                      <Link to={`/payments/${expense.id}`}>
+                        <button className="EditButton">Edit</button>
+                      </Link>
+                    </div>
                   </div>
                 ))}
             </li>
