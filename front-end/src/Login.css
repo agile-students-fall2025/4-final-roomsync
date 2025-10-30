@@ -1,0 +1,51 @@
+.Login-container {
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.Login-container h1 {
+  font-size: 46px;
+  margin-bottom: 1rem;
+}
+
+.Login-label {
+  align-self: felx-start;
+  font-size: 14px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.Login-input {
+  display: block;
+  justify-content: space-between;
+  padding: 1rem;
+  margin: 0.5rem auto;
+  border-radius: 4px;
+}
+
+.Login-button {
+  background-color: #3c93c2;
+  color: white;
+  padding: 10px 40px;
+  font-size: 20px;
+  cursor: pointer;
+  margin-top: 2rem;
+}
+
+.register-text {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.register-text a {
+  color: #3f97c6;
+  text-decoration: none;
+}
+
+.register-text a:hover {
+  text-decoration: underline;
+}
+
+

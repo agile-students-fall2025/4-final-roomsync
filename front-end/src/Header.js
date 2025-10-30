@@ -33,6 +33,9 @@ const Header = props => {
           <li className="nav-item">
             <Link to="/events">Events</Link>
           </li>
+          <li className="nav-item">
+            <Link to="/skillswap">SkillSwap</Link>
+          </li>
         </ul>
       </nav>
     </header>

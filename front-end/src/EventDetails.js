@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './EventDetails.css'
+import { user, roommates, getRoommateName } from "./users";
 
 const EventDetails = props => {
   const navigate = useNavigate()
   const { eventId } = useParams() 
-  
-  // Mock current user, not hardcoded
-  const [currentUser] = useState({ id: 1, name: 'Brian' })
   
   // Mock event data, not hardcoded, just for testing frontend and stakeholder video
   const [event, setEvent] = useState(null)
@@ -52,10 +50,10 @@ const EventDetails = props => {
         date: fetchedEvent.date,
         time: fetchedEvent.time
       })
-      setIsEditable(fetchedEvent.createdBy === currentUser.id)
-      setIsAttending(fetchedEvent.attendees.includes(currentUser.id))
+      setIsEditable(fetchedEvent.createdBy === user.id)
+      setIsAttending(fetchedEvent.attendees.includes(user.id))
     }
-  }, [eventId, currentUser.id])
+  }, [eventId, user.id])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target

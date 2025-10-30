@@ -14,8 +14,8 @@ export default function Landing() {
         <li>Building a genuine community</li>
      </ul>
     </div>
-    <a href="default.asp">Sign In</a>
-    <a href="default.asp">Register</a>
+    <a href="/login">Sign In</a>
+    <a href="/register">Register</a>
     </>
   )
 }
