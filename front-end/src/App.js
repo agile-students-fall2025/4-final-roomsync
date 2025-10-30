@@ -15,6 +15,7 @@ import StartEssayForRoommate from './compatibility/StartEssayForRoommate';
 import PostAvailableSpace from './compatibility/PostAvailableSpace';
 import PotentialRoommates from './compatibility/PotentialRoommates';
 import PotentialRoommateProfile from './compatibility/PotentialRoommateProfile';
+import StartEssayForRoom from './compatibility/StartEssayForRoom';
 
 
 const App = props => {
@@ -42,6 +43,7 @@ const App = props => {
             <Route path="/compatibility/roommate/space" element={<PostAvailableSpace />} />
             <Route path="/compatibility/roommate/potentialroommates" element={<PotentialRoommates />} />
             <Route path="/compatibility/roommate/potentialroommate/:id" element={<PotentialRoommateProfile />} />
+            <Route path="/compatibility/room/essay" element={<StartEssayForRoom />} />
           </Routes>
         </main>
         <Footer />
