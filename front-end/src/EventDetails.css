@@ -32,7 +32,7 @@
     color: #666;
   }
   
-  .EventDetails-header h1 {
+  .EventDetails-header strong {
     font-size: 1.8rem;
     margin: 0;
     flex: 1;

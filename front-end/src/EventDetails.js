@@ -85,7 +85,7 @@ const EventDetails = props => {
         <button className="Back-button" onClick={() => navigate('/events')}>
           &lt;
         </button>
-        <h1>*{event.name}*</h1>
+        <strong>{event.name}</strong>
       </div>
 
       <section className="EventDetails-section">
@@ -155,7 +155,7 @@ const EventDetails = props => {
             onChange={handleAttendanceChange}
           />
           <label htmlFor="attending">
-            Attending *{event.name}* ?
+            Attending <strong>{event.name}</strong> ?
           </label>
         </div>
       </section>
