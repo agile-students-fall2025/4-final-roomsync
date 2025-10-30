@@ -18,6 +18,8 @@ import StartEssayForRoommate from './compatibility/StartEssayForRoommate';
 import PostAvailableSpace from './compatibility/PostAvailableSpace';
 import PotentialRoommates from './compatibility/PotentialRoommates';
 import PotentialRoommateProfile from './compatibility/PotentialRoommateProfile';
+import Login from './Login';
+import Register from './Register';
 
 
 const App = props => {
@@ -31,6 +33,10 @@ const App = props => {
             <Route path="/" element={<Home />} />
             <Route path="/landing" element={<Landing />} />
             
+            {/* a route for login and register page */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+
             {/* a route for the chores page */}
             <Route path="/chores" element={<Chores />} />
             <Route path="/chores/add" element={<AddChore />} />
