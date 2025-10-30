@@ -6,6 +6,7 @@ import Chores from './Chores';
 import AddChore from './AddChore';
 import Header from './Header';
 import Footer from './Footer';
+import CreateHome from './CreateHome'
 import Landing from './Landing';
 import Payments from './Payments.js'
 import Events from './Events';
@@ -32,6 +33,8 @@ const App = props => {
             <Route path="/chores" element={<Chores />} />
             {/* a route for the add chore page */}
             <Route path="/chores/add" element={<AddChore />} />
+            {/* a route for the invite roommate to create a new home */}
+            <Route path="/create" element={<CreateHome />} /> {/* This page won't be in the navbar, and have access from onboarding or in home page*/}
             <Route path="/payments" element={<Payments />} />
             <Route path="/events" element={<Events />} />
             <Route path="/events/:eventId" element={<EventDetails />} />
