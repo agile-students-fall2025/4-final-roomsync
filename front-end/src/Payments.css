@@ -1,0 +1,32 @@
+/* Payments.css */
+
+.Payments-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px;
+  font-family: sans-serif;
+}
+
+.Payment-Category {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.Payment-Category > div {
+  margin-bottom: 6px;
+}
+
+.Payment-Category strong {
+  display: block;
+  margin-top: 6px;
+}
+
+.Payment-Category .Cleared {
+  color: green;
+}
+
+.Payment-Category .NotCleared {
+  color: red;
+}

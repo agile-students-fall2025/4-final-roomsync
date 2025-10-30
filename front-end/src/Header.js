@@ -16,6 +16,9 @@ const Header = props => {
         </Link>
         <ul className="nav-links">
           <li className="nav-item">
+            <Link to="/landing">Landing</Link>
+          </li>
+          <li className="nav-item">
             <Link to="/">Home</Link>
           </li>
           <li className="nav-item">
@@ -23,6 +26,12 @@ const Header = props => {
           </li>
           <li className="nav-item">
             <Link to="/chores">Chores</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/payments">Payments</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/events">Events</Link>
           </li>
         </ul>
       </nav>
