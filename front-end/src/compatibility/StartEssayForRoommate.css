@@ -1,0 +1,77 @@
+.compat-essay-page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 20px 56px;
+}
+
+.compat-essay-title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 12px 0 8px;
+}
+
+.compat-essay-subtitle {
+  text-align: center;
+  color: #555;
+  margin: 0 0 28px;
+}
+
+.compat-essay-form {
+  display: block;
+}
+
+.form-section {
+  margin: 18px 0 26px;
+}
+
+.section-title {
+  font-size: 18px;
+  margin: 0 0 8px;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  resize: vertical;
+}
+
+/* Actions */
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.compat-btn {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  padding: 12px 18px;
+  min-width: 160px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #f4f6ff;
+  color: #333;
+  font-weight: 600;
+  transition: transform 0.02s ease, opacity 0.1s ease;
+}
+
+.compat-btn:hover { opacity: 0.9; }
+.compat-btn:active { transform: translateY(1px); }
+
+.compat-btn-primary {
+  background: #e5e9ff;
+  border-color: #cfd7ff;
+}

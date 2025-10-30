@@ -10,6 +10,11 @@ import Landing from './Landing';
 import Payments from './Payments.js'
 import Events from './Events';
 import EventDetails from './EventDetails';
+import CompatibilityFinder from './compatibility/CompatibilityFinder';
+import StartEssayForRoommate from './compatibility/StartEssayForRoommate';
+import PostAvailableSpace from './compatibility/PostAvailableSpace';
+import PotentialRoommates from './compatibility/PotentialRoommates';
+import PotentialRoommateProfile from './compatibility/PotentialRoommateProfile';
 
 
 const App = props => {
@@ -30,6 +35,13 @@ const App = props => {
             <Route path="/payments" element={<Payments />} />
             <Route path="/events" element={<Events />} />
             <Route path="/events/:eventId" element={<EventDetails />} />
+
+            {/* compatibility finder hub */}
+            <Route path="/compatibility" element={<CompatibilityFinder />} />
+            <Route path="/compatibility/roommate/essay" element={<StartEssayForRoommate />} />
+            <Route path="/compatibility/roommate/space" element={<PostAvailableSpace />} />
+            <Route path="/compatibility/roommate/potentialroommates" element={<PotentialRoommates />} />
+            <Route path="/compatibility/roommate/potentialroommate/:id" element={<PotentialRoommateProfile />} />
           </Routes>
         </main>
         <Footer />

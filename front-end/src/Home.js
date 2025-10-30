@@ -9,9 +9,9 @@ import './Home.css'
 const Home = props => {
   return (
     <>
-    <div class="">
+    <div className="">
     <form action="get">
-    <div class="statistics-home">
+    <div className="statistics-home">
      <h3>Upcoming Chores</h3>
      <ul id="chores"></ul>
      <h3>Upcoming Payments</h3>
@@ -20,11 +20,11 @@ const Home = props => {
     </form>
     </div>
 
-    <div class="buttons-home">
+    <div className="buttons-home">
       <a href="default.asp">Skill Swap</a>
       <a href="/chores">Chores</a>
       <a href="/payments">Payments</a>
-      <a href="default.asp">Compatibility Finder</a>
+      <Link to="/compatibility">Compatibility Finder</Link>
     </div>
     </>
   )
