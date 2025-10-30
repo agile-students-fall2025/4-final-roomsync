@@ -8,6 +8,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Landing from './Landing';
 import Payments from './Payments.js'
+import PaymentDetails from './PaymentDetails.js'
 import Events from './Events';
 import EventDetails from './EventDetails';
 import CompatibilityFinder from './compatibility/CompatibilityFinder';
@@ -30,9 +31,12 @@ const App = props => {
             
             {/* a route for the chores page */}
             <Route path="/chores" element={<Chores />} />
-            {/* a route for the add chore page */}
             <Route path="/chores/add" element={<AddChore />} />
+
+            {/* a route for the payments page */}
             <Route path="/payments" element={<Payments />} />
+            <Route path="/payments/:paymentId" element={<PaymentDetails />} />
+
             <Route path="/events" element={<Events />} />
             <Route path="/events/:eventId" element={<EventDetails />} />
 
