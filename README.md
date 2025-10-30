@@ -53,14 +53,14 @@ Nexus is a mobile-friendly web application with three core modules that work tog
   * **Scrum Master:** Jacob Kang
 
 * **Sprint 1 Roles**
-  * **Product Owner:** Ginny 
+  * **Product Owner:** Chenyu (Ginny) Jiang 
   * **Scrum Master:** Eslem Varank
 
 * **Developers**
   * [Eslem Varank](https://github.com/eselmsenavarank)
   * [Amish Vandse](https://github.com/AmishVandse1)
   * [Jacob Kang](https://github.com/jkang2003)
-  * [Ginny](https://github.com/ginny1536)
+  * [Chenyu (Ginny) Jiang](https://github.com/ginny1536)
   * [Brian Chen](https://github.com/shrimpforfree)
 
 _Note: Scrum Master and Product Owner roles rotate each sprint so everyone gets experience in each role._

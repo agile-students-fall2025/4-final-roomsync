@@ -12,8 +12,8 @@ const Home = props => {
     <div class="">
     <form action="get">
     <div class="statistics-home">
-     <h3>Upcoming Chorses</h3>
-     <ul id="chorses"></ul>
+     <h3>Upcoming Chores</h3>
+     <ul id="chores"></ul>
      <h3>Upcoming Payments</h3>
      <ul id="payments"></ul>
      </div>
