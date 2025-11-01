@@ -1,0 +1,97 @@
+.Events-container {
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .Events-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+  }
+  
+  .Back-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    color: #333;
+  }
+  
+  .Back-button:hover {
+    color: #666;
+  }
+  
+  .Events-header h1 {
+    font-size: 2rem;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+  }
+  
+  .Events-section {
+    margin-bottom: 3rem;
+  }
+  
+  .Events-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .Events-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .Event-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    gap: 1rem; 
+  }
+  
+  
+  .Event-item:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .Event-item.selected {
+    border-color: #4A90E2;
+    background-color: #E3F2FD;
+  }
+  
+  .Event-name {
+    font-size: 1rem;
+    flex: 1;
+    text-align: left;
+  }
+
+  .Event-date {
+    flex: 1;
+    text-align: center; 
+  }
+  
+  .Edit-button {
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    flex-shrink: 0;
+  }
+  
+  .Edit-button:hover {
+    color: #666;
+  }

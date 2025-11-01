@@ -1,0 +1,71 @@
+.compat-page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 20px 56px;
+}
+
+.compat-title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 12px 0 8px;
+}
+
+.compat-subtitle {
+  text-align: center;
+  color: #555;
+  margin: 0 0 28px;
+}
+
+.compat-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.compat-btn {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  padding: 12px 18px;
+  min-width: 260px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #f4f6ff;           
+  color: #333;
+  font-weight: 600;
+  transition: transform 0.02s ease, opacity 0.1s ease;
+}
+
+.compat-btn:hover {
+  opacity: 0.9;
+}
+
+.compat-btn:active {
+  transform: translateY(1px);
+}
+
+.compat-btn-primary {
+  background: #e5e9ff;           
+  border-color: #cfd7ff;
+}
+
+.compat-back {
+  margin-top: 28px;
+  text-align: center;
+}
+
+.compat-back a {
+  color: #3a3a3a;
+  text-decoration: none;
+}
+
+.compat-back a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .compat-btn { min-width: 100%; }
+}
