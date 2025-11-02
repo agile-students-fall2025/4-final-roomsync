@@ -49,7 +49,7 @@ const Register = props => {
       />
 
       <button className="Login-button" onClick={handleSubmit}>
-          <Link to="/compatibility">Register</Link>
+          <Link to="/create">Register</Link>
       </button>
   </div>
 </>
