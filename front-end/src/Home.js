@@ -63,7 +63,7 @@ const Home = props => {
             <h3>Your Upcoming Payments</h3>
             <ul id="payments">
               {filteredPayments.map(payment => (
-                <li key={payments.id}>{payment.name} | git {payment.amount}</li>
+                <li key={payments.id}>{payment.name} | {payment.amount}</li>
               ))}
             </ul>
           </div>
