@@ -67,7 +67,7 @@
 }
 
 .btn-primary:hover {
-  background: #fb8332;
+  background: black;
   transform: translateY(-2px);
 }
 
@@ -78,7 +78,7 @@
 }
 
 .btn-secondary:hover {
-  background: #fb8332;
+  background: black;
   color: white;
   transform: translateY(-2px);
 }

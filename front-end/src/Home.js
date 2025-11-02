@@ -56,9 +56,9 @@ const Home = props => {
     </div>
 
     <div class="buttons-home">
-      <a class="button-5" href="default.asp">Skill Swap</a>
+      <a class="button-5" href="skillswap">Skill Swap</a>
       <a class="button-5" href="/chores">Chores</a>
-      <a class="button-5" href="default.asp">Payments</a>
+      <a class="button-5" href="/payments">Payments</a>
       <a class="button-5" href="/compatibility">Compatibility Finder</a>
     </div>
     </>

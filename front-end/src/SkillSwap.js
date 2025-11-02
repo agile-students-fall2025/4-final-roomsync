@@ -7,11 +7,13 @@ const SkillSwap = props => {
   return (
     <div className="SkillSwap-container">
       <div className="SkillSwap-header">
-        <button className="Back-button" onClick={() => navigate(-1)}> 
+        {/* We may not need this */}
+        {/* <button className="Back-button" onClick={() => navigate(-1)}> 
           &lt;
-        </button>
+        </button> */}  
         <h1>Skill Swap</h1>
       </div>
+      <p>See the events around your neighborhood</p>
 
       <div className="SkillSwap-buttons">
         <button 
