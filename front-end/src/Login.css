@@ -12,6 +12,7 @@
 
 .Login-label {
   align-self: felx-start;
+  align-content: left;
   font-size: 14px;
   margin-bottom: 5px;
   font-weight: bold;
@@ -26,12 +27,21 @@
 }
 
 .Login-button {
-  background-color: #3c93c2;
+  background: #a7a7a7;
   color: white;
-  padding: 10px 40px;
-  font-size: 20px;
-  cursor: pointer;
-  margin-top: 2rem;
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  transition: all 0.3s ease;
+  min-width: 120px;
+  text-align: center;
+}
+
+.Login-button:hover {
+  background: #fb8332;
+  transform: translateY(-2px);
 }
 
 .register-text {

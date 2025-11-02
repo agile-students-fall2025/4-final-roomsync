@@ -8,7 +8,7 @@ import './Footer.css'
 const Footer = props => {
   return (
     <footer className="Footer-footer">
-      &copy;2027. Foo Barstein. All rights reserved.
+      RoomSync. All rights reserved.
     </footer>
   )
 }

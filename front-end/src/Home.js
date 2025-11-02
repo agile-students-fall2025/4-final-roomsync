@@ -31,6 +31,19 @@ const Home = props => {
     const filteredChores = chores.filter(chore => chore.id == userID && chore.finished == false && chore.assignedTo);
     const user = chores.find(user => user.id = userID )
 
+
+
+    const filteredPayments = payments
+  .filter(payment => 
+    payment.paidBy === userID && 
+    payment.cleared === false && 
+    payment.owedBy.includes(1)
+  )
+  .map(payment => ({
+    ...payment,
+    amountPerPerson: payment.amount / payment.owedBy.length
+  }));
+
   return (
     <>
     <div class="">
@@ -48,7 +61,11 @@ const Home = props => {
           </div>
           <div class="stats">
             <h3>Your Upcoming Payments</h3>
-            <ul id="payments"></ul>
+            <ul id="payments">
+              {filteredPayments.map(payment => (
+                <li key={payments.id}>{payment.name} | {payment.amount}</li>
+              ))}
+            </ul>
           </div>
           
         </div>
@@ -56,10 +73,10 @@ const Home = props => {
     </div>
 
     <div class="buttons-home">
-      <a class="button-5" href="default.asp">Skill Swap</a>
+      <a class="button-5" href="skillswap">Skill Swap</a>
       <a class="button-5" href="/chores">Chores</a>
-      <a class="button-5" href="default.asp">Payments</a>
-      <a class="button-5" href="default.asp">Compatibility Finder</a>
+      <a class="button-5" href="/payments">Payments</a>
+      <a class="button-5" href="/compatibility">Compatibility Finder</a>
     </div>
     </>
   )
