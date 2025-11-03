@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import './Login.css'
 
 const Register = props => {
@@ -7,6 +7,8 @@ const Register = props => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
+
+  const navigate = useNavigate();
   
   const handleSubmit = (e) => {
       e.preventDefault()
@@ -16,7 +18,18 @@ const Register = props => {
         setError('Passwords do not match')
         return;
       }
-      // TODO: implement login logic
+
+      if (password.length < 6) {
+        setError('Password must be at least 6 characters');
+        return;
+      }
+
+      if (email.length < 5) {
+        setError('Not valid email input');
+        return;
+      }
+      
+      navigate('/create');
   }
 
   return (
@@ -26,31 +39,33 @@ const Register = props => {
 
       {error && <p style={{color: 'red'}}>{error}</p>}
       
-      <label className="Login-label">Email</label>
-      <input 
-        className="Login-input" 
-        placeholder="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <label className="Login-label">Password</label>
-      <input 
-        className="Login-input" 
-        placeholder="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <label className="Login-label">Confirm Password</label>
-      <input 
-        className="Login-input" 
-        placeholder="Type your password again"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-      />
+      <form onSubmit={handleSubmit}>
+        <label className="Login-label">Email</label>
+        <input 
+          className="Login-input" 
+          placeholder="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <label className="Login-label">Password</label>
+        <input 
+          className="Login-input" 
+          placeholder="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <label className="Login-label">Confirm Password</label>
+        <input 
+          className="Login-input" 
+          placeholder="Type your password again"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
 
-      <button className="Login-button" onClick={handleSubmit}>
-          <Link to="/create">Register</Link>
-      </button>
+        <button type="submit" className="Login-button">
+            Register
+        </button>
+      </form>
   </div>
 </>
     )    
