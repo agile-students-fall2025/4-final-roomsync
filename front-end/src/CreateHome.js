@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'
+import './CreateHome.js'
 
 export default function CreateHome() {
   const [name, setName] = useState('');
@@ -53,7 +55,7 @@ export default function CreateHome() {
           />
         </div>
         <div>
-          <button onClick={handleAddRoommate}>Add Roommate</button>
+          <button style={{ marginTop: '10px' }} onClick={handleAddRoommate}>Add Roommate</button>
         </div>
         <ul id="myList">
           {roommates.map((r, index) => (
@@ -61,7 +63,8 @@ export default function CreateHome() {
           ))}
         </ul>
         <div className="form-example">
-          <input type="submit" value="Create House" />
+          {/* <input type="submit" value="Create House" /> */}
+          <button ><Link to="/">Create Home</Link></button>
         </div>
       </form>
     </>

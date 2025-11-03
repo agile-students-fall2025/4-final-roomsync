@@ -30,6 +30,9 @@ const Header = props => {
           <li className="nav-item">
             <Link to="/skillswap">SkillSwap</Link>
           </li>
+          <li className="nav-item">
+            <Link to="/compatibility">Compatibility Finder</Link>
+          </li>
         </ul>
       </nav>
     </header>
