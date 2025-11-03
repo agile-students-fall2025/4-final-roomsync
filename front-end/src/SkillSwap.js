@@ -32,7 +32,7 @@ const SkillSwap = props => {
 
         <button 
           className="nav-button" 
-          // onClick={() => navigate('/profile')} uncomment once profile page is created
+          onClick={() => navigate('/profile')}
         >
           Your Profile
         </button>

@@ -21,6 +21,7 @@ import PotentialRoommateProfile from './compatibility/PotentialRoommateProfile';
 import StartEssayForRoom from './compatibility/StartEssayForRoom';
 import Login from './Login';
 import Register from './Register';
+import Profile from './Profile';
 
 
 const App = props => {
@@ -60,6 +61,7 @@ const App = props => {
             <Route path="/compatibility/roommate/potentialroommates" element={<PotentialRoommates />} />
             <Route path="/compatibility/roommate/potentialroommate/:id" element={<PotentialRoommateProfile />} />
             <Route path="/compatibility/room/essay" element={<StartEssayForRoom />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>
         

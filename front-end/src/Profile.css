@@ -1,0 +1,237 @@
+.Profile-container {
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    min-height: auto;
+  }
+  
+  .Profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #333;
+  }
+  
+  .Back-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    color: #333;
+    width: 40px;
+    text-align: left;
+  }
+  
+  .Back-button:hover {
+    color: #666;
+  }
+  
+  .Profile-header h1 {
+    font-size: 2rem;
+    margin: 0;
+    flex: 1;
+    font-weight: 400;
+  }
+  
+  .Profile-content {
+    padding: 1rem 0;
+  }
+  
+  .Profile-top {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    margin-bottom: 3rem;
+  }
+  
+  .Profile-picture {
+    width: 150px;
+    height: 150px;
+    flex-shrink: 0;
+  }
+  
+  .picture-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #c4c4c4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #666;
+  }
+  
+  .Profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .Profile-info h2 {
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 400;
+  }
+  
+  .Profile-info p {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .Profile-section {
+    margin-bottom: 2.5rem;
+  }
+  
+  .Profile-section label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .Profile-section textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #333;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .Profile-section textarea:focus {
+    outline: none;
+    border-color: #000;
+  }
+  
+  .Skills-dropdown {
+    position: relative;
+  }
+  
+  .Skills-header {
+    width: 100%;
+    max-width: 220px;
+    padding: 0.75rem 1rem;
+    background-color: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: left;
+  }
+  
+  .Skills-header:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .arrow {
+    transition: transform 0.2s ease;
+    font-size: 0.8rem;
+  }
+  
+  .arrow.open {
+    transform: rotate(180deg);
+  }
+  
+  .Skills-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-width: 220px;
+    background-color: white;
+    border: 2px solid #333;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    margin-top: -8px;
+    z-index: 10;
+  }
+  
+  .skill-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 1rem;
+  }
+  
+  .skill-item:last-child {
+    border-bottom: none;
+  }
+  
+  .skill-item.others {
+    color: #666;
+  }
+  
+  .privacy-section {
+    padding: 1.5rem;
+    border: 2px solid #333;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+  }
+  
+  .privacy-section label {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+  
+  .Privacy-options {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .radio-option input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+  
+  .privacy-note {
+    margin: 1rem 0 0 0;
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+    line-height: 1.4;
+  }
+  
+  @media (max-width: 768px) {
+    .Profile-container {
+      padding: 1.5rem;
+    }
+  
+    .Profile-top {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    .Profile-picture {
+      width: 120px;
+      height: 120px;
+    }
+  
+    .Profile-info h2 {
+      font-size: 1.5rem;
+    }
+  
+    .Privacy-options {
+      gap: 2rem;
+    }
+  }
