@@ -55,7 +55,7 @@ Nexus is a mobile-friendly web application with three core modules that work tog
 * **Sprint 1 Roles**
   * **Product Owner:** Chenyu (Ginny) Jiang 
   * **Scrum Master:** Eslem Varank
-  * _Note: To be able run our program and see all the sprint 1 implementation: 1- Fork the file, 2- Install npm, 3- run 'npm start' on terminal in front-end folder
+  * __Note: To be able run our program and see all the sprint 1 implementation: 1- Fork the file, 2- Install npm, 3- run 'npm start' on terminal in front-end folder_
 
 
 * **Developers**
