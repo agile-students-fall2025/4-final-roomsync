@@ -111,9 +111,3 @@ This naming convention helps us track which task belongs to which user story.
    cd ../back-end
    npm install
    ```
-
-
-
-- Reach out to a team member
-
-Thank you for contributing to RoomSync! 🏠✨
