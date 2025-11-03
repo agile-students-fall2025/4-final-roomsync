@@ -25,7 +25,7 @@ const SkillSwap = props => {
 
         <button 
           className="nav-button" 
-          // onClick={() => navigate('/calendar')} uncomment on calendar page is created
+          onClick={() => navigate('/eventcalendar')}
         >
           Calendar
         </button>

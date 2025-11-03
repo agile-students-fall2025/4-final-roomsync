@@ -1,126 +1,118 @@
-import React, { useState } from 'react';
-import './EventCalendar.css'
+import React, { useState } from "react";
+// import { Link,useNavigate } from 'react-router-dom'
 
-export default function EventCalendar(){
-    const monthEl = document.getElementById('month');
-        const yearEl = document.getElementById('year');
-        const daysGrid = document.getElementById('days-grid');
+import "./EventCalendar.css";
 
-        let currentDate = new Date(2021, 8, 1); // Set to September 2021 as in the screenshot
 
-        function renderCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
+export default function EventCalendar() {
+//   const navigate = useNavigate()
+  const today = new Date();
+  const [year, setYear] = useState(today.getFullYear());
+  const [month, setMonth] = useState(today.getMonth()); // 0..11
+  const [selectedDay, setSelectedDay] = useState(null);
 
-            // Update header
-            monthEl.textContent = new Date(year, month).toLocaleString('default', { month: 'long' });
-            yearEl.textContent = year;
+  const monthName = new Date(year, month, 1).toLocaleString("en", {
+    month: "long",
+  });
 
-            // Clear previous days
-            daysGrid.innerHTML = '';
+  
+  const firstWeekday = new Date(year, month, 1).getDay(); 
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const cells = [];
+  const startBlanks = firstWeekday; 
 
-            // Calculate first day of the month and number of days in the month
-            const firstDayOfMonth = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
+  for (let i = 0; i < startBlanks; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+  while (cells.length < 42) cells.push(null);
 
-            // Add empty cells for days before the first of the month
-            for (let i = 0; i < firstDayOfMonth; i++) {
-                const emptyDay = document.createElement('li');
-                daysGrid.appendChild(emptyDay);
-            }
+  function prevMonth() {
+    if (month === 0) {
+      setMonth(11);
+      setYear(year - 1);
+    } else {
+      setMonth(month - 1);
+    }
+    setSelectedDay(null);
+  }
 
-            // Add day numbers
-            for (let i = 1; i <= daysInMonth; i++) {
-                const dayListItem = document.createElement('li');
-                dayListItem.textContent = i;
-                
-                // Highlight current day (if it matches today)
-                const today = new Date();
-                if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    dayListItem.classList.add('current-day');
-                }
-                
-                daysGrid.appendChild(dayListItem);
-            }
-        }
+  function nextMonth() {
+    if (month === 11) {
+      setMonth(0);
+      setYear(year + 1);
+    } else {
+      setMonth(month + 1);
+    }
+    setSelectedDay(null);
+  }
 
-        function goToPreviousMonth() {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar();
-        }
-
-        function goToNextMonth() {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalendar();
-        }
-
-        // Initialize calendar
-        renderCalendar();
-return(
-    <>
-    <div class="container">
-        <div class="header">
+  return (
+    <div className="cal-page">
+        <div className="cal-card">
+            {/* Title */}
+            <div className="cal-header">
             <h1>Calendar</h1>
-            <p>See availability of your mates</p>
-        </div>
+            <p className="muted">See availability of your mates</p>
+            </div>
 
-        {/* <hr> */}
+            {/* Month bar */}
+            <div className="cal-bar">
+            <button onClick={prevMonth}>&lt;</button>
+            <div className="cal-month">{monthName} {year}</div>
+            <button onClick={nextMonth}>&gt;</button>
+            </div>
 
-        <div class="calendar-section">
-            <div class="calendar-header">
-                <div class="month-year">
-                    <span id="month">September</span> 
-                    <span id="year">2021</span>
+            {/* Weekdays */}
+            <div className="cal-weekdays">
+            {["SUN","MON","TUE","WED","THU","FRI","SAT"].map(w => (
+                <div key={w}>{w}</div>
+            ))}
+            </div>
+
+            {/* Grid */}
+            <div className="cal-grid">
+            {cells.map((val, i) => {
+                const isToday =
+                val === today.getDate() &&
+                month === today.getMonth() &&
+                year === today.getFullYear();
+
+                const isSelected = val && val === selectedDay;
+
+                const cls =
+                "cell" +
+                (val ? "" : " cell--blank") +
+                (isToday ? " cell--today" : "") +
+                (isSelected ? " cell--selected" : "");
+
+                return (
+                <div
+                    key={i}
+                    className={cls}
+                    onClick={() => val && setSelectedDay(val)}
+                >
+                    {val ?? ""}
                 </div>
-                <div class="nav-buttons">
-                    <button class="nav-button" onclick="goToPreviousMonth()">←</button>
-                    <button class="nav-button" onclick="goToNextMonth()">→</button>
-                </div>
+                );
+            })}
             </div>
 
-            <div class="weekdays">
-                <div>SAN</div>
-                <div>MON</div>
-                <div>TUE</div>
-                <div>WED</div>
-                <div>THU</div>
-                <div>FRI</div>
-                <div>SAT</div>
+            {/* Simple events area static for now, requires db implementation for dynamic version */}
+            <div className="events">
+            <div className="event">
+                <input type="checkbox" /> <span>Eslem free for guitar lesson</span>
+            </div>
+            <div className="event">
+                <input type="checkbox" /> <span>Ginny free for yoga class</span>
+                <div className="muted small">Location: (Address)</div>
+                <div className="muted small">Time: (Hour:Minute)</div>
             </div>
 
-            <ul class="days-grid" id="days-grid"></ul>
-        </div>
-
-        {/* </hr> */}
-
-        <div class="events-section">
-            <h2>Events</h2>
-            
-            <div class="event-item">
-                <label class="checkbox-label">
-                    <input type="checkbox" class="event-checkbox"/>
-                    <div class="event-details">
-                        <div class="event-title">Eslem free for guitar lesson</div>
-                    </div>
-                </label>
-            </div>
-
-            <div class="event-item">
-                <label class="checkbox-label">
-                    <input type="checkbox" class="event-checkbox"/>
-                    <div class="event-details">
-                        <div class="event-title">Ginny free for yoga class</div>
-                        <div class="event-location">Location: (Address Info)</div>
-                        <div class="event-time">Time: (Hour: Minute)</div>
-                        <div class="event-description">
-                            Do you also have a time to swap some skill and nice time
-                        </div>
-                    </div>
-                </label>
+            <p className="muted center small">
+                Do you also have a time to swap some skill and nice time
+            </p>
             </div>
         </div>
+        <p>Go <a href="./skillswap">back</a> to skillswap menu</p>
     </div>
-
-    </>
-);
+  );
 }
