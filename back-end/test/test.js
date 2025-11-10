@@ -36,3 +36,60 @@ describe('POST /api/submit', () => {
       })
   })
 })
+
+// User routes tests
+describe('GET /api/rooms/:roomId/users', () => {
+  it('should return users for a room', done => {
+    request
+      .execute(app)
+      .get('/api/rooms/1/users')
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an('array')
+        done()
+      })
+  })
+})
+
+describe('POST /api/rooms/:roomId/users', () => {
+  it('should create a new user', done => {
+    request
+      .execute(app)
+      .post('/api/rooms/1/users')
+      .send({ name: 'Test User' })
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res.body).to.have.property('id')
+        expect(res.body).to.have.property('name')
+        expect(res.body).to.have.property('roomId')
+        done()
+      })
+  })
+})
+
+describe('DELETE /api/rooms/:roomId/users/:id', () => {
+  it('should delete a user', done => {
+    request
+      .execute(app)
+      .delete('/api/rooms/1/users/1')
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res.body).to.have.property('success')
+        done()
+      })
+  })
+})
+
+describe('POST /api/users/:userId/assign-room', () => {
+  it('should assign user to a room', done => {
+    request
+      .execute(app)
+      .post('/api/users/2/assign-room')
+      .send({ roomId: 2 })
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res.body).to.have.property('success')
+        done()
+      })
+  })
+})
