@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./PaymentDetails.css";
-import { user, roommates, getRoommateName } from "./users";
+import { user, getUsers } from "./api/users";
 
 const PaymentDetails = () => {
   const navigate = useNavigate();
   const { paymentId } = useParams();
+
+  // users from API
+  const [users, setUsers] = useState([]);
 
   const [payments, setPayments] = useState([
     { id: 1, name: "Pay electricity bill", amount: 120.5, createdAt: "2025-10-20", cleared: false, categoryId: 1, paidBy: 1, owedBy: [1, 2, 3, 4, 5] },
@@ -33,6 +36,14 @@ const PaymentDetails = () => {
   const findPayment = (idNum) => payments.find((p) => p.id === idNum) || null;
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      const data = await getUsers();
+      setUsers(data);
+    };
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
     const idNum = Number(paymentId);
     const fetched = Number.isFinite(idNum) ? findPayment(idNum) : null;
     setPayment(fetched);
@@ -50,6 +61,11 @@ const PaymentDetails = () => {
       });
     }
   }, [paymentId, payments]);
+
+  const getUserNameSync = (id) => {
+    const foundUser = users.find(u => u.id === id);
+    return foundUser ? foundUser.name : "Unknown";
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -176,10 +192,10 @@ const PaymentDetails = () => {
             value={formData.paidBy}
             onChange={handleInputChange}
           >
-            <option value={-1}>Select roommate</option>
-            {roommates.map((r) => (
-              <option key={r.id} value={r.id}>
-                {getRoommateName(r.id)}
+            <option value={-1}>Select user</option>
+            {users.map((u) => (
+              <option key={u.id} value={u.id}>
+                {getUserNameSync(u.id)}
               </option>
             ))}
           </select>
@@ -188,14 +204,14 @@ const PaymentDetails = () => {
         <div className="form-group">
           <label>Owed By:</label>
           <div className="checkbox-grid">
-            {roommates.map((r) => (
-              <label key={r.id} className="checkbox-item">
+            {users.map((u) => (
+              <label key={u.id} className="checkbox-item">
                 <input
                   type="checkbox"
-                  checked={formData.owedBy.includes(r.id)}
-                  onChange={() => handleOwedByToggle(r.id)}
+                  checked={formData.owedBy.includes(u.id)}
+                  onChange={() => handleOwedByToggle(u.id)}
                 />
-                {getRoommateName(r.id)}
+                {getUserNameSync(u.id)}
               </label>
             ))}
           </div>
