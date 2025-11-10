@@ -94,8 +94,10 @@ app.post("/api/users/:userId/assign-room", (req, res) => {
 })
 
 // ========================================
-// 
+//
 // ========================================
+
+export default app
 
 const port = 3000
 app.listen(port, () => {
