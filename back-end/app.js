@@ -39,6 +39,66 @@ app.post("/api/submit", (req, res) => {
   })
 })
 
+// ========================================
+// USER MANAGEMENT
+// ========================================
+let users = [
+  { id: 1, name: "Brian", roomId: 1 },
+  { id: 2, name: "Ginny", roomId: 1 },
+  { id: 3, name: "Jacob", roomId: 1 },
+  { id: 4, name: "Amish", roomId: 1 },
+  { id: 5, name: "Eslem", roomId: 1 },
+]
+
+// GET users for a specific room
+app.get("/api/rooms/:roomId/users", (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const roomUsers = users.filter(u => u.roomId === roomId)
+  res.json(roomUsers)
+})
+
+// POST new user to a room
+app.post("/api/rooms/:roomId/users", (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const { name } = req.body
+  const newId = Math.max(...users.map(u => u.id), 0) + 1
+  const newUser = { id: newId, name: name, roomId: roomId }
+  users.push(newUser)
+  res.json(newUser)
+})
+
+// DELETE user from room
+app.delete("/api/rooms/:roomId/users/:id", (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const index = users.findIndex(u => u.id === id && u.roomId === roomId)
+  if (index !== -1) {
+    users.splice(index, 1)
+    res.json({ success: true })
+  } else {
+    res.status(404).json({ success: false, message: "User not found" })
+  }
+})
+
+// POST assign user to a room
+app.post("/api/users/:userId/assign-room", (req, res) => {
+  const userId = parseInt(req.params.userId)
+  const { roomId } = req.body
+  const user = users.find(u => u.id === userId)
+  if (user) {
+    user.roomId = roomId
+    res.json({ success: true, user })
+  } else {
+    res.status(404).json({ success: false, message: "User not found" })
+  }
+})
+
+// ========================================
+//
+// ========================================
+
+export default app
+
 const port = 3000
 app.listen(port, () => {
   console.log(`Server running on port: ${port}`)

@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Payments.css";
-import { user, roommates, getRoommateName } from "./users";
+import { user, getUsers } from "./api/users";
 
 const Payments = (props) => {
+  const [users, setUsers] = useState([]);
+
   // categories table
   const [categories, setCategories] = useState([
     { id: 1, name: "Utility" },
@@ -24,6 +26,19 @@ const Payments = (props) => {
 
   // list of categoryId that is collapsed
   const [collapsedIds, setCollapsedIds] = useState(new Set(categories.map(category => category.id)));
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const data = await getUsers();
+      setUsers(data);
+    };
+    fetchUsers();
+  }, []);
+
+  const getUserNameSync = (id) => {
+    const foundUser = users.find(u => u.id === id);
+    return foundUser ? foundUser.name : "Unknown";
+  };
 
   const toggleCategory = (id) => {
     setCollapsedIds((prev) => {
@@ -119,10 +134,10 @@ const Payments = (props) => {
                           </span>
                         </strong>
                         <span style={{ marginLeft: "15px", fontSize: "14px" }}>
-                          Paid by: <span style={{ color: expense.paidBy === user.id ? "#1a5490" : "inherit" }}>{getRoommateName(expense.paidBy)}</span> •
+                          Paid by: <span style={{ color: expense.paidBy === user.id ? "#1a5490" : "inherit" }}>{getUserNameSync(expense.paidBy)}</span> •
                           Owed by: {expense.owedBy.map((id, index) => (
                             <span key={id}>
-                              <span style={{ color: id === user.id ? "#1a5490" : "inherit" }}>{getRoommateName(id)}</span>
+                              <span style={{ color: id === user.id ? "#1a5490" : "inherit" }}>{getUserNameSync(id)}</span>
                               {index < expense.owedBy.length - 1 ? ", " : ""}
                             </span>
                           ))}

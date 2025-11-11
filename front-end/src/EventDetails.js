@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './EventDetails.css'
-import { user, roommates, getRoommateName } from "./users";
+import { user } from "./api/users";
 
 const EventDetails = props => {
   const navigate = useNavigate()
