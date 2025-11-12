@@ -181,6 +181,31 @@ app.post("/api/rooms/:roomId/payments", (req, res) => {
   res.json(newPayment)
 })
 
+// PUT (update) an existing payment
+// For paymentDetails page
+app.put("/api/rooms/:roomId/payments/:id", (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const { name, amount, createdAt, cleared, categoryId, paidBy, owedBy } = req.body
+
+  const index = payments.findIndex(p => p.id === id && p.roomId === roomId)
+  if (index !== -1) {
+    payments[index] = {
+      ...payments[index],
+      name: name !== undefined ? name : payments[index].name,
+      amount: amount !== undefined ? parseFloat(amount) : payments[index].amount,
+      createdAt: createdAt !== undefined ? createdAt : payments[index].createdAt,
+      cleared: cleared !== undefined ? Boolean(cleared) : payments[index].cleared,
+      categoryId: categoryId !== undefined ? parseInt(categoryId) : payments[index].categoryId,
+      paidBy: paidBy !== undefined ? parseInt(paidBy) : payments[index].paidBy,
+      owedBy: owedBy !== undefined ? (Array.isArray(owedBy) ? owedBy.map(id => parseInt(id)) : payments[index].owedBy) : payments[index].owedBy,
+    }
+    res.json(payments[index])
+  } else {
+    res.status(404).json({ success: false, message: "Payment not found" })
+  }
+})
+
 // DELETE payment from room
 // Should never need this
 app.delete("/api/rooms/:roomId/payments/:id", (req, res) => {
