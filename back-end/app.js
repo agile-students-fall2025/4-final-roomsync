@@ -107,6 +107,27 @@ app.get("/api/categories", (req, res) => {
   res.json(categories)
 })
 
+// POST new category
+app.post("/api/categories", (req, res) => {
+  const { name } = req.body
+  const newId = Math.max(...categories.map(c => c.id), 0) + 1
+  const newCategory = { id: newId, name: name }
+  categories.push(newCategory)
+  res.json(newCategory)
+})
+
+// DELETE category
+app.delete("/api/categories/:id", (req, res) => {
+  const id = parseInt(req.params.id)
+  const index = categories.findIndex(c => c.id === id)
+  if (index !== -1) {
+    categories.splice(index, 1)
+    res.json({ success: true })
+  } else {
+    res.status(404).json({ success: false, message: "Category not found" })
+  }
+})
+
 // ========================================
 //
 // ========================================
