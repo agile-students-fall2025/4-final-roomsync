@@ -29,7 +29,7 @@ const Register = props => {
         return;
       }
       
-      navigate('/create');
+      navigate('/');
   }
 
   return (
