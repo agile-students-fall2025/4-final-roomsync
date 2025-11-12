@@ -142,6 +142,25 @@ let payments = [
   { id: 7, name: "Check smoke detector", amount: 10.0, createdAt: "2025-10-19", cleared: true, categoryId: 3, paidBy: 2, owedBy: [2, 3, 5], roomId: 1 },
 ]
 
+// GET all payments for a specific room
+app.get("/api/rooms/:roomId/payments", (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const roomPayments = payments.filter(p => p.roomId === roomId)
+  res.json(roomPayments)
+})
+
+// GET a specific payment by id
+app.get("/api/rooms/:roomId/payments/:id", (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const payment = payments.find(p => p.id === id && p.roomId === roomId)
+  if (payment) {
+    res.json(payment)
+  } else {
+    res.status(404).json({ success: false, message: "Payment not found" })
+  }
+})
+
 // ========================================
 //
 // ========================================
