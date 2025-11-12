@@ -161,6 +161,40 @@ app.get("/api/rooms/:roomId/payments/:id", (req, res) => {
   }
 })
 
+// POST new payment to a room
+app.post("/api/rooms/:roomId/payments", (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const { name, amount, createdAt, cleared, categoryId, paidBy, owedBy } = req.body
+  const newId = Math.max(...payments.map(p => p.id), 0) + 1
+  const newPayment = {
+    id: newId,
+    name,
+    amount: parseFloat(amount),
+    createdAt,
+    cleared: Boolean(cleared),
+    categoryId: parseInt(categoryId),
+    paidBy: parseInt(paidBy),
+    owedBy: Array.isArray(owedBy) ? owedBy.map(id => parseInt(id)) : [],
+    roomId
+  }
+  payments.push(newPayment)
+  res.json(newPayment)
+})
+
+// DELETE payment from room
+// Should never need this
+app.delete("/api/rooms/:roomId/payments/:id", (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const index = payments.findIndex(p => p.id === id && p.roomId === roomId)
+  if (index !== -1) {
+    payments.splice(index, 1)
+    res.json({ success: true })
+  } else {
+    res.status(404).json({ success: false, message: "Payment not found" })
+  }
+})
+
 // ========================================
 //
 // ========================================
