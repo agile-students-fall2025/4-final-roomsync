@@ -77,6 +77,7 @@ const Home = props => {
       <a class="button-5" href="/chores">Chores</a>
       <a class="button-5" href="/payments">Payments</a>
       <a class="button-5" href="/compatibility">Compatibility Finder</a>
+      <a class="button-5" href="/create">Invite Roommate</a>
     </div>
     </>
   )
