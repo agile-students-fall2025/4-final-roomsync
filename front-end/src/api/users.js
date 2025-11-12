@@ -20,7 +20,7 @@
  * - POST   /api/users/:userId/assign-room    - Assign user to room
  */
 
-const API_URL = "http://localhost:3000/api";
+const API_URL = "/api";
 
 export const user = { id: 1, name: "Brian", roomId: 1 };
 
