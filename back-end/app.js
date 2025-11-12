@@ -94,6 +94,20 @@ app.post("/api/users/:userId/assign-room", (req, res) => {
 })
 
 // ========================================
+// CATEGORIES MANAGEMENT
+// ========================================
+let categories = [
+  { id: 1, name: "Utility" },
+  { id: 2, name: "Groceries" },
+  { id: 3, name: "Maintenance" },
+]
+
+// GET all categories
+app.get("/api/categories", (req, res) => {
+  res.json(categories)
+})
+
+// ========================================
 //
 // ========================================
 
