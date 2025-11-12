@@ -20,74 +20,74 @@
  * - POST   /api/users/:userId/assign-room    - Assign user to room
  */
 
-const API_URL = "/api";
+const API_URL = '/api'
 
-export const user = { id: 1, name: "Brian", roomId: 1 };
+export const user = { id: 1, name: 'Brian', roomId: 1 }
 
 export const getUsers = async () => {
   try {
-    const response = await fetch(`${API_URL}/rooms/${user.roomId}/users`);
-    const data = await response.json();
-    return data;
+    const response = await fetch(`${API_URL}/rooms/${user.roomId}/users`)
+    const data = await response.json()
+    return data
   } catch (error) {
-    console.error("Error fetching users:", error);
-    return [];
+    console.error('Error fetching users:', error)
+    return []
   }
-};
+}
 
-export const getUserById = async (id) => {
-  const users = await getUsers();
-  return users.find(u => u.id === id);
-};
+export const getUserById = async id => {
+  const users = await getUsers()
+  return users.find(u => u.id === id)
+}
 
-export const getUserName = async (id) => {
-  const foundUser = await getUserById(id);
-  return foundUser ? foundUser.name : "Unknown";
-};
+export const getUserName = async id => {
+  const foundUser = await getUserById(id)
+  return foundUser ? foundUser.name : 'Unknown'
+}
 
-export const addUser = async (name) => {
+export const addUser = async name => {
   try {
     const response = await fetch(`${API_URL}/rooms/${user.roomId}/users`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ name }),
-    });
-    const newUser = await response.json();
-    return newUser;
+    })
+    const newUser = await response.json()
+    return newUser
   } catch (error) {
-    console.error("Error adding user:", error);
-    return null;
+    console.error('Error adding user:', error)
+    return null
   }
-};
+}
 
-export const removeUser = async (id) => {
+export const removeUser = async id => {
   try {
     const response = await fetch(`${API_URL}/rooms/${user.roomId}/users/${id}`, {
-      method: "DELETE",
-    });
-    const result = await response.json();
-    return result.success;
+      method: 'DELETE',
+    })
+    const result = await response.json()
+    return result.success
   } catch (error) {
-    console.error("Error removing user:", error);
-    return false;
+    console.error('Error removing user:', error)
+    return false
   }
-};
+}
 
 export const assignUserToRoom = async (userId, roomId) => {
   try {
     const response = await fetch(`${API_URL}/users/${userId}/assign-room`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ roomId }),
-    });
-    const result = await response.json();
-    return result.success;
+    })
+    const result = await response.json()
+    return result.success
   } catch (error) {
-    console.error("Error assigning user to room:", error);
-    return false;
+    console.error('Error assigning user to room:', error)
+    return false
   }
-};
+}
