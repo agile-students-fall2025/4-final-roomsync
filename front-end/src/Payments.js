@@ -5,34 +5,36 @@ import { user, getUsers } from "./api/users";
 
 const Payments = (props) => {
   const [users, setUsers] = useState([]);
-
-  // categories table
-  const [categories, setCategories] = useState([
-    { id: 1, name: "Utility" },
-    { id: 2, name: "Groceries" },
-    { id: 3, name: "Maintenance" },
-  ]);
-
-  // expenses table
-  const [expenses, setExpenses] = useState([
-    { id: 1, name: "Pay electricity bill", amount: 120.5, createdAt: "2025-10-20", cleared: false, categoryId: 1, paidBy: 1, owedBy: [1, 2, 3, 4, 5] },
-    { id: 2, name: "Refill water filter", amount: 35.0, createdAt: "2025-10-18", cleared: true, categoryId: 1, paidBy: 2, owedBy: [1, 2, 3] },
-    { id: 3, name: "Buy milk", amount: 4.25, createdAt: "2025-10-25", cleared: true, categoryId: 2, paidBy: 3, owedBy: [1, 3, 4] },
-    { id: 4, name: "Buy vegetables", amount: 18.6, createdAt: "2025-10-26", cleared: false, categoryId: 2, paidBy: 1, owedBy: [1, 2, 5] },
-    { id: 5, name: "Restock snacks", amount: 22.4, createdAt: "2025-10-23", cleared: false, categoryId: 2, paidBy: 4, owedBy: [1, 2, 3, 4] },
-    { id: 6, name: "Change air filter", amount: 15.0, createdAt: "2025-10-21", cleared: false, categoryId: 3, paidBy: 5, owedBy: [1, 2, 3, 4, 5] },
-    { id: 7, name: "Check smoke detector", amount: 10.0, createdAt: "2025-10-19", cleared: true, categoryId: 3, paidBy: 2, owedBy: [2, 3, 5] },
-  ]);
-
-  // list of categoryId that is collapsed
-  const [collapsedIds, setCollapsedIds] = useState(new Set(categories.map(category => category.id)));
+  const [categories, setCategories] = useState([]);
+  const [expenses, setExpenses] = useState([]);
+  const [collapsedIds, setCollapsedIds] = useState(new Set());
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const data = await getUsers();
-      setUsers(data);
+    const fetchData = async () => {
+      // Fetch users
+      const usersData = await getUsers();
+      setUsers(usersData);
+
+      // Fetch categories
+      try {
+        const categoriesResponse = await fetch("/api/categories");
+        const categoriesData = await categoriesResponse.json();
+        setCategories(categoriesData);
+        setCollapsedIds(new Set(categoriesData.map(category => category.id)));
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+
+      // Fetch payments
+      try {
+        const paymentsResponse = await fetch(`/api/rooms/${user.roomId}/payments`);
+        const paymentsData = await paymentsResponse.json();
+        setExpenses(paymentsData);
+      } catch (error) {
+        console.error("Error fetching payments:", error);
+      }
     };
-    fetchUsers();
+    fetchData();
   }, []);
 
   const getUserNameSync = (id) => {

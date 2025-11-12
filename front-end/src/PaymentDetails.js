@@ -9,17 +9,6 @@ const PaymentDetails = () => {
 
   // users from API
   const [users, setUsers] = useState([]);
-
-  const [payments, setPayments] = useState([
-    { id: 1, name: "Pay electricity bill", amount: 120.5, createdAt: "2025-10-20", cleared: false, categoryId: 1, paidBy: 1, owedBy: [1, 2, 3, 4, 5] },
-    { id: 2, name: "Refill water filter", amount: 35.0,  createdAt: "2025-10-18", cleared: true,  categoryId: 1, paidBy: 2, owedBy: [1, 2, 3] },
-    { id: 3, name: "Buy milk",            amount: 4.25,  createdAt: "2025-10-25", cleared: true,  categoryId: 2, paidBy: 3, owedBy: [1, 3, 4] },
-    { id: 4, name: "Buy vegetables",      amount: 18.6,  createdAt: "2025-10-26", cleared: false, categoryId: 2, paidBy: 1, owedBy: [1, 2, 5] },
-    { id: 5, name: "Restock snacks",      amount: 22.4,  createdAt: "2025-10-23", cleared: false, categoryId: 2, paidBy: 4, owedBy: [1, 2, 3, 4] },
-    { id: 6, name: "Change air filter",   amount: 15.0,  createdAt: "2025-10-21", cleared: false, categoryId: 3, paidBy: 5, owedBy: [1, 2, 3, 4, 5] },
-    { id: 7, name: "Check smoke detector",amount: 10.0,  createdAt: "2025-10-19", cleared: true,  categoryId: 3, paidBy: 2, owedBy: [2, 3, 5] },
-  ]);
-
   const [payment, setPayment] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -33,8 +22,6 @@ const PaymentDetails = () => {
     owedBy: [],
   });
 
-  const findPayment = (idNum) => payments.find((p) => p.id === idNum) || null;
-
   useEffect(() => {
     const fetchUsers = async () => {
       const data = await getUsers();
@@ -44,23 +31,42 @@ const PaymentDetails = () => {
   }, []);
 
   useEffect(() => {
-    const idNum = Number(paymentId);
-    const fetched = Number.isFinite(idNum) ? findPayment(idNum) : null;
-    setPayment(fetched);
+    const fetchPayment = async () => {
+      const idNum = Number(paymentId);
+      if (!Number.isFinite(idNum)) {
+        setPayment(null);
+        return;
+      }
 
-    if (fetched) {
-      setFormData({
-        id: fetched.id,
-        name: fetched.name,
-        amount: fetched.amount,
-        createdAt: fetched.createdAt,
-        cleared: fetched.cleared,
-        categoryId: fetched.categoryId,
-        paidBy: fetched.paidBy,
-        owedBy: [...fetched.owedBy],
-      });
-    }
-  }, [paymentId, payments]);
+      try {
+        const response = await fetch(`/api/rooms/${user.roomId}/payments/${idNum}`);
+        if (!response.ok) {
+          setPayment(null);
+          return;
+        }
+        const fetched = await response.json();
+        setPayment(fetched);
+
+        if (fetched) {
+          setFormData({
+            id: fetched.id,
+            name: fetched.name,
+            amount: fetched.amount,
+            createdAt: fetched.createdAt,
+            cleared: fetched.cleared,
+            categoryId: fetched.categoryId,
+            paidBy: fetched.paidBy,
+            owedBy: [...fetched.owedBy],
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching payment:", error);
+        setPayment(null);
+      }
+    };
+
+    fetchPayment();
+  }, [paymentId]);
 
   const getUserNameSync = (id) => {
     const foundUser = users.find(u => u.id === id);
@@ -100,13 +106,25 @@ const PaymentDetails = () => {
     });
   };
 
-  const handleSave = () => {
-    // temp, store into local
-    setPayments((prev) =>
-      prev.map((p) => (p.id === formData.id ? { ...p, ...formData } : p))
-    );
-    console.log("Saving payment:", formData);
-    navigate("/payments");
+  const handleSave = async () => {
+    try {
+      const response = await fetch(`/api/rooms/${user.roomId}/payments/${formData.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        console.log("Payment saved successfully");
+        navigate("/payments");
+      } else {
+        console.error("Error saving payment");
+      }
+    } catch (error) {
+      console.error("Error saving payment:", error);
+    }
   };
 
   if (!payment) {
