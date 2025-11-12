@@ -43,11 +43,11 @@ app.post("/api/submit", (req, res) => {
 // USER MANAGEMENT
 // ========================================
 let users = [
-  { id: 1, name: "Brian", roomId: 1 },
-  { id: 2, name: "Ginny", roomId: 1 },
-  { id: 3, name: "Jacob", roomId: 1 },
-  { id: 4, name: "Amish", roomId: 1 },
-  { id: 5, name: "Eslem", roomId: 1 },
+  { id: 1, email: "brian@agile.com", name: "Brian", roomId: 1 },
+  { id: 2, email: "ginny@agile.com", name: "Ginny", roomId: 1 },
+  { id: 3, email: "jacob@agile.com", name: "Jacob", roomId: 1 },
+  { id: 4, email: "amish@agile.com", name: "Amish", roomId: 1 },
+  { id: 5, email: "eslem@agile.com", name: "Eslem", roomId: 1 },
 ]
 
 // GET users for a specific room
@@ -63,6 +63,16 @@ app.post("/api/rooms/:roomId/users", (req, res) => {
   const { name } = req.body
   const newId = Math.max(...users.map(u => u.id), 0) + 1
   const newUser = { id: newId, name: name, roomId: roomId }
+  users.push(newUser)
+  res.json(newUser)
+})
+
+// Disscuss with teammates for future implementation. Good to have common logic
+app.post("/api/rooms/:roomId/user", (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const { name , email } = req.body
+  const newId = Math.max(...users.map(u => u.id), 0) + 1
+  const newUser = { id: newId, name: name, email: email, roomId: roomId }
   users.push(newUser)
   res.json(newUser)
 })
@@ -94,8 +104,22 @@ app.post("/api/users/:userId/assign-room", (req, res) => {
 })
 
 // ========================================
-//
+// ROOM MANAGEMENT
 // ========================================
+app.get("/api/users/:email/room-status", (req, res) => {
+  const email = req.params.email;
+  const foundUser = users.find(u => u.email === email);
+  
+  if (foundUser) {
+    res.json({ 
+      hasRoom: !!foundUser.roomId,
+      roomId: foundUser.roomId 
+    });
+  } else {
+    res.status(404).json({ success: false, message: "User not found" });
+  }
+});
+
 
 export default app
 
