@@ -57,18 +57,9 @@ app.get('/api/rooms/:roomId/users', (req, res) => {
   res.json(roomUsers)
 })
 
-// POST new user to a room
-app.post('/api/rooms/:roomId/users', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const { name } = req.body
-  const newId = Math.max(...users.map(u => u.id), 0) + 1
-  const newUser = { id: newId, name: name, roomId: roomId }
-  users.push(newUser)
-  res.json(newUser)
-})
 
-// Disscuss with teammates for future implementation. Good to have common logic
-app.post("/api/rooms/:roomId/user", (req, res) => {
+// POST new user to a room
+app.post("/api/rooms/:roomId/users", (req, res) => {
   const roomId = parseInt(req.params.roomId)
   const { name , email } = req.body
   const newId = Math.max(...users.map(u => u.id), 0) + 1
@@ -102,6 +93,19 @@ app.post('/api/users/:userId/assign-room', (req, res) => {
     res.status(404).json({ success: false, message: 'User not found' })
   }
 })
+
+// GET user by email
+app.get("/api/users/email/:email", (req, res) => {
+  const email = req.params.email;
+  const foundUser = users.find(u => u.email === email);
+  console.log('Found user:', foundUser);
+  
+  if (foundUser) {
+    res.json(foundUser);
+  } else {
+    res.status(404).json({ success: false, message: "User not found" });
+  }
+});
 
 // ========================================
 // CATEGORIES MANAGEMENT
@@ -233,6 +237,7 @@ app.delete('/api/rooms/:roomId/payments/:id', (req, res) => {
 // ========================================
 // ROOM MANAGEMENT
 // ========================================
+
 app.get("/api/users/:email/room-status", (req, res) => {
   const email = req.params.email;
   const foundUser = users.find(u => u.email === email);

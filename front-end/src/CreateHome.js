@@ -7,6 +7,7 @@ const API_URL = "http://localhost:3000/api";
 export default function CreateHome() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  //roommate added to the list
   const [roommates, setRoommates] = useState([]);
   const [currentUserRoomId, setCurrentUserRoomId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -72,7 +73,8 @@ export default function CreateHome() {
   const addInviteesToExistingRoom = async () => {
     // TODO for sprint 3: Add backend validation to check if invitees assigned to any other room
     for (const roommate of roommates) {
-      if(await checkIfInviteeHasRoom(roommate.email)){
+      const userToAdd = getUserByEmail(roommate.userId);
+      if(await checkIfInviteeHasRoom(roommate.email) && userToAdd !== currentUserRoomId){
         alert(`${roommate.email} is already part of another household`);
         return false;
       }
@@ -105,7 +107,8 @@ export default function CreateHome() {
       }
 
       // TODO for sprint 3: actual add to db
-      await assignUserToRoom(roommate.userId, newRoomId);
+      const userToAdd = getUserByEmail(roommate.email);
+      await assignUserToRoom(userToAdd.userId, newRoomId);
       console.log(`Added ${roommate.name} (${roommate.email}) to new room ${newRoomId}`);
     }
     

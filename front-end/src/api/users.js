@@ -43,8 +43,15 @@ export const getUserById = async id => {
 }
 
 export const getUserByEmail = async (email) => {
-  const users = await getUsers();
-  return users.find(u => u.email === email);
+  try {
+    const response = await fetch(`${API_URL}/users/email/${email}`);
+    if (response.status === 404) return null;
+    const user = await response.json();
+    return user;
+  } catch (error) {
+    console.error('Error fetching user by email:', error);
+    return null;
+  }
 };
 
 export const getUserName = async (id) => {
@@ -54,7 +61,7 @@ export const getUserName = async (id) => {
 
 export const addUser = async (name, email) => {
   try {
-    const response = await fetch(`${API_URL}/rooms/${user.roomId}/user`, {
+    const response = await fetch(`${API_URL}/rooms/${user.roomId}/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

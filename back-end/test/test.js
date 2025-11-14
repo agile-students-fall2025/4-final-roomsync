@@ -61,6 +61,7 @@ describe('POST /api/rooms/:roomId/users', () => {
         expect(res).to.have.status(200)
         expect(res.body).to.have.property('id')
         expect(res.body).to.have.property('name')
+        expect(res.body).to.have.property('email')
         expect(res.body).to.have.property('roomId')
         done()
       })
@@ -89,6 +90,38 @@ describe('POST /api/users/:userId/assign-room', () => {
       .end((err, res) => {
         expect(res).to.have.status(200)
         expect(res.body).to.have.property('success')
+        done()
+      })
+  })
+})
+
+
+//test get user by email
+describe('GET /api/users/email/:email', () => {
+  it('should return user when email exists', done => {
+    request
+      .execute(app)
+      .get('/api/users/email/eslem@agile.com')
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res.body).to.have.property('email').that.equals('eslem@agile.com')
+        expect(res.body).to.be.an('object')
+        expect(res.body).to.have.property('id')
+        expect(res.body).to.have.property('name')
+        expect(res.body).to.have.property('roomId')
+        done()
+      })
+  })
+
+  it('should return 404 when email does not exist', done => {
+    request
+      .execute(app)
+      .get('/api/users/email/nonexistent@example.com')
+      .end((err, res) => {
+        expect(res).to.have.status(404)
+        expect(res.body).to.be.an('object')
+        expect(res.body).to.have.property('success').that.equals(false)
+        expect(res.body).to.have.property('message').that.equals('User not found')
         done()
       })
   })
