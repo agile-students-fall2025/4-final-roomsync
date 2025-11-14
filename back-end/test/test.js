@@ -56,7 +56,7 @@ describe('POST /api/rooms/:roomId/users', () => {
     request
       .execute(app)
       .post('/api/rooms/1/users')
-      .send({ name: 'Test User' })
+      .send({ name: 'Test User', email: 'test email' })
       .end((err, res) => {
         expect(res).to.have.status(200)
         expect(res.body).to.have.property('id')
