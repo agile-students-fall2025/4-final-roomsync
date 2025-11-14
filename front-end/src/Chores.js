@@ -55,6 +55,9 @@ const Chores = props => {
     : chores
   ).sort((a, b) => a.finished - b.finished)
 
+  const notFinishedChores = filteredChores.filter(chore => !chore.finished)
+  const finishedChores = filteredChores.filter(chore => chore.finished)
+
   return (
     <>
       <div className="Chores-container">
@@ -74,7 +77,28 @@ const Chores = props => {
             </label>
           </div>
           <ul className="Chores-list">
-            {filteredChores.map(chore => (
+            {notFinishedChores.map(chore => (
+              <li key={chore.id} className="Chore-item">
+                <div>
+                  <strong>{chore.name}</strong>
+                  <div>Assigned to: {getUserName(chore.assignedTo)}</div>
+                  <div>Status: {chore.finished ? 'Finished' : 'Not finished'}</div>
+                </div>
+
+                <div>
+                  <button onClick={() => toggleFinished(chore.id)}>
+                    {chore.finished ? 'Mark Incomplete' : 'Mark Complete'}
+                  </button>
+                  <Link to={`/chores/edit/${chore.id}`}>
+                    <button style={{ marginLeft: '10px' }}>Edit</button>
+                  </Link>
+                </div>
+              </li>
+            ))}
+            {notFinishedChores.length > 0 && finishedChores.length > 0 && (
+              <hr style={{ margin: '20px 0', border: 'none', borderTop: '2px solid #ddd' }} />
+            )}
+            {finishedChores.map(chore => (
               <li key={chore.id} className="Chore-item">
                 <div>
                   <strong>{chore.name}</strong>
