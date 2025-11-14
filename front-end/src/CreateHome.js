@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './CreateHome.css';
-import { getUsers, assignUserToRoom, user, getUserByEmail, addUserEmail } from './api/users.js';
+import { getUsers, assignUserToRoom, user, getUserByEmail, addUser } from './api/users.js';
 const API_URL = "http://localhost:3000/api";
 
 export default function CreateHome() {
@@ -81,7 +81,7 @@ export default function CreateHome() {
         return false;
       }
       
-      await addUserEmail(roommate.name, roommate.email);
+      await addUser(roommate.name, roommate.email);
       console.log(`Invited ${roommate.name} (${roommate.email}) to room ${currentUserRoomId}`);
     }
     return true;
