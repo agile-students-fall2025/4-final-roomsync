@@ -1,49 +1,70 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import './AddChore.css'
 import { user, getUsers } from './api/users'
 
 const AddChore = props => {
   const navigate = useNavigate()
+  const { id } = useParams()
   const [users, setUsers] = useState([])
+  const [choreName, setChoreName] = useState('')
+  const [assignedTo, setAssignedTo] = useState('')
+  const isEditMode = !!id
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
+      // Fetch users
       const usersData = await getUsers()
       setUsers(usersData)
+
+      // If editing, fetch the chore data
+      if (id) {
+        try {
+          const response = await fetch(`/api/rooms/${user.roomId}/chores/${id}`)
+          const chore = await response.json()
+          setChoreName(chore.name)
+          setAssignedTo(chore.assignedTo.toString())
+        } catch (error) {
+          console.error('Error fetching chore:', error)
+        }
+      }
     }
-    fetchUsers()
-  }, [])
+    fetchData()
+  }, [id])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const formData = new FormData(e.target)
     const choreData = {
-      name: formData.get('name'),
-      assignedTo: parseInt(formData.get('assignedTo'))
+      name: choreName,
+      assignedTo: parseInt(assignedTo)
     }
 
     try {
-      const response = await fetch(`/api/rooms/${user.roomId}/chores`, {
-        method: 'POST',
+      const url = isEditMode
+        ? `/api/rooms/${user.roomId}/chores/${id}`
+        : `/api/rooms/${user.roomId}/chores`
+      const method = isEditMode ? 'PUT' : 'POST'
+
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(choreData),
       })
-      const newChore = await response.json()
-      console.log('New chore created:', newChore)
+      const result = await response.json()
+      console.log(isEditMode ? 'Chore updated:' : 'New chore created:', result)
       navigate('/chores')
     } catch (error) {
-      console.error('Error creating chore:', error)
+      console.error('Error saving chore:', error)
     }
   }
 
   return (
     <>
       <div className="AddChore-container">
-        <h1>Add New Chore</h1>
+        <h1>{isEditMode ? 'Edit Chore' : 'Add New Chore'}</h1>
 
         <form className="AddChore-form" onSubmit={handleSubmit}>
           <div className="form-group">
@@ -53,6 +74,8 @@ const AddChore = props => {
               id="name"
               name="name"
               placeholder="Enter chore name"
+              value={choreName}
+              onChange={(e) => setChoreName(e.target.value)}
               required
             />
           </div>
@@ -62,6 +85,8 @@ const AddChore = props => {
             <select
               id="assignedTo"
               name="assignedTo"
+              value={assignedTo}
+              onChange={(e) => setAssignedTo(e.target.value)}
               required
             >
               <option value="">Select a roommate</option>
@@ -73,7 +98,9 @@ const AddChore = props => {
             </select>
           </div>
 
-          <button type="submit" className="AddChore-button">Add Chore</button>
+          <button type="submit" className="AddChore-button">
+            {isEditMode ? 'Update Chore' : 'Add Chore'}
+          </button>
         </form>
 
         <p className="AddChore-footer">

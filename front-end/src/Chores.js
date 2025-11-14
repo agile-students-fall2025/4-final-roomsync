@@ -82,10 +82,14 @@ const Chores = props => {
                   <div>Status: {chore.finished ? 'Finished' : 'Not finished'}</div>
                 </div>
 
-                {/* toggle for complete */}
-                <button onClick={() => toggleFinished(chore.id)}>
-                  {chore.finished ? 'Mark Incomplete' : 'Mark Complete'}
-                </button>
+                <div>
+                  <button onClick={() => toggleFinished(chore.id)}>
+                    {chore.finished ? 'Mark Incomplete' : 'Mark Complete'}
+                  </button>
+                  <Link to={`/chores/edit/${chore.id}`}>
+                    <button style={{ marginLeft: '10px' }}>Edit</button>
+                  </Link>
+                </div>
               </li>
             ))}
           </ul>
