@@ -1,20 +1,43 @@
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import './AddChore.css'
+import { user, getUsers } from './api/users'
 
 const AddChore = props => {
   const navigate = useNavigate()
+  const [users, setUsers] = useState([])
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const usersData = await getUsers()
+      setUsers(usersData)
+    }
+    fetchUsers()
+  }, [])
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
     const choreData = {
       name: formData.get('name'),
-      assignedTo: formData.get('assignedTo')
+      assignedTo: parseInt(formData.get('assignedTo'))
     }
-    // TODO: Send data to backend
-    console.log('New chore:', choreData)
-    navigate('/chores')
+
+    try {
+      const response = await fetch(`/api/rooms/${user.roomId}/chores`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(choreData),
+      })
+      const newChore = await response.json()
+      console.log('New chore created:', newChore)
+      navigate('/chores')
+    } catch (error) {
+      console.error('Error creating chore:', error)
+    }
   }
 
   return (
@@ -36,13 +59,18 @@ const AddChore = props => {
 
           <div className="form-group">
             <label htmlFor="assignedTo">Assign To:</label>
-            <input
-              type="text"
+            <select
               id="assignedTo"
               name="assignedTo"
-              placeholder="Enter roommate name"
               required
-            />
+            >
+              <option value="">Select a roommate</option>
+              {users.map(u => (
+                <option key={u.id} value={u.id}>
+                  {u.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <button type="submit" className="AddChore-button">Add Chore</button>
