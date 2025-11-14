@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import './AddChore.css'
+import './ChoreDetails.css'
 import { user, getUsers } from './api/users'
 
-const AddChore = props => {
+const ChoreDetails = props => {
   const navigate = useNavigate()
   const { id } = useParams()
   const [users, setUsers] = useState([])
@@ -63,10 +63,10 @@ const AddChore = props => {
 
   return (
     <>
-      <div className="AddChore-container">
+      <div className="ChoreDetails-container">
         <h1>{isEditMode ? 'Edit Chore' : 'Add New Chore'}</h1>
 
-        <form className="AddChore-form" onSubmit={handleSubmit}>
+        <form className="ChoreDetails-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="name">Chore Name:</label>
             <input
@@ -98,12 +98,12 @@ const AddChore = props => {
             </select>
           </div>
 
-          <button type="submit" className="AddChore-button">
+          <button type="submit" className="ChoreDetails-button">
             {isEditMode ? 'Update Chore' : 'Add Chore'}
           </button>
         </form>
 
-        <p className="AddChore-footer">
+        <p className="ChoreDetails-footer">
           <Link to="/chores">Back to Chores</Link>
         </p>
       </div>
@@ -111,4 +111,4 @@ const AddChore = props => {
   )
 }
 
-export default AddChore
+export default ChoreDetails
