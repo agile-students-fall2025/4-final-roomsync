@@ -316,9 +316,9 @@ app.get("/api/users/:email/room-status", (req, res) => {
   const foundUser = users.find(u => u.email === email);
 
   if (foundUser) {
-    res.json({ 
+    res.json({
       hasRoom: !!foundUser.roomId,
-      roomId: foundUser.roomId 
+      roomId: foundUser.roomId
     });
   } else {
     res.status(404).json({ success: false, message: "User not found" });
