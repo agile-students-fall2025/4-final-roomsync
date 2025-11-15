@@ -105,6 +105,62 @@ app.get("/api/users/email/:email", (req, res) => {
   } else {
     res.status(404).json({ success: false, message: "User not found" });
   }
+
+// POST register user 
+app.post('/api/auth/register', (req, res) => {
+  const { email, password, name } = req.body;
+
+  if (!email || !password || !name) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'insufficient data' 
+    });
+  }
+
+  if (password.length < 6) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'insufficient password length' 
+    });
+  }
+
+  if (email.length < 5) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'insufficient email' 
+    });
+  }
+
+  const existingUser = users.find(u => u.email === email);
+  if (existingUser) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'existed user' 
+    });
+  }
+
+  const newId = Math.max(...users.map(u => u.id), 0) + 1; // TODO sprint 3: real logic for new user id
+  
+  const newUser = {
+    id: newId,
+    email: email,
+    password: password,
+    name: name,
+    roomId: null //no room for first time user
+  };
+
+  users.push(newUser);
+
+  res.status(201).json({
+    success: true,
+    message: 'Registration successful',
+    user: {
+      id: newUser.id,
+      email: newUser.email,
+      name: newUser.name,
+      roomId: newUser.roomId
+    }
+  });
 });
 
 // ========================================
@@ -235,17 +291,95 @@ app.delete('/api/rooms/:roomId/payments/:id', (req, res) => {
 })
 
 // ========================================
+// CHORES MANAGEMENT
+// ========================================
+let chores = [
+  { id: 1, name: 'Clean Kitchen', assignedTo: 1, finished: false, roomId: 1 },
+  { id: 2, name: 'Take Out Trash', assignedTo: 5, finished: false, roomId: 1 },
+  { id: 3, name: 'Vacuum Living Room', assignedTo: 3, finished: true, roomId: 1 },
+  { id: 4, name: 'Clean Bathroom', assignedTo: 2, finished: false, roomId: 1 },
+]
+
+// GET all chores for a specific room
+app.get('/api/rooms/:roomId/chores', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const roomChores = chores.filter(c => c.roomId === roomId)
+  res.json(roomChores)
+})
+
+// GET a specific chore by id
+app.get('/api/rooms/:roomId/chores/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const chore = chores.find(c => c.id === id && c.roomId === roomId)
+  if (chore) {
+    res.json(chore)
+  } else {
+    res.status(404).json({ success: false, message: 'Chore not found' })
+  }
+})
+
+// POST new chore to a room
+app.post('/api/rooms/:roomId/chores', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const { name, assignedTo } = req.body
+  const newId = Math.max(...chores.map(c => c.id), 0) + 1
+  const newChore = {
+    id: newId,
+    name,
+    assignedTo: parseInt(assignedTo),
+    finished: false,
+    roomId,
+  }
+  chores.push(newChore)
+  res.json(newChore)
+})
+
+// PUT (update) an existing chore
+app.put('/api/rooms/:roomId/chores/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const { name, assignedTo, finished } = req.body
+
+  const index = chores.findIndex(c => c.id === id && c.roomId === roomId)
+  if (index !== -1) {
+    chores[index] = {
+      ...chores[index],
+      name: name !== undefined ? name : chores[index].name,
+      assignedTo: assignedTo !== undefined ? parseInt(assignedTo) : chores[index].assignedTo,
+      finished: finished !== undefined ? Boolean(finished) : chores[index].finished,
+    }
+    res.json(chores[index])
+  } else {
+    res.status(404).json({ success: false, message: 'Chore not found' })
+  }
+})
+
+// DELETE chore from room
+app.delete('/api/rooms/:roomId/chores/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const index = chores.findIndex(c => c.id === id && c.roomId === roomId)
+  if (index !== -1) {
+    chores.splice(index, 1)
+    res.json({ success: true })
+  } else {
+    res.status(404).json({ success: false, message: 'Chore not found' })
+  }
+})
+
+// ========================================
 // ROOM MANAGEMENT
 // ========================================
 
 app.get("/api/users/:email/room-status", (req, res) => {
   const email = req.params.email;
   const foundUser = users.find(u => u.email === email);
-  
+
   if (foundUser) {
-    res.json({ 
+    res.json({
       hasRoom: !!foundUser.roomId,
-      roomId: foundUser.roomId 
+      roomId: foundUser.roomId
     });
   } else {
     res.status(404).json({ success: false, message: "User not found" });
