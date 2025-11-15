@@ -105,7 +105,7 @@ app.get("/api/users/email/:email", (req, res) => {
   } else {
     res.status(404).json({ success: false, message: "User not found" });
   }
-
+})
 // POST register user 
 app.post('/api/auth/register', (req, res) => {
   const { email, password, name } = req.body;

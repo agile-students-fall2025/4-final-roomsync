@@ -108,6 +108,11 @@ describe('GET /api/users/email/:email', () => {
         expect(res.body).to.be.an('object')
         expect(res.body).to.have.property('id')
         expect(res.body).to.have.property('name')
+      })
+    })
+   })
+
+
 // Chores routes tests
 describe('GET /api/rooms/:roomId/chores', () => {
   it('should return all chores for a room', done => {
@@ -144,6 +149,7 @@ describe('GET /api/rooms/:roomId/chores/:id', () => {
       })
   })
 
+
   it('should return 404 when email does not exist', done => {
     request
       .execute(app)
@@ -153,6 +159,10 @@ describe('GET /api/rooms/:roomId/chores/:id', () => {
         expect(res.body).to.be.an('object')
         expect(res.body).to.have.property('success').that.equals(false)
         expect(res.body).to.have.property('message').that.equals('User not found')
+        done()
+      })
+  })
+  
   it('should return 404 for non-existing chore', done => {
     request
       .execute(app)
@@ -164,6 +174,7 @@ describe('GET /api/rooms/:roomId/chores/:id', () => {
       })
   })
 })
+
 
 describe('POST /api/rooms/:roomId/chores', () => {
   it('should create a new chore', done => {
@@ -287,4 +298,5 @@ describe('POST /api/auth/register', () => {
         done()
       })
   })
-});
+})
+
