@@ -103,6 +103,63 @@ app.post('/api/users/:userId/assign-room', (req, res) => {
   }
 })
 
+// USER REGISTRATION
+app.post('/api/auth/register', (req, res) => {
+  const { email, password, name } = req.body;
+
+  if (!email || !password || !name) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'insufficient data' 
+    });
+  }
+
+  if (password.length < 6) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'insufficient password length' 
+    });
+  }
+
+  if (email.length < 5) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'insufficient email' 
+    });
+  }
+
+  const existingUser = users.find(u => u.email === email);
+  if (existingUser) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'existed user' 
+    });
+  }
+
+  const newId = Math.max(...users.map(u => u.id), 0) + 1; // TODO sprint 3: real logic for new user id
+  
+  const newUser = {
+    id: newId,
+    email: email,
+    password: password,
+    name: name,
+    roomId: null //no room for first time user
+  };
+
+  users.push(newUser);
+
+  res.status(201).json({
+    success: true,
+    message: 'Registration successful',
+    user: {
+      id: newUser.id,
+      email: newUser.email,
+      name: newUser.name,
+      roomId: newUser.roomId
+    }
+  });
+});
+
 // ========================================
 // CATEGORIES MANAGEMENT
 // ========================================
