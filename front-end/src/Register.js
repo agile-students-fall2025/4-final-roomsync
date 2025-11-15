@@ -69,6 +69,13 @@ const Register = props => {
       {error && <p style={{color: 'red'}}>{error}</p>}
       
       <form onSubmit={handleSubmit}>
+        <label className="Login-label">Full Name</label>
+        <input 
+          className="Login-input" 
+          placeholder="name"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <label className="Login-label">Email</label>
         <input 
           className="Login-input" 

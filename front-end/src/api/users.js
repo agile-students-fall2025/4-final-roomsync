@@ -10,8 +10,7 @@
  * - getUserById(id): Get a specific user by ID
  * - getUserByEmail(email): Get a specific user by email
  * - getUserName(id): Get a user's name by ID
- * - addUser(name): Add a new user to the current(existing) room
- * - addUserEmail(email): Add a new user to the current(existing) room by using email
+ * - addUser(name, email): Add a new user to the current(existing) room by using email
  * - removeUser(id): Remove a user from the current(existing) room
  * - assignUserToRoom(userId, roomId): Assign a user to a different room
  * 
@@ -45,8 +44,15 @@ export const getUserById = async id => {
 }
 
 export const getUserByEmail = async (email) => {
-  const users = await getUsers();
-  return users.find(u => u.email === email);
+  try {
+    const response = await fetch(`${API_URL}/users/email/${email}`);
+    if (response.status === 404) return null;
+    const user = await response.json();
+    return user;
+  } catch (error) {
+    console.error('Error fetching user by email:', error);
+    return null;
+  }
 };
 
 export const getUserName = async (id) => {
@@ -54,27 +60,9 @@ export const getUserName = async (id) => {
   return foundUser ? foundUser.name : "Unknown";
 };
 
-
-export const addUser = async (name) => {
+export const addUser = async (name, email) => {
   try {
     const response = await fetch(`${API_URL}/rooms/${user.roomId}/users`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name }),
-    })
-    const newUser = await response.json()
-    return newUser
-  } catch (error) {
-    console.error('Error adding user:', error)
-    return null
-  }
-}
-
-export const addUserEmail = async (name, email) => {
-  try {
-    const response = await fetch(`${API_URL}/rooms/${user.roomId}/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
