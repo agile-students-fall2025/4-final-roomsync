@@ -208,3 +208,60 @@ describe('DELETE /api/rooms/:roomId/chores/:id', () => {
       })
   })
 })
+
+
+//test register
+describe('POST /api/auth/register', () => {
+  it('should register a new user successfully', done => {
+    request
+      .execute(app)
+      .post('/api/auth/register')
+      .send({
+        email: 'newuser@test.com',
+        password: 'password123',
+        name: 'New User'
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(201)
+        expect(res.body).to.have.property('success').that.equals(true)
+        expect(res.body).to.have.property('message').that.equals('Registration successful')
+        expect(res.body.user).to.have.property('id')
+        expect(res.body.user).to.have.property('email').that.equals('newuser@test.com')
+        expect(res.body.user).to.have.property('name').that.equals('New User')
+        expect(res.body.user).to.have.property('roomId').that.is.null
+        done()
+      })
+  })
+
+  it('should reject duplicate email registration', done => {
+    request
+      .execute(app)
+      .post('/api/auth/register')
+      .send({
+        email: 'eslem@agile.com', // Already exists
+        password: 'password123',
+        name: 'Duplicate User'
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400)
+        expect(res.body).to.have.property('success').that.equals(false)
+        done()
+      })
+  })
+
+  it('should reject short password', done => {
+    request
+      .execute(app)
+      .post('/api/auth/register')
+      .send({
+        email: 'shortpass@test.com',
+        password: '123', // Too short
+        name: 'Short Password User'
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400)
+        expect(res.body).to.have.property('success').that.equals(false)
+        done()
+      })
+  })
+});

@@ -23,9 +23,10 @@
  * - POST   /api/users/:userId/assign-room    - Assign user to room
  */
 
+
 const API_URL = '/api'
 
-export const user = { id: 1, name: 'Brian', roomId: 1 }
+export const user = { id: 1, name: 'Brian', email: 'brian@agile.com', roomId: 1, password: '1234'}
 
 export const getUsers = async () => {
   try {
@@ -116,4 +117,28 @@ export const assignUserToRoom = async (userId, roomId) => {
     console.error('Error assigning user to room:', error)
     return false
   }
+}
+
+
+// register the new user
+export const registerUser = async (name, email, password) => {
+  try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          password: password,
+          name: name.trim()
+        }),
+      });
+
+      const result = await response.json();
+
+      return result.success
+    }catch (error) {
+      return false
+    }
 }

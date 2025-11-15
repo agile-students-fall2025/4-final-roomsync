@@ -1,35 +1,64 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import './Login.css'
+import { registerUser, getUserByEmail } from './api/users'
 
 const Register = props => {
-  const[email, setEmail] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [name, setName] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate();
   
-  const handleSubmit = (e) => {
-      e.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
 
-      setError('')
-      if(password !== confirmPassword) {
-        setError('Passwords do not match')
-        return;
-      }
+    if (password !== confirmPassword) {
+      setError('Passwords do not match')
+      setLoading(false)
+      return;
+    }
 
-      if (password.length < 6) {
-        setError('Password must be at least 6 characters');
-        return;
-      }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      setLoading(false)
+      return;
+    }
 
-      if (email.length < 5) {
-        setError('Not valid email input');
-        return;
-      }
-      
-      navigate('/');
+    if (email.length < 5) {
+      setError('Please enter a valid email');
+      setLoading(false)
+      return;
+    }
+
+    if (getUserByEmail(email)){
+      setError('This user already registered')
+      setLoading(false)
+      return;
+    }
+
+    if (!name.trim()) {
+      setError('Name is required');
+      setLoading(false)
+      return;
+    }
+
+
+    const registerStatus = registerUser(name, email, password)
+
+    if (registerStatus !== false){
+      navigate('/')
+    }
+    else{
+      console.log('Failed registration')
+    }
+
+    
   }
 
   return (
