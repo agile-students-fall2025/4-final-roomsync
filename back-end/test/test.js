@@ -108,6 +108,7 @@ describe('GET /api/users/email/:email', () => {
         expect(res.body).to.be.an('object')
         expect(res.body).to.have.property('id')
         expect(res.body).to.have.property('name')
+        done()
       })
     })
    })
