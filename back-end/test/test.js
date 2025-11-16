@@ -301,3 +301,72 @@ describe('POST /api/auth/register', () => {
   })
 })
 
+//test login
+describe('POST /api/auth/login', () => {
+  it('should login user with correct credentials', done => {
+    request
+      .execute(app)
+      .post('/api/auth/login')
+      .send({
+        email: 'eslem@agile.com',
+        password: '819202'
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res.body).to.have.property('success').that.equals(true)
+        expect(res.body).to.have.property('message').that.equals('Login successful')
+        expect(res.body.user).to.have.property('id').that.equals(5)
+        expect(res.body.user).to.have.property('email').that.equals('eslem@agile.com')
+        expect(res.body.user).to.have.property('name').that.equals('Eslem')
+        done()
+      })
+  })
+
+  it('should reject login with wrong password', done => {
+    request
+      .execute(app)
+      .post('/api/auth/login')
+      .send({
+        email: 'brian@agile.com',
+        password: 'wrongpassword'
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(401)
+        expect(res.body).to.have.property('success').that.equals(false)
+        expect(res.body).to.have.property('message').that.equals('Invalid email or password')
+        done()
+      })
+  })
+
+  it('should reject login with non-existent email', done => {
+    request
+      .execute(app)
+      .post('/api/auth/login')
+      .send({
+        email: 'nonexistent@test.com',
+        password: 'password'
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(401)
+        expect(res.body).to.have.property('success').that.equals(false)
+        expect(res.body).to.have.property('message').that.equals('Invalid email or password')
+        done()
+      })
+  })
+
+  it('should require both email and password', done => {
+    request
+      .execute(app)
+      .post('/api/auth/login')
+      .send({
+        email: 'brian@agile.com'
+        // missing password
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400)
+        expect(res.body).to.have.property('success').that.equals(false)
+        expect(res.body).to.have.property('message').that.equals('Email and password are required')
+        done()
+      })
+  })
+})

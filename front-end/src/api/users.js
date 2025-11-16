@@ -25,7 +25,7 @@
 
 const API_URL = '/api'
 
-export const user = { id: 1, name: 'Brian', email: 'brian@agile.com', roomId: 1, password: '1234'}
+export const user = { id: 1, name: 'Brian', email: 'brian@agile.com', password: '123456', roomId: 1}
 
 export const getUsers = async () => {
   try {
@@ -127,6 +127,27 @@ export const registerUser = async (name, email, password) => {
 
       return result.success
     }catch (error) {
+      return false
+    }
+}
+
+export const loginUser = async(email , password) => {
+  try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          password: password,
+        }),
+      });
+
+      const result = await response.json();
+
+      return result.success
+    } catch (error) {
       return false
     }
 }
