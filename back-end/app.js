@@ -43,11 +43,11 @@ app.post('/api/submit', (req, res) => {
 // USER MANAGEMENT
 // ========================================
 let users = [
-  { id: 1, email: "brian@agile.com", name: "Brian", roomId: 1 },
-  { id: 2, email: "ginny@agile.com", name: "Ginny", roomId: 1 },
-  { id: 3, email: "jacob@agile.com", name: "Jacob", roomId: 1 },
-  { id: 4, email: "amish@agile.com", name: "Amish", roomId: 1 },
-  { id: 5, email: "eslem@agile.com", name: "Eslem", roomId: 1 },
+  { id: 1, email: "brian@agile.com", name: "Brian", password: "123456", roomId: 1 },
+  { id: 2, email: "ginny@agile.com", name: "Ginny", password: "789101", roomId: 1 },
+  { id: 3, email: "jacob@agile.com", name: "Jacob", password: "213141", roomId: 1 },
+  { id: 4, email: "amish@agile.com", name: "Amish", password: "516171", roomId: 1 },
+  { id: 5, email: "eslem@agile.com", name: "Eslem", password: "819202", roomId: 1 },
 ]
 
 // GET users for a specific room
@@ -106,6 +106,8 @@ app.get("/api/users/email/:email", (req, res) => {
     res.status(404).json({ success: false, message: "User not found" });
   }
 })
+
+
 // POST register user 
 app.post('/api/auth/register', (req, res) => {
   const { email, password, name } = req.body;
@@ -159,6 +161,45 @@ app.post('/api/auth/register', (req, res) => {
       email: newUser.email,
       name: newUser.name,
       roomId: newUser.roomId
+    }
+  });
+});
+
+//POST user login
+app.post('/api/auth/login', (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Email and password are required' 
+    });
+  }
+
+  const user = users.find(u => u.email === email);
+  
+  if (!user) {
+    return res.status(401).json({ 
+      success: false, 
+      message: 'Invalid email or password' 
+    });
+  }
+
+  if (user.password !== password) {
+    return res.status(401).json({ 
+      success: false, 
+      message: 'Invalid email or password' 
+    });
+  }
+
+  res.json({
+    success: true,
+    message: 'Login successful',
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      roomId: user.roomId
     }
   });
 });

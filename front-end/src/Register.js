@@ -74,7 +74,7 @@ const Register = props => {
           className="Login-input" 
           placeholder="name"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
         />
         <label className="Login-label">Email</label>
         <input 

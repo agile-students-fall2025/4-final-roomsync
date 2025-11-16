@@ -1,15 +1,37 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link , useNavigate } from 'react-router-dom'
 import './Login.css'
+import { loginUser } from './api/users'
 
 const Login = props => {
-    const[email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  
+  const navigate = useNavigate()
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        // TODO: implement login logic
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+
+    // Basic validation
+    if (!email || !password) {
+      setError('Please enter both email and password')
+      setLoading(false)
+      return
     }
+
+    const loginRes = loginUser(email , password);
+
+    if(loginRes !== false){
+        navigate('/')
+    }
+    else{
+        console.log('Wrong email or password');
+    }
+}
 
     return (
         <>
