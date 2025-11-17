@@ -759,6 +759,191 @@ app.get('/api/potential-roommates/:id', (req, res) => {
   res.json(roommate)
 })
 
+// ========================================
+// POTENTIAL ROOMS MANAGEMENT
+// ========================================
+let potentialRooms = [
+  {
+    id: 1,
+    listingName: 'TheBestBuilding',
+    owner: {
+      id: 'amish',
+      name: 'Amish',
+      budget: '$1.2k–$1.6k',
+      areas: ['LES', 'East Village'],
+      tags: ['Non-smoker', 'Dog-friendly', 'Organized'],
+      blurb: 'Works hybrid, cooks often, likes clean common areas.',
+      photo: null,
+      essay: {
+        about: 'Analyst, hybrid schedule. Chill on weeknights.',
+        prefs: 'Split essentials, keep counters clean.',
+        dealbreakers: 'Noise after midnight midweek.'
+      }
+    },
+    location: '123 3rd Ave, New York',
+    monthlyRent: 1600,
+    deposit: null,
+    bedroom: 'studio',
+    bathroom: '1',
+    amenities: ['Wi-Fi', 'Elevator', 'Furnished'],
+    rules: 'no smoking',
+    photo: null
+  },
+  {
+    id: 2,
+    listingName: 'TheGreatestBuilding',
+    owner: {
+      id: 'eslem',
+      name: 'Eslem',
+      budget: '$1.5k–$1.9k',
+      areas: ['Chelsea', 'Flatiron'],
+      tags: ['Student', 'Gym', 'Quiet hours'],
+      blurb: 'Design student. Quiet, focused, weekends social.',
+      photo: null,
+      essay: {
+        about: 'Parsons design student; studio late some nights.',
+        prefs: 'Quiet hours 11pm–7am.',
+        dealbreakers: 'Pets with severe shedding.'
+      }
+    },
+    location: '456 Metropolitan Ave, Brooklyn',
+    monthlyRent: 3000,
+    deposit: null,
+    bedroom: '2',
+    bathroom: '1.5',
+    amenities: ['Elevator', 'Furnished', 'Doorman'],
+    rules: 'no shoes indoor',
+    photo: null
+  }
+]
+
+// GET all potential rooms
+app.get('/api/potential-rooms', (req, res) => {
+  res.json(potentialRooms)
+})
+
+// GET a single potential room by id
+app.get('/api/potential-rooms/:id', (req, res) => {
+  const id = parseInt(req.params.id)
+  const room = potentialRooms.find(r => r.id === id)
+
+  if (!room) {
+    return res.status(404).json({ 
+      success: false, 
+      message: 'Potential room not found' 
+    })
+  }
+
+  res.json(room)
+})
+
+// POST create a new potential room
+app.post('/api/potential-rooms', (req, res) => {
+  const {
+    listingName,
+    owner,
+    location,
+    monthlyRent,
+    deposit,
+    bedroom,
+    bathroom,
+    amenities,
+    rules,
+    photo
+  } = req.body
+
+  if (!listingName || !location || !monthlyRent || !bedroom) {
+    return res.status(400).json({
+      success: false,
+      message: 'listingName, location, monthlyRent, and bedroom are required'
+    })
+  }
+
+  const newId = potentialRooms.length > 0
+    ? Math.max(...potentialRooms.map(r => r.id)) + 1
+    : 1
+
+  const newRoom = {
+    id: newId,
+    listingName,
+    owner: owner || null,
+    location,
+    monthlyRent: Number(monthlyRent),
+    deposit: deposit !== undefined && deposit !== null ? Number(deposit) : null,
+    bedroom,
+    bathroom: bathroom || '1',
+    amenities: Array.isArray(amenities) ? amenities : [],
+    rules: rules || '',
+    photo: photo || null
+  }
+
+  potentialRooms.push(newRoom)
+  res.status(201).json(newRoom)
+})
+
+// PUT update a potential room
+app.put('/api/potential-rooms/:id', (req, res) => {
+  const id = parseInt(req.params.id)
+  const {
+    listingName,
+    owner,
+    location,
+    monthlyRent,
+    deposit,
+    bedroom,
+    bathroom,
+    amenities,
+    rules,
+    photo
+  } = req.body
+
+  const index = potentialRooms.findIndex(r => r.id === id)
+
+  if (index === -1) {
+    return res.status(404).json({ 
+      success: false, 
+      message: 'Potential room not found' 
+    })
+  }
+
+  potentialRooms[index] = {
+    ...potentialRooms[index],
+    listingName: listingName ?? potentialRooms[index].listingName,
+    owner: owner !== undefined ? owner : potentialRooms[index].owner,
+    location: location ?? potentialRooms[index].location,
+    monthlyRent: monthlyRent !== undefined 
+      ? Number(monthlyRent) 
+      : potentialRooms[index].monthlyRent,
+    deposit: deposit !== undefined 
+      ? (deposit !== null ? Number(deposit) : null)
+      : potentialRooms[index].deposit,
+    bedroom: bedroom ?? potentialRooms[index].bedroom,
+    bathroom: bathroom ?? potentialRooms[index].bathroom,
+    amenities: amenities !== undefined
+      ? (Array.isArray(amenities) ? amenities : [])
+      : potentialRooms[index].amenities,
+    rules: rules ?? potentialRooms[index].rules,
+    photo: photo !== undefined ? photo : potentialRooms[index].photo
+  }
+
+  res.json(potentialRooms[index])
+})
+
+// DELETE a potential room
+app.delete('/api/potential-rooms/:id', (req, res) => {
+  const id = parseInt(req.params.id)
+  const index = potentialRooms.findIndex(r => r.id === id)
+
+  if (index === -1) {
+    return res.status(404).json({ 
+      success: false, 
+      message: 'Potential room not found' 
+    })
+  }
+
+  potentialRooms.splice(index, 1)
+  res.json({ success: true })
+})
 //ROOM ESSAY MANAGEMENT
 // POST create new essay
 let roomEssay = [
