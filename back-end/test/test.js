@@ -473,3 +473,87 @@ describe('POST /api/auth/login', () => {
   })
   
 })
+
+
+//test for event calender
+describe('GET /api/rooms/:roomId/events/date/:date', () => {
+  it('should return events for a specific date', done => {
+    request
+      .execute(app)
+      .get('/api/rooms/1/events/date/2025-11-15')
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an('array');
+        // Should return Birthday Party event
+        expect(res.body).to.have.lengthOf(1);
+        expect(res.body[0]).to.have.property('name').that.equals('Birthday Party');
+        expect(res.body[0]).to.have.property('date').that.equals('2025-11-15');
+        expect(res.body[0]).to.have.property('roomId').that.equals(1);
+        done();
+      });
+  });
+
+  it('should return empty array for date with no events', done => {
+    request
+      .execute(app)
+      .get('/api/rooms/1/events/date/2025-11-01') // No events on this date
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body).to.have.lengthOf(0);
+        done();
+      });
+  });
+
+  it('should return events only for specified room', done => {
+    request
+      .execute(app)
+      .get('/api/rooms/999/events/date/2025-11-15') // Different room ID
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body).to.have.lengthOf(0); // No events in room 999
+        done();
+      });
+  });
+});
+
+describe('GET /api/rooms/:roomId/events/month/:year/:month', () => {
+  it('should return events for a specific month', done => {
+    request
+      .execute(app)
+      .get('/api/rooms/1/events/month/2025/10') // November 2025
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an('array');
+        //there are 5 of events in November 2025 (6-1 beacuse the user's event(s) arent there)
+        expect(res.body).to.have.lengthOf(5);
+        
+        // Verify all returned events are in November 2025
+        res.body.forEach(event => {
+          const eventDate = new Date(event.date);
+          expect(eventDate.getFullYear()).to.equal(2025);
+          expect(eventDate.getMonth()).to.equal(10); 
+        });
+        
+        const eventNames = res.body.map(e => e.name);
+        expect(eventNames).to.include('Birthday Party');
+        expect(eventNames).to.include('Study Group');
+        expect(eventNames).to.include('Movie Night');
+        expect(eventNames).to.include('Apartment Inspection');
+        done();
+      });
+  });
+
+  it('should return empty array for month with no events', done => {
+    request
+      .execute(app)
+      .get('/api/rooms/1/events/month/2024/0') // January 2024 - no events
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body).to.have.lengthOf(0);
+        done();
+      });
+  });
+});
