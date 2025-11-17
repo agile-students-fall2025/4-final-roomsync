@@ -408,6 +408,289 @@ app.delete('/api/rooms/:roomId/chores/:id', (req, res) => {
     res.status(404).json({ success: false, message: 'Chore not found' })
   }
 })
+// ========================================
+// COMPATIBILITY FINDER
+// ========================================
+//ROOMMATE ESSAYS MANAGEMENT
+let roommateEssays = [
+  {
+    id: 1,
+    userId: 1,
+    roomId: 1,
+    title: 'Roommate compatibility essay',
+    aboutMe: 'CS student, trains MMA, usually up early and in bed by midnight.',
+    idealRoommate: 'Respectful, clean, quiet on weeknights.',
+    lifestyleDetails: 'Gym in the morning, study at night.',
+    createdAt: '2025-11-01'
+  }
+];
+
+// GET all roommate essays for a room
+app.get('/api/rooms/:roomId/roommate-essays', (req, res) => {
+  const roomId = parseInt(req.params.roomId);
+  const filtered = roommateEssays.filter(e => e.roomId === roomId);
+  res.json(filtered);
+});
+
+// GET a single essay
+app.get('/api/rooms/:roomId/roommate-essays/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId);
+  const id = parseInt(req.params.id);
+  const essay = roommateEssays.find(e => e.id === id && e.roomId === roomId);
+
+  if (!essay) {
+    return res.status(404).json({ success: false, message: 'Essay not found' });
+  }
+
+  res.json(essay);
+});
+
+// POST create new essay
+app.post('/api/rooms/:roomId/roommate-essays', (req, res) => {
+  const roomId = parseInt(req.params.roomId);
+  const { userId, title, aboutMe, idealRoommate, lifestyleDetails } = req.body;
+
+  if (!userId || !title || !aboutMe) {
+    return res.status(400).json({
+      success: false,
+      message: 'userId, title, and aboutMe are required'
+    });
+  }
+
+  const newId = roommateEssays.length > 0
+    ? Math.max(...roommateEssays.map(e => e.id)) + 1
+    : 1;
+
+  const newEssay = {
+    id: newId,
+    userId: parseInt(userId),
+    roomId,
+    title,
+    aboutMe,
+    idealRoommate: idealRoommate || '',
+    lifestyleDetails: lifestyleDetails || '',
+    createdAt: new Date().toISOString().slice(0, 10)
+  };
+
+  roommateEssays.push(newEssay);
+  res.status(201).json(newEssay);
+});
+
+// PUT update essay
+app.put('/api/rooms/:roomId/roommate-essays/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId);
+  const id = parseInt(req.params.id);
+  const { title, aboutMe, idealRoommate, lifestyleDetails } = req.body;
+
+  const index = roommateEssays.findIndex(e => e.id === id && e.roomId === roomId);
+
+  if (index === -1) {
+    return res.status(404).json({ success: false, message: 'Essay not found' });
+  }
+
+  roommateEssays[index] = {
+    ...roommateEssays[index],
+    title: title ?? roommateEssays[index].title,
+    aboutMe: aboutMe ?? roommateEssays[index].aboutMe,
+    idealRoommate: idealRoommate ?? roommateEssays[index].idealRoommate,
+    lifestyleDetails: lifestyleDetails ?? roommateEssays[index].lifestyleDetails
+  };
+
+  res.json(roommateEssays[index]);
+});
+
+// DELETE essay
+app.delete('/api/rooms/:roomId/roommate-essays/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId);
+  const id = parseInt(req.params.id);
+  const index = roommateEssays.findIndex(e => e.id === id && e.roomId === roomId);
+
+  if (index === -1) {
+    return res.status(404).json({ success: false, message: 'Essay not found' });
+  }
+
+  roommateEssays.splice(index, 1);
+  res.json({ success: true });
+});
+
+// AVAILABLE SPACES MANAGEMENT
+let availableSpaces = [
+  {
+    id: 1,
+    roomId: 1,
+    title: 'Sunny room near Union Sq',
+    neighborhood: 'Union Square / 14th St',
+    rent: 1600,
+    deposit: 1600,
+    startDate: '2025-12-01',
+    endDate: '',
+    roomType: 'Private',
+    amenities: ['Wi-Fi', 'Laundry', 'A/C'],
+    houseRules: 'Quiet on weeknights, no indoor smoking, guests with heads-up.',
+    idealRoommateTags: ['student', 'tidy', 'early riser'],
+    createdAt: '2025-11-01',
+  },
+]
+
+// GET all available spaces for a room
+app.get('/api/rooms/:roomId/available-spaces', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const filtered = availableSpaces.filter((s) => s.roomId === roomId)
+  res.json(filtered)
+})
+
+// GET a single available space
+app.get('/api/rooms/:roomId/available-spaces/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const space = availableSpaces.find((s) => s.id === id && s.roomId === roomId)
+
+  if (!space) {
+    return res
+      .status(404)
+      .json({ success: false, message: 'Space not found' })
+  }
+
+  res.json(space)
+})
+
+// POST create a new available space
+app.post('/api/rooms/:roomId/available-spaces', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const {
+    title,
+    neighborhood,
+    rent,
+    deposit,
+    startDate,
+    endDate,
+    roomType,
+    amenities,
+    houseRules,
+    idealRoommateTags,
+  } = req.body
+
+  if (!title || !neighborhood || !rent || !roomType) {
+    return res.status(400).json({
+      success: false,
+      message: 'title, neighborhood, rent, and roomType are required',
+    })
+  }
+
+  const newId =
+    availableSpaces.length > 0
+      ? Math.max(...availableSpaces.map((s) => s.id)) + 1
+      : 1
+
+  const newSpace = {
+    id: newId,
+    roomId,
+    title,
+    neighborhood,
+    rent: Number(rent),
+    deposit:
+      deposit !== undefined && deposit !== null && deposit !== ''
+        ? Number(deposit)
+        : 0,
+    startDate: startDate || '',
+    endDate: endDate || '',
+    roomType,
+    amenities: Array.isArray(amenities) ? amenities : [],
+    houseRules: houseRules || '',
+    idealRoommateTags: Array.isArray(idealRoommateTags)
+      ? idealRoommateTags
+      : typeof idealRoommateTags === 'string' && idealRoommateTags.length > 0
+        ? idealRoommateTags.split(',').map((t) => t.trim()).filter(Boolean)
+        : [],
+    createdAt: new Date().toISOString().slice(0, 10),
+  }
+
+  availableSpaces.push(newSpace)
+  res.status(201).json(newSpace)
+})
+
+// PUT update an available space
+app.put('/api/rooms/:roomId/available-spaces/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const {
+    title,
+    neighborhood,
+    rent,
+    deposit,
+    startDate,
+    endDate,
+    roomType,
+    amenities,
+    houseRules,
+    idealRoommateTags,
+  } = req.body
+
+  const index = availableSpaces.findIndex(
+    (s) => s.id === id && s.roomId === roomId
+  )
+
+  if (index === -1) {
+    return res
+      .status(404)
+      .json({ success: false, message: 'Space not found' })
+  }
+
+  availableSpaces[index] = {
+    ...availableSpaces[index],
+    title: title ?? availableSpaces[index].title,
+    neighborhood: neighborhood ?? availableSpaces[index].neighborhood,
+    rent:
+      rent !== undefined ? Number(rent) : availableSpaces[index].rent,
+    deposit:
+      deposit !== undefined
+        ? Number(deposit)
+        : availableSpaces[index].deposit,
+    startDate: startDate ?? availableSpaces[index].startDate,
+    endDate: endDate ?? availableSpaces[index].endDate,
+    roomType: roomType ?? availableSpaces[index].roomType,
+    amenities:
+      amenities !== undefined
+        ? Array.isArray(amenities)
+          ? amenities
+          : []
+        : availableSpaces[index].amenities,
+    houseRules: houseRules ?? availableSpaces[index].houseRules,
+    idealRoommateTags:
+      idealRoommateTags !== undefined
+        ? Array.isArray(idealRoommateTags)
+          ? idealRoommateTags
+          : typeof idealRoommateTags === 'string' &&
+            idealRoommateTags.length > 0
+            ? idealRoommateTags
+                .split(',')
+                .map((t) => t.trim())
+                .filter(Boolean)
+            : []
+        : availableSpaces[index].idealRoommateTags,
+  }
+
+  res.json(availableSpaces[index])
+})
+
+// DELETE an available space
+app.delete('/api/rooms/:roomId/available-spaces/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const index = availableSpaces.findIndex(
+    (s) => s.id === id && s.roomId === roomId
+  )
+
+  if (index === -1) {
+    return res
+      .status(404)
+      .json({ success: false, message: 'Space not found' })
+  }
+
+  availableSpaces.splice(index, 1)
+  res.json({ success: true })
+})
+
 
 // ========================================
 // EVENTS MANAGEMENT
@@ -415,12 +698,72 @@ app.delete('/api/rooms/:roomId/chores/:id', (req, res) => {
 
 // Mock events data
 let events = [
-  { id: 1, name: 'Birthday Party', date: '2025-11-15', roomId: 1, createdBy: 1, description: 'Celebrate with friends!' },
-  { id: 2, name: 'Study Group', date: '2025-11-10', roomId: 1, createdBy: 2, description: 'CS study session.' },
-  { id: 3, name: 'Movie Night', date: '2025-11-08', roomId: 1, createdBy: 3, description: 'Movie + snacks in the living room.' },
-  { id: 4, name: 'Apartment Inspection', date: '2025-11-20', roomId: 1, createdBy: 1, description: 'Landlord inspection.' },
-  { id: 5, name: 'Rent Due', date: '2025-12-01', roomId: 1, createdBy: 4, description: 'Monthly rent payment reminder.' },
-  { id: 6, name: 'Holiday Party', date: '2025-12-15', roomId: 1, createdBy: 5, description: 'End-of-year party.' },
+  {
+    id: 1,
+    name: 'Birthday Party',
+    location: 'Living Room',
+    date: '2025-11-15',
+    time: '18:00',
+    roomId: 1,
+    createdBy: 1,
+    attendees: [1, 2],
+    description: 'Celebrate with friends!',
+  },
+  {
+    id: 2,
+    name: 'Study Group',
+    location: 'Library',
+    date: '2025-11-10',
+    time: '14:00',
+    roomId: 1,
+    createdBy: 2,
+    attendees: [2],
+    description: 'CS study session.',
+  },
+  {
+    id: 3,
+    name: 'Movie Night',
+    location: 'Living Room',
+    date: '2025-11-08',
+    time: '20:00',
+    roomId: 1,
+    createdBy: 3,
+    attendees: [1, 3, 4],
+    description: 'Movie + snacks in the living room.',
+  },
+  {
+    id: 4,
+    name: 'Apartment Inspection',
+    location: 'Entire Apartment',
+    date: '2025-11-20',
+    time: '10:00',
+    roomId: 1,
+    createdBy: 1,
+    attendees: [],
+    description: 'Landlord inspection.',
+  },
+  {
+    id: 5,
+    name: 'Rent Due',
+    location: 'Online Payment Portal',
+    date: '2025-12-01',
+    time: '09:00',
+    roomId: 1,
+    createdBy: 4,
+    attendees: [],
+    description: 'Monthly rent payment reminder.',
+  },
+  {
+    id: 6,
+    name: 'Holiday Party',
+    location: 'Common Area',
+    date: '2025-12-15',
+    time: '19:00',
+    roomId: 1,
+    createdBy: 5,
+    attendees: [1, 2, 3, 4, 5],
+    description: 'End-of-year party.',
+  },
 ]
 
 app.get('/api/rooms/:roomId/events', (req, res) => {
@@ -468,6 +811,94 @@ app.get('/api/rooms/:roomId/events/month/:year/:month', (req, res) => {
   
   res.json(monthEvents);
 });
+app.put('/api/rooms/:roomId/events/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const { name, location, date, time, description } = req.body
+
+  const index = events.findIndex(e => e.id === id && e.roomId === roomId)
+
+  if (index === -1) {
+    return res.status(404).json({ success: false, message: 'Event not found' })
+  }
+
+  events[index] = {
+    ...events[index],
+    name: name !== undefined ? name : events[index].name,
+    location: location !== undefined ? location : events[index].location,
+    date: date !== undefined ? date : events[index].date,
+    time: time !== undefined ? time : events[index].time,
+    description: description !== undefined ? description : events[index].description,
+  }
+
+  res.json(events[index])
+})
+
+app.post('/api/rooms/:roomId/events/:id/attendance', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const { userId, isAttending } = req.body
+
+  const index = events.findIndex(e => e.id === id && e.roomId === roomId)
+
+  if (index === -1) {
+    return res.status(404).json({ success: false, message: 'Event not found' })
+  }
+
+  const attendingUserId = parseInt(userId)
+  const event = events[index]
+
+  if (!Array.isArray(event.attendees)) {
+    event.attendees = []
+  }
+
+  const isAlreadyAttending = event.attendees.includes(attendingUserId)
+
+  if (isAttending && !isAlreadyAttending) {
+    event.attendees.push(attendingUserId)
+  } else if (!isAttending && isAlreadyAttending) {
+    event.attendees = event.attendees.filter(uid => uid !== attendingUserId)
+  }
+
+  res.json({ success: true, event: events[index] })
+})
+
+app.post('/api/rooms/:roomId/events', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const { name, location, date, time, description, createdBy } = req.body
+
+  const newId = Math.max(...events.map(e => e.id), 0) + 1
+
+  const newEvent = {
+    id: newId,
+    name,
+    location,
+    date,
+    time,
+    description: description || '',
+    roomId,
+    createdBy: parseInt(createdBy),
+    attendees: [parseInt(createdBy)], 
+  }
+
+  events.push(newEvent)
+  res.status(201).json(newEvent)
+})
+
+// delete is optional for now, going to implement it later, need to discuss wiht the team
+app.delete('/api/rooms/:roomId/events/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+
+  const index = events.findIndex(e => e.id === id && e.roomId === roomId)
+
+  if (index === -1) {
+    return res.status(404).json({ success: false, message: 'Event not found' })
+  }
+
+  events.splice(index, 1)
+  res.json({ success: true })
+})
 
 // ========================================
 // ROOM MANAGEMENT
