@@ -610,6 +610,87 @@ app.post('/api/rooms/:roomId/available-spaces', (req, res) => {
   res.status(201).json(newSpace)
 })
 
+// PUT update an available space
+app.put('/api/rooms/:roomId/available-spaces/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const {
+    title,
+    neighborhood,
+    rent,
+    deposit,
+    startDate,
+    endDate,
+    roomType,
+    amenities,
+    houseRules,
+    idealRoommateTags,
+  } = req.body
+
+  const index = availableSpaces.findIndex(
+    (s) => s.id === id && s.roomId === roomId
+  )
+
+  if (index === -1) {
+    return res
+      .status(404)
+      .json({ success: false, message: 'Space not found' })
+  }
+
+  availableSpaces[index] = {
+    ...availableSpaces[index],
+    title: title ?? availableSpaces[index].title,
+    neighborhood: neighborhood ?? availableSpaces[index].neighborhood,
+    rent:
+      rent !== undefined ? Number(rent) : availableSpaces[index].rent,
+    deposit:
+      deposit !== undefined
+        ? Number(deposit)
+        : availableSpaces[index].deposit,
+    startDate: startDate ?? availableSpaces[index].startDate,
+    endDate: endDate ?? availableSpaces[index].endDate,
+    roomType: roomType ?? availableSpaces[index].roomType,
+    amenities:
+      amenities !== undefined
+        ? Array.isArray(amenities)
+          ? amenities
+          : []
+        : availableSpaces[index].amenities,
+    houseRules: houseRules ?? availableSpaces[index].houseRules,
+    idealRoommateTags:
+      idealRoommateTags !== undefined
+        ? Array.isArray(idealRoommateTags)
+          ? idealRoommateTags
+          : typeof idealRoommateTags === 'string' &&
+            idealRoommateTags.length > 0
+            ? idealRoommateTags
+                .split(',')
+                .map((t) => t.trim())
+                .filter(Boolean)
+            : []
+        : availableSpaces[index].idealRoommateTags,
+  }
+
+  res.json(availableSpaces[index])
+})
+
+// DELETE an available space
+app.delete('/api/rooms/:roomId/available-spaces/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const index = availableSpaces.findIndex(
+    (s) => s.id === id && s.roomId === roomId
+  )
+
+  if (index === -1) {
+    return res
+      .status(404)
+      .json({ success: false, message: 'Space not found' })
+  }
+
+  availableSpaces.splice(index, 1)
+  res.json({ success: true })
+})
 
 
 // ========================================
