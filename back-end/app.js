@@ -513,6 +513,185 @@ app.delete('/api/rooms/:roomId/roommate-essays/:id', (req, res) => {
   res.json({ success: true });
 });
 
+// AVAILABLE SPACES MANAGEMENT
+let availableSpaces = [
+  {
+    id: 1,
+    roomId: 1,
+    title: 'Sunny room near Union Sq',
+    neighborhood: 'Union Square / 14th St',
+    rent: 1600,
+    deposit: 1600,
+    startDate: '2025-12-01',
+    endDate: '',
+    roomType: 'Private',
+    amenities: ['Wi-Fi', 'Laundry', 'A/C'],
+    houseRules: 'Quiet on weeknights, no indoor smoking, guests with heads-up.',
+    idealRoommateTags: ['student', 'tidy', 'early riser'],
+    createdAt: '2025-11-01',
+  },
+]
+
+// GET all available spaces for a room
+app.get('/api/rooms/:roomId/available-spaces', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const filtered = availableSpaces.filter((s) => s.roomId === roomId)
+  res.json(filtered)
+})
+
+// GET a single available space
+app.get('/api/rooms/:roomId/available-spaces/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const space = availableSpaces.find((s) => s.id === id && s.roomId === roomId)
+
+  if (!space) {
+    return res
+      .status(404)
+      .json({ success: false, message: 'Space not found' })
+  }
+
+  res.json(space)
+})
+
+// POST create a new available space
+app.post('/api/rooms/:roomId/available-spaces', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const {
+    title,
+    neighborhood,
+    rent,
+    deposit,
+    startDate,
+    endDate,
+    roomType,
+    amenities,
+    houseRules,
+    idealRoommateTags,
+  } = req.body
+
+  if (!title || !neighborhood || !rent || !roomType) {
+    return res.status(400).json({
+      success: false,
+      message: 'title, neighborhood, rent, and roomType are required',
+    })
+  }
+
+  const newId =
+    availableSpaces.length > 0
+      ? Math.max(...availableSpaces.map((s) => s.id)) + 1
+      : 1
+
+  const newSpace = {
+    id: newId,
+    roomId,
+    title,
+    neighborhood,
+    rent: Number(rent),
+    deposit:
+      deposit !== undefined && deposit !== null && deposit !== ''
+        ? Number(deposit)
+        : 0,
+    startDate: startDate || '',
+    endDate: endDate || '',
+    roomType,
+    amenities: Array.isArray(amenities) ? amenities : [],
+    houseRules: houseRules || '',
+    idealRoommateTags: Array.isArray(idealRoommateTags)
+      ? idealRoommateTags
+      : typeof idealRoommateTags === 'string' && idealRoommateTags.length > 0
+        ? idealRoommateTags.split(',').map((t) => t.trim()).filter(Boolean)
+        : [],
+    createdAt: new Date().toISOString().slice(0, 10),
+  }
+
+  availableSpaces.push(newSpace)
+  res.status(201).json(newSpace)
+})
+
+// PUT update an available space
+app.put('/api/rooms/:roomId/available-spaces/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const {
+    title,
+    neighborhood,
+    rent,
+    deposit,
+    startDate,
+    endDate,
+    roomType,
+    amenities,
+    houseRules,
+    idealRoommateTags,
+  } = req.body
+
+  const index = availableSpaces.findIndex(
+    (s) => s.id === id && s.roomId === roomId
+  )
+
+  if (index === -1) {
+    return res
+      .status(404)
+      .json({ success: false, message: 'Space not found' })
+  }
+
+  availableSpaces[index] = {
+    ...availableSpaces[index],
+    title: title ?? availableSpaces[index].title,
+    neighborhood: neighborhood ?? availableSpaces[index].neighborhood,
+    rent:
+      rent !== undefined ? Number(rent) : availableSpaces[index].rent,
+    deposit:
+      deposit !== undefined
+        ? Number(deposit)
+        : availableSpaces[index].deposit,
+    startDate: startDate ?? availableSpaces[index].startDate,
+    endDate: endDate ?? availableSpaces[index].endDate,
+    roomType: roomType ?? availableSpaces[index].roomType,
+    amenities:
+      amenities !== undefined
+        ? Array.isArray(amenities)
+          ? amenities
+          : []
+        : availableSpaces[index].amenities,
+    houseRules: houseRules ?? availableSpaces[index].houseRules,
+    idealRoommateTags:
+      idealRoommateTags !== undefined
+        ? Array.isArray(idealRoommateTags)
+          ? idealRoommateTags
+          : typeof idealRoommateTags === 'string' &&
+            idealRoommateTags.length > 0
+            ? idealRoommateTags
+                .split(',')
+                .map((t) => t.trim())
+                .filter(Boolean)
+            : []
+        : availableSpaces[index].idealRoommateTags,
+  }
+
+  res.json(availableSpaces[index])
+})
+
+// DELETE an available space
+app.delete('/api/rooms/:roomId/available-spaces/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+  const index = availableSpaces.findIndex(
+    (s) => s.id === id && s.roomId === roomId
+  )
+
+  if (index === -1) {
+    return res
+      .status(404)
+      .json({ success: false, message: 'Space not found' })
+  }
+
+  availableSpaces.splice(index, 1)
+  res.json({ success: true })
+})
+
+
 // ========================================
 // EVENTS MANAGEMENT
 // ========================================
