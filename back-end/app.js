@@ -410,6 +410,39 @@ app.delete('/api/rooms/:roomId/chores/:id', (req, res) => {
 })
 
 // ========================================
+// EVENTS MANAGEMENT
+// ========================================
+
+// Mock events data
+let events = [
+  { id: 1, name: 'Birthday Party', date: '2025-11-15', roomId: 1, createdBy: 1, description: 'Celebrate with friends!' },
+  { id: 2, name: 'Study Group', date: '2025-11-10', roomId: 1, createdBy: 2, description: 'CS study session.' },
+  { id: 3, name: 'Movie Night', date: '2025-11-08', roomId: 1, createdBy: 3, description: 'Movie + snacks in the living room.' },
+  { id: 4, name: 'Apartment Inspection', date: '2025-11-20', roomId: 1, createdBy: 1, description: 'Landlord inspection.' },
+  { id: 5, name: 'Rent Due', date: '2025-12-01', roomId: 1, createdBy: 4, description: 'Monthly rent payment reminder.' },
+  { id: 6, name: 'Holiday Party', date: '2025-12-15', roomId: 1, createdBy: 5, description: 'End-of-year party.' },
+]
+
+app.get('/api/rooms/:roomId/events', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const roomEvents = events.filter(e => e.roomId === roomId)
+  res.json(roomEvents)
+})
+
+app.get('/api/rooms/:roomId/events/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId)
+  const id = parseInt(req.params.id)
+
+  const event = events.find(e => e.id === id && e.roomId === roomId)
+
+  if (!event) {
+    return res.status(404).json({ success: false, message: 'Event not found' })
+  }
+
+  res.json(event)
+})
+
+// ========================================
 // ROOM MANAGEMENT
 // ========================================
 

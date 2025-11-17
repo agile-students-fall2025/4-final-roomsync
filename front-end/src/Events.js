@@ -1,30 +1,41 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Events.css'
+import { user, getUsers } from './api/users'
 
 const Events = props => {
   const navigate = useNavigate()
-  
-  
-  const [yourEvents, setYourEvents] = useState([
-    { id: 1, name: 'Birthday Party', date: '2025-11-15' },
-    { id: 2, name: 'Study Group', date: '2025-11-10' },
-    { id: 3, name: 'Movie Night', date: '2025-11-08' }
-  ])
 
-  const [upcomingEvents, setUpcomingEvents] = useState([
-    { id: 4, name: 'Apartment Inspection', date: '2025-11-20' },
-    { id: 5, name: 'Rent Due', date: '2025-12-01' },
-    { id: 6, name: 'Holiday Party', date: '2025-12-15' }
-  ])
+  const [events, setEvents] = useState([])
+  const [selectedEventId, setSelectedEventId] = useState(null)
 
-  const [selectedEventId, setSelectedEventId] = useState(1) 
+  // Fetch events from the Express backend when component mounts
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch(`/api/rooms/${user.roomId}/events`)
+        const data = await res.json()
+        setEvents(data)
+        if (data.length > 0) {
+          setSelectedEventId(data[0].id)
+        }
+      } catch (err) {
+        console.error('Error fetching events:', err)
+      }
+    }
 
-  const handleEdit = (eventId) => {
+    fetchEvents()
+  }, [])
+
+  // Split into "Your Events" and "Upcoming Events" based on createdBy
+  const yourEvents = events.filter(e => e.createdBy === user.id)
+  const upcomingEvents = events.filter(e => e.createdBy !== user.id)
+
+  const handleEdit = eventId => {
     navigate(`/events/${eventId}`)
   }
 
-  const handleEventClick = (eventId) => {
+  const handleEventClick = eventId => {
     setSelectedEventId(eventId)
   }
 
@@ -41,17 +52,19 @@ const Events = props => {
         <h2>Your Events</h2>
         <ul className="Events-list">
           {yourEvents.map(event => (
-            <li 
-              key={event.id} 
-              className={`Event-item ${selectedEventId === event.id ? 'selected' : ''}`}
+            <li
+              key={event.id}
+              className={`Event-item ${
+                selectedEventId === event.id ? 'selected' : ''
+              }`}
               onClick={() => handleEventClick(event.id)}
             >
               <span className="Event-name">{event.name}</span>
               <span className="Event-date">{event.date}</span>
-              <button 
+              <button
                 className="Edit-button"
-                onClick={(e) => {
-                  e.stopPropagation() 
+                onClick={e => {
+                  e.stopPropagation()
                   handleEdit(event.id)
                 }}
               >
@@ -66,16 +79,18 @@ const Events = props => {
         <h2>Upcoming Events</h2>
         <ul className="Events-list">
           {upcomingEvents.map(event => (
-            <li 
-              key={event.id} 
-              className={`Event-item ${selectedEventId === event.id ? 'selected' : ''}`}
+            <li
+              key={event.id}
+              className={`Event-item ${
+                selectedEventId === event.id ? 'selected' : ''
+              }`}
               onClick={() => handleEventClick(event.id)}
             >
               <span className="Event-name">{event.name}</span>
               <span className="Event-date">{event.date}</span>
-              <button 
+              <button
                 className="Edit-button"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation()
                   handleEdit(event.id)
                 }}

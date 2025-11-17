@@ -244,6 +244,44 @@ describe('DELETE /api/rooms/:roomId/chores/:id', () => {
   })
 })
 
+// ========================================
+// EVENTS API TESTS
+// ========================================
+
+describe('Events API', () => {
+
+  it('GET /api/rooms/:roomId/events should return an array of events', done => {
+    request
+      .execute(app)
+      .get('/api/rooms/1/events')
+      .end((err, res) => {
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an('array')
+        // if there is at least one event, check a few fields
+        if (res.body.length > 0) {
+          expect(res.body[0]).to.have.property('id')
+          expect(res.body[0]).to.have.property('name')
+          expect(res.body[0]).to.have.property('date')
+          expect(res.body[0]).to.have.property('roomId')
+        }
+        done()
+      })
+  })
+
+  it('GET /api/rooms/:roomId/events/:id should return 404 for missing event', done => {
+    request
+      .execute(app)
+      .get('/api/rooms/1/events/99999') // id that should not exist
+      .end((err, res) => {
+        expect(res).to.have.status(404)
+        expect(res.body).to.have.property('success').that.equals(false)
+        expect(res.body).to.have.property('message')
+        done()
+      })
+  })
+
+})
 
 //test register
 describe('POST /api/auth/register', () => {
@@ -369,4 +407,5 @@ describe('POST /api/auth/login', () => {
         done()
       })
   })
+  
 })
