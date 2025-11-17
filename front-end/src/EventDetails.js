@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './EventDetails.css'
-import { user } from "./api/users";
+import { user } from './api/users'
 
 const EventDetails = props => {
   const navigate = useNavigate()
-  const { eventId } = useParams() 
-  
-  // Mock event data, not hardcoded, just for testing frontend and stakeholder video
+  const { eventId } = useParams()
+
   const [event, setEvent] = useState(null)
   const [isEditable, setIsEditable] = useState(false)
   const [isAttending, setIsAttending] = useState(false)
@@ -15,62 +14,98 @@ const EventDetails = props => {
     name: '',
     location: '',
     date: '',
-    time: ''
+    time: '',
   })
 
-  
   useEffect(() => {
-    const mockEvents = {
-      '1': { 
-        id: 1, 
-        name: 'Birthday Party', 
-        location: 'Living Room',
-        date: '2025-11-15',
-        time: '18:00',
-        createdBy: 1, 
-        attendees: [1, 2] 
-      },
-      '2': { 
-        id: 2, 
-        name: 'Study Group', 
-        location: 'Library',
-        date: '2025-11-10',
-        time: '14:00',
-        createdBy: 2,
-        attendees: [2]
+    const fetchEvent = async () => {
+      try {
+        const res = await fetch(`/api/rooms/${user.roomId}/events/${eventId}`)
+        if (!res.ok) {
+          console.error('Failed to fetch event details')
+          navigate('/events')
+          return
+        }
+
+        const fetchedEvent = await res.json()
+        setEvent(fetchedEvent)
+
+        setFormData({
+          name: fetchedEvent.name || '',
+          location: fetchedEvent.location || '',
+          date: fetchedEvent.date || '',
+          time: fetchedEvent.time || '',
+        })
+
+        setIsEditable(fetchedEvent.createdBy === user.id)
+        setIsAttending(
+          Array.isArray(fetchedEvent.attendees)
+            ? fetchedEvent.attendees.includes(user.id)
+            : false
+        )
+      } catch (err) {
+        console.error('Error fetching event details:', err)
       }
     }
-    
-    const fetchedEvent = mockEvents[eventId]
-    if (fetchedEvent) {
-      setEvent(fetchedEvent)
-      setFormData({
-        name: fetchedEvent.name,
-        location: fetchedEvent.location,
-        date: fetchedEvent.date,
-        time: fetchedEvent.time
-      })
-      setIsEditable(fetchedEvent.createdBy === user.id)
-      setIsAttending(fetchedEvent.attendees.includes(user.id))
-    }
-  }, [eventId, user.id])
 
-  const handleInputChange = (e) => {
+    fetchEvent()
+  }, [eventId, user.roomId, user.id, navigate])
+
+  const handleInputChange = e => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
-  const handleAttendanceChange = (e) => {
-    setIsAttending(e.target.checked)
+  const handleAttendanceChange = async (e) => {
+    const newAttendanceStatus = e.target.checked
+    setIsAttending(newAttendanceStatus)
+
+    try {
+      const res = await fetch(`/api/rooms/${user.roomId}/events/${eventId}/attendance`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          isAttending: newAttendanceStatus,
+        }),
+      })
+
+      if (!res.ok) {
+        console.error('Failed to update attendance')
+        setIsAttending(!newAttendanceStatus)
+      }
+    } catch (err) {
+      console.error('Error updating attendance:', err)
+      setIsAttending(!newAttendanceStatus)
+    }
   }
 
-  const handleSave = () => {
-    console.log('Saving event:', formData)
-    console.log('Attendance status:', isAttending)
-    navigate('/events')
+  const handleSave = async () => {
+    try {
+      const res = await fetch(`/api/rooms/${user.roomId}/events/${eventId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (!res.ok) {
+        console.error('Failed to save event changes')
+        return
+      }
+
+      const updatedEvent = await res.json()
+      setEvent(updatedEvent)
+      navigate('/events')
+    } catch (err) {
+      console.error('Error saving event:', err)
+    }
   }
 
   if (!event) {
@@ -88,7 +123,7 @@ const EventDetails = props => {
 
       <section className="EventDetails-section">
         <h2>Edit Event Information</h2>
-        
+
         <div className="form-group">
           <label htmlFor="name">Event Name:</label>
           <input
@@ -144,7 +179,7 @@ const EventDetails = props => {
 
       <section className="EventDetails-section">
         <h2>Attendance</h2>
-        
+
         <div className="attendance-checkbox">
           <input
             type="checkbox"
