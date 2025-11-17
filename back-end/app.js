@@ -740,6 +740,25 @@ let potentialRoommates = [
   },
 ]
 
+// GET all potential roommates
+app.get('/api/potential-roommates', (req, res) => {
+  res.json(potentialRoommates)
+})
+
+// GET a single potential roommate by id
+app.get('/api/potential-roommates/:id', (req, res) => {
+  const id = parseInt(req.params.id)
+  const roommate = potentialRoommates.find((r) => r.id === id)
+
+  if (!roommate) {
+    return res
+      .status(404)
+      .json({ success: false, message: 'Potential roommate not found' })
+  }
+
+  res.json(roommate)
+})
+
 
 // ========================================
 // EVENTS MANAGEMENT
