@@ -410,6 +410,111 @@ app.delete('/api/rooms/:roomId/chores/:id', (req, res) => {
 })
 
 // ========================================
+// COMPATIBILITY FINDER
+// ========================================
+//ROOMMATE ESSAYS MANAGEMENT
+let roommateEssays = [
+  {
+    id: 1,
+    userId: 1,
+    roomId: 1,
+    title: 'Roommate compatibility essay',
+    aboutMe: 'CS student, trains MMA, usually up early and in bed by midnight.',
+    idealRoommate: 'Respectful, clean, quiet on weeknights.',
+    lifestyleDetails: 'Gym in the morning, study at night.',
+    createdAt: '2025-11-01'
+  }
+];
+
+// GET all roommate essays for a room
+app.get('/api/rooms/:roomId/roommate-essays', (req, res) => {
+  const roomId = parseInt(req.params.roomId);
+  const filtered = roommateEssays.filter(e => e.roomId === roomId);
+  res.json(filtered);
+});
+
+// GET a single essay
+app.get('/api/rooms/:roomId/roommate-essays/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId);
+  const id = parseInt(req.params.id);
+  const essay = roommateEssays.find(e => e.id === id && e.roomId === roomId);
+
+  if (!essay) {
+    return res.status(404).json({ success: false, message: 'Essay not found' });
+  }
+
+  res.json(essay);
+});
+
+// POST create new essay
+app.post('/api/rooms/:roomId/roommate-essays', (req, res) => {
+  const roomId = parseInt(req.params.roomId);
+  const { userId, title, aboutMe, idealRoommate, lifestyleDetails } = req.body;
+
+  if (!userId || !title || !aboutMe) {
+    return res.status(400).json({
+      success: false,
+      message: 'userId, title, and aboutMe are required'
+    });
+  }
+
+  const newId = roommateEssays.length > 0
+    ? Math.max(...roommateEssays.map(e => e.id)) + 1
+    : 1;
+
+  const newEssay = {
+    id: newId,
+    userId: parseInt(userId),
+    roomId,
+    title,
+    aboutMe,
+    idealRoommate: idealRoommate || '',
+    lifestyleDetails: lifestyleDetails || '',
+    createdAt: new Date().toISOString().slice(0, 10)
+  };
+
+  roommateEssays.push(newEssay);
+  res.status(201).json(newEssay);
+});
+
+// PUT update essay
+app.put('/api/rooms/:roomId/roommate-essays/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId);
+  const id = parseInt(req.params.id);
+  const { title, aboutMe, idealRoommate, lifestyleDetails } = req.body;
+
+  const index = roommateEssays.findIndex(e => e.id === id && e.roomId === roomId);
+
+  if (index === -1) {
+    return res.status(404).json({ success: false, message: 'Essay not found' });
+  }
+
+  roommateEssays[index] = {
+    ...roommateEssays[index],
+    title: title ?? roommateEssays[index].title,
+    aboutMe: aboutMe ?? roommateEssays[index].aboutMe,
+    idealRoommate: idealRoommate ?? roommateEssays[index].idealRoommate,
+    lifestyleDetails: lifestyleDetails ?? roommateEssays[index].lifestyleDetails
+  };
+
+  res.json(roommateEssays[index]);
+});
+
+// DELETE essay
+app.delete('/api/rooms/:roomId/roommate-essays/:id', (req, res) => {
+  const roomId = parseInt(req.params.roomId);
+  const id = parseInt(req.params.id);
+  const index = roommateEssays.findIndex(e => e.id === id && e.roomId === roomId);
+
+  if (index === -1) {
+    return res.status(404).json({ success: false, message: 'Essay not found' });
+  }
+
+  roommateEssays.splice(index, 1);
+  res.json({ success: true });
+});
+
+// ========================================
 // EVENTS MANAGEMENT
 // ========================================
 
