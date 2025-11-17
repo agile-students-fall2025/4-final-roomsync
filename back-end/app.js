@@ -442,6 +442,33 @@ app.get('/api/rooms/:roomId/events/:id', (req, res) => {
   res.json(event)
 })
 
+// GET events for a specific date
+app.get('/api/rooms/:roomId/events/date/:date', (req, res) => {
+  const roomId = parseInt(req.params.roomId);
+  const date = req.params.date; // YYYY-MM-DD format
+  
+  const dayEvents = events.filter(event => 
+    event.roomId === roomId && event.date === date
+  );
+  res.json(dayEvents);
+});
+
+// GET events for a specific month
+app.get('/api/rooms/:roomId/events/month/:year/:month', (req, res) => {
+  const roomId = parseInt(req.params.roomId);
+  const year = parseInt(req.params.year);
+  const month = parseInt(req.params.month);
+  
+  const monthEvents = events.filter(event => {
+    if (event.roomId !== roomId) return false;
+    
+    const eventDate = new Date(event.date);
+    return eventDate.getFullYear() === year && eventDate.getMonth() === month;
+  });
+  
+  res.json(monthEvents);
+});
+
 // ========================================
 // ROOM MANAGEMENT
 // ========================================
