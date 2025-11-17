@@ -244,43 +244,107 @@ describe('DELETE /api/rooms/:roomId/chores/:id', () => {
   })
 })
 
-// ========================================
-// EVENTS API TESTS
-// ========================================
 
-describe('Events API', () => {
+// event test
+describe('More EventDetails Tests', () => {
+  
+  it('should remove user from attendees', done => {
+    request
+      .execute(app)
+      .post('/api/rooms/1/events/1/attendance')
+      .send({ userId: 1, isAttending: false })
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res.body.event.attendees).to.not.include(1)
+        done()
+      })
+  })
 
-  it('GET /api/rooms/:roomId/events should return an array of events', done => {
+  it('should create a new event', done => {
+    request
+      .execute(app)
+      .post('/api/rooms/1/events')
+      .send({
+        name: 'Test Event',
+        location: 'Test Room',
+        date: '2025-12-01',
+        time: '14:00',
+        createdBy: 1
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(201)
+        expect(res.body).to.have.property('id')
+        expect(res.body.name).to.equal('Test Event')
+        expect(res.body.attendees).to.include(1)
+        done()
+      })
+  })
+
+  it('should delete an event', done => {
+    request
+      .execute(app)
+      .delete('/api/rooms/1/events/5')
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res.body.success).to.equal(true)
+        done()
+      })
+  })
+
+  it('should return 404 for non-existing event', done => {
+    request
+      .execute(app)
+      .get('/api/rooms/1/events/9999')
+      .end((err, res) => {
+        expect(res).to.have.status(404)
+        expect(res.body.success).to.equal(false)
+        done()
+      })
+  })
+
+  it('should update only date and time', done => {
+    request
+      .execute(app)
+      .put('/api/rooms/1/events/2')
+      .send({ date: '2025-12-25', time: '20:00' })
+      .end((err, res) => {
+        expect(res).to.have.status(200)
+        expect(res.body.date).to.equal('2025-12-25')
+        expect(res.body.time).to.equal('20:00')
+        done()
+      })
+  })
+
+  it('should return all events for a room', done => {
     request
       .execute(app)
       .get('/api/rooms/1/events')
       .end((err, res) => {
-        expect(err).to.be.null
         expect(res).to.have.status(200)
         expect(res.body).to.be.an('array')
-        // if there is at least one event, check a few fields
-        if (res.body.length > 0) {
-          expect(res.body[0]).to.have.property('id')
-          expect(res.body[0]).to.have.property('name')
-          expect(res.body[0]).to.have.property('date')
-          expect(res.body[0]).to.have.property('roomId')
-        }
+        expect(res.body.length).to.be.greaterThan(0)
         done()
       })
   })
 
-  it('GET /api/rooms/:roomId/events/:id should return 404 for missing event', done => {
+  it('should not add user twice to attendees', done => {
     request
       .execute(app)
-      .get('/api/rooms/1/events/99999') // id that should not exist
-      .end((err, res) => {
-        expect(res).to.have.status(404)
-        expect(res.body).to.have.property('success').that.equals(false)
-        expect(res.body).to.have.property('message')
-        done()
+      .post('/api/rooms/1/events/3/attendance')
+      .send({ userId: 4, isAttending: true })
+      .end(() => {
+        request
+          .execute(app)
+          .post('/api/rooms/1/events/3/attendance')
+          .send({ userId: 4, isAttending: true })
+          .end((err, res) => {
+            expect(res).to.have.status(200)
+            const count = res.body.event.attendees.filter(id => id === 4).length
+            expect(count).to.equal(1)
+            done()
+          })
       })
   })
-
 })
 
 //test register
