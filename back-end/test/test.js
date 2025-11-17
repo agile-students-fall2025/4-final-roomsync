@@ -473,3 +473,114 @@ describe('POST /api/auth/login', () => {
   })
   
 })
+
+describe('PROFILE API', () => {
+  it('GET /api/users/:userId/profile should return an existing profile with community', done => {
+    request
+      .execute(app)
+      .get('/api/users/1/profile')
+      .end((err, res) => {
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an('object')
+        expect(res.body).to.have.property('userId').that.equals(1)
+        expect(res.body).to.have.property('skills').that.is.an('array')
+        expect(res.body).to.have.property('isPublic')
+        expect(res.body).to.have.property('community')
+        done()
+      })
+  })
+
+  it('PUT /api/users/:userId/profile should update about, community, and isPublic', done => {
+    const updates = {
+      about: 'I love cooking and watching movies.',
+      isPublic: false,
+      community: 'Downtown Brooklyn'
+    }
+
+    request
+      .execute(app)
+      .put('/api/users/1/profile')
+      .send(updates)
+      .end((err, res) => {
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res.body).to.have.property('userId').that.equals(1)
+        expect(res.body).to.have.property('about').that.equals(updates.about)
+        expect(res.body).to.have.property('isPublic').that.equals(false)
+        expect(res.body).to.have.property('community').that.equals('Downtown Brooklyn')
+        done()
+      })
+  })
+
+  it('POST /api/users/:userId/profile should reject creating a profile if it already exists', done => {
+    request
+      .execute(app)
+      .post('/api/users/1/profile')
+      .send({
+        about: 'This should not be created',
+        isPublic: true,
+        community: 'Somewhere'
+      })
+      .end((err, res) => {
+        expect(res).to.have.status(400)
+        expect(res.body).to.be.an('object')
+        expect(res.body).to.have.property('success').that.equals(false)
+        expect(res.body).to.have.property('message').that.equals('Profile already exists')
+        done()
+      })
+  })
+
+  it('POST /api/users/:userId/profile should create a new profile for a new userId', done => {
+    const newProfile = {
+      about: 'New user profile',
+      skills: ['Reading', 'Music'],
+      isPublic: true,
+      community: 'Midtown West'
+    }
+
+    request
+      .execute(app)
+      .post('/api/users/99/profile')
+      .send(newProfile)
+      .end((err, res) => {
+        expect(err).to.be.null
+        expect(res).to.have.status(201)
+        expect(res.body).to.be.an('object')
+        expect(res.body).to.have.property('userId').that.equals(99)
+        expect(res.body).to.have.property('about').that.equals(newProfile.about)
+        expect(res.body).to.have.property('skills').that.is.an('array')
+        expect(res.body.skills).to.include('Reading')
+        expect(res.body).to.have.property('isPublic').that.equals(true)
+        expect(res.body).to.have.property('community').that.equals('Midtown West')
+        done()
+      })
+  })
+
+  it('DELETE /api/users/:userId/profile should delete an existing profile', done => {
+    request
+      .execute(app)
+      .delete('/api/users/99/profile')
+      .end((err, res) => {
+        expect(err).to.be.null
+        expect(res).to.have.status(200)
+        expect(res.body).to.be.an('object')
+        expect(res.body).to.have.property('success').that.equals(true)
+        done()
+      })
+  })
+
+  it('PUT /api/users/:userId/profile should return 404 for non-existing profile', done => {
+    request
+      .execute(app)
+      .put('/api/users/12345/profile')
+      .send({ about: 'Does not exist' })
+      .end((err, res) => {
+        expect(res).to.have.status(404)
+        expect(res.body).to.be.an('object')
+        expect(res.body).to.have.property('success').that.equals(false)
+        expect(res.body).to.have.property('message').that.equals('Profile not found')
+        done()
+      })
+  })
+})
