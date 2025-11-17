@@ -111,3 +111,15 @@ This naming convention helps us track which task belongs to which user story.
    cd ../back-end
    npm install
    ```
+## Back-end Development
+
+Our back-end is a simple Express server located in the `back-end` directory.
+
+### Running the Back-end
+
+From the project root:
+
+```bash
+cd back-end
+npm install
+npm start        
