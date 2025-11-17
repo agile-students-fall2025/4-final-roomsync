@@ -410,9 +410,9 @@ app.delete('/api/rooms/:roomId/chores/:id', (req, res) => {
 })
 
 // ========================================
-// COMPATIBILITY – ROOMMATE ESSAYS
+// COMPATIBILITY FINDER
 // ========================================
-
+//ROOMMATE ESSAYS MANAGEMENT
 let roommateEssays = [
   {
     id: 1,
