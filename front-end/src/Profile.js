@@ -1,47 +1,95 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import './Profile.css'
+import { user } from './api/users'
 
 const Profile = props => {
-  const navigate = useNavigate()
-  
-  
-  const [user] = useState({
-    id: 1,
-    name: 'John Doe',
-    community: 'Midtown West',
-    profilePicture: null, 
-    about: '',
-    skills: ['Guitar', 'Cooking', 'Photography'],
-    isPublic: true
-  })
-
-  const [isEditing, setIsEditing] = useState(false)
-  const [editedUser, setEditedUser] = useState(user)
+  const [profile, setProfile] = useState(null)
   const [isSkillsOpen, setIsSkillsOpen] = useState(false)
 
-  const handleInputChange = (e) => {
+  const [formData, setFormData] = useState({
+    about: '',
+    isPublic: true,
+    community: '',
+  })
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch(`/api/users/${user.id}/profile`)
+
+        if (!res.ok) {
+          console.error('Failed to fetch profile')
+          return
+        }
+
+        const data = await res.json()
+        setProfile(data)
+        setFormData({
+          about: data.about || '',
+          isPublic: data.isPublic ?? true,
+          community: data.community || '',
+        })
+      } catch (err) {
+        console.error('Error fetching profile:', err)
+      }
+    }
+
+    fetchProfile()
+  }, [])
+
+  const handleInputChange = e => {
     const { name, value } = e.target
-    setEditedUser(prev => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
-  const handlePrivacyChange = (isPublic) => {
-    setEditedUser(prev => ({
+  const handlePrivacyChange = isPublic => {
+    setFormData(prev => ({
       ...prev,
-      isPublic: isPublic
+      isPublic,
     }))
   }
 
   const toggleSkillsDropdown = () => {
-    setIsSkillsOpen(!isSkillsOpen)
+    setIsSkillsOpen(prev => !prev)
   }
 
-  const handleSave = () => {
-    console.log('Saving profile:', editedUser)
-    setIsEditing(false)
+  const handleSave = async () => {
+    try {
+      const res = await fetch(`/api/users/${user.id}/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          about: formData.about,
+          isPublic: formData.isPublic,
+          community: formData.community,
+        }),
+      })
+
+      if (!res.ok) {
+        console.error('Failed to save profile changes')
+        return
+      }
+
+      const updatedProfile = await res.json()
+      setProfile(updatedProfile)
+      setFormData({
+        about: updatedProfile.about || '',
+        isPublic: updatedProfile.isPublic ?? true,
+        community: updatedProfile.community || '',
+      })
+      console.log('Profile saved:', updatedProfile)
+    } catch (err) {
+      console.error('Error saving profile:', err)
+    }
+  }
+
+  if (!profile) {
+    return <div className="Profile-container">Loading profile...</div>
   }
 
   return (
@@ -53,23 +101,34 @@ const Profile = props => {
       <div className="Profile-content">
         <div className="Profile-top">
           <div className="Profile-picture">
-            {user.profilePicture ? (
-              <img src={user.profilePicture} alt="Profile" />
+            {profile.profilePicture ? (
+              <img src={profile.profilePicture} alt="Profile" />
             ) : (
               <div className="picture-placeholder">Picture</div>
             )}
           </div>
           <div className="Profile-info">
             <h2>{user.name}</h2>
-            <p>Community: {user.community}</p>
+            <p>Community: {formData.community || 'Not set'}</p>
           </div>
+        </div>
+
+        <div className="Profile-section">
+          <label>Community</label>
+          <input
+            type="text"
+            name="community"
+            value={formData.community}
+            onChange={handleInputChange}
+            placeholder="e.g. Midtown West"
+          />
         </div>
 
         <div className="Profile-section">
           <label>About me</label>
           <textarea
             name="about"
-            value={editedUser.about}
+            value={formData.about}
             onChange={handleInputChange}
             placeholder="Tell us about yourself..."
             rows="4"
@@ -79,7 +138,7 @@ const Profile = props => {
         <div className="Profile-section">
           <label>My skills</label>
           <div className="Skills-dropdown">
-            <button 
+            <button
               className="Skills-header"
               onClick={toggleSkillsDropdown}
             >
@@ -88,7 +147,7 @@ const Profile = props => {
             </button>
             {isSkillsOpen && (
               <div className="Skills-list">
-                {user.skills.map((skill, index) => (
+                {(profile.skills || []).map((skill, index) => (
                   <div key={index} className="skill-item">
                     {skill}
                   </div>
@@ -108,7 +167,7 @@ const Profile = props => {
               <input
                 type="radio"
                 name="privacy"
-                checked={editedUser.isPublic === true}
+                checked={formData.isPublic === true}
                 onChange={() => handlePrivacyChange(true)}
               />
               <span>Public</span>
@@ -117,7 +176,7 @@ const Profile = props => {
               <input
                 type="radio"
                 name="privacy"
-                checked={editedUser.isPublic === false}
+                checked={formData.isPublic === false}
                 onChange={() => handlePrivacyChange(false)}
               />
               <span>Private</span>
@@ -126,6 +185,12 @@ const Profile = props => {
           <p className="privacy-note">
             Public profile allows other people to see your profile when you add a skill to the calendar
           </p>
+        </div>
+
+        <div className="Profile-section">
+          <button className="Save-button" onClick={handleSave}>
+            Save Changes
+          </button>
         </div>
       </div>
     </div>
