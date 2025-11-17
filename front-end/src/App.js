@@ -68,7 +68,7 @@ const App = props => {
             <Route path="/compatibility/roommate/potentialroommate/:id" element={<PotentialRoommateProfile />} />
             <Route path="/compatibility/room/essay" element={<StartEssayForRoom />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/compatibility/roommate/potentialrooms" element={<PotentialRooms />} />
+            <Route path="/compatibility/room/potentialrooms" element={<PotentialRooms />} />
             <Route path="/compatibility/room/potentialroom/:id" element={<PotentialRoomProfile />} />
           </Routes>
         </main>

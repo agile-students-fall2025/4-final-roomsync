@@ -69,7 +69,7 @@ const StartEssayForRoom = () => {
         throw new Error(body.message || 'Failed to save essay');
       }
 
-      navigate('/compatibility/roommate/space');
+      navigate('/compatibility/room/potentialrooms');
     } catch (err) {
       setError(err.message || 'Failed saving your essay.');
     } finally {
