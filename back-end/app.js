@@ -944,6 +944,69 @@ app.delete('/api/potential-rooms/:id', (req, res) => {
   potentialRooms.splice(index, 1)
   res.json({ success: true })
 })
+//ROOM ESSAY MANAGEMENT
+// POST create new essay
+let roomEssay = [
+  {
+    id: 1,
+    title: 'xxx',
+    neighborhood: 'West Village',
+    minPrice: 2000,
+    maxPrice: 4000,
+    startDate: '2026-01-01',
+    endDate: '2027-01-01',
+    roomType: 'Private',
+    bedroomSelected: '1',
+    bathroomSelected: '2',
+    amenities: ['Gym', 'Doorman'],
+    createdAt: '2025-11-01',
+  },
+]
+app.post('/api/user/:userId/room-essays', (req, res) => {
+  const userIdFromUrl = parseInt(req.params.userId);
+  const {  
+    title,
+    location,
+    minPrice,
+    maxPrice,
+    startDate,
+    endDate,
+    roomType,
+    bedroomSelected,
+    bathroomSelected,
+    amenities 
+  } = req.body;
+
+  if (!userId || !title) {
+    return res.status(400).json({
+      success: false,
+      message: 'userId and title are required'
+    });
+  }
+
+  const newId = roomEssay.length > 0
+    ? Math.max(...roomEssay.map(e => e.id)) + 1
+    : 1;
+
+  const newEssay = {
+    id: newId,
+    userId: userIdFromUrl,
+    title,
+    location,
+    minPrice,
+    maxPrice,
+    startDate,
+    endDate,
+    roomType,
+    bedroomSelected,
+    bathroomSelected,
+    amenities,
+    createdAt: new Date().toISOString().slice(0, 10)
+  };
+
+  roommateEssays.push(newEssay);
+  res.status(201).json(newEssay);
+});
 
 
 // ========================================
