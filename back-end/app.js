@@ -760,7 +760,7 @@ app.get('/api/potential-roommates/:id', (req, res) => {
 })
 
 // ========================================
-// POTENTIAL ROOMS MANAGEMENT
+// LOOING FOR MANAGEMENT
 // ========================================
 let potentialRooms = [
   {
@@ -962,9 +962,54 @@ let roomEssay = [
     createdAt: '2025-11-01',
   },
 ]
+// ========================================
+// ROOM ESSAYS MANAGEMENT
+// ========================================
+let roomEssays = [
+  {
+    id: 1,
+    userId: 1,
+    title: 'Room compatibility essay',
+    location: 'East Village',
+    minPrice: 1200,
+    maxPrice: 1800,
+    startDate: '2025-12-01',
+    endDate: '2026-06-01',
+    roomType: 'Private',
+    bedroomSelected: '1',
+    bathroomSelected: '1+',
+    amenities: ['Wi-Fi', 'Laundry', 'A/C'],
+    createdAt: '2025-11-01'
+  }
+]
+
+// GET all room essays for a user
+app.get('/api/user/:userId/room-essays', (req, res) => {
+  const userId = parseInt(req.params.userId)
+  const userEssays = roomEssays.filter(e => e.userId === userId)
+  res.json(userEssays)
+})
+
+// GET a single room essay by id
+app.get('/api/user/:userId/room-essays/:id', (req, res) => {
+  const userId = parseInt(req.params.userId)
+  const id = parseInt(req.params.id)
+  const essay = roomEssays.find(e => e.id === id && e.userId === userId)
+
+  if (!essay) {
+    return res.status(404).json({ 
+      success: false, 
+      message: 'Room essay not found' 
+    })
+  }
+
+  res.json(essay)
+})
+
+// POST create a new room essay
 app.post('/api/user/:userId/room-essays', (req, res) => {
-  const userIdFromUrl = parseInt(req.params.userId);
-  const {  
+  const userId = parseInt(req.params.userId)
+  const {
     title,
     location,
     minPrice,
@@ -974,23 +1019,45 @@ app.post('/api/user/:userId/room-essays', (req, res) => {
     roomType,
     bedroomSelected,
     bathroomSelected,
-    amenities 
-  } = req.body;
+    amenities
+  } = req.body
 
-  if (!userId || !title) {
+  if (!title || !location) {
     return res.status(400).json({
       success: false,
-      message: 'userId and title are required'
-    });
+      message: 'title and location are required'
+    })
   }
 
-  const newId = roomEssay.length > 0
-    ? Math.max(...roomEssay.map(e => e.id)) + 1
-    : 1;
+  const newId = roomEssays.length > 0
+    ? Math.max(...roomEssays.map(e => e.id)) + 1
+    : 1
 
   const newEssay = {
     id: newId,
-    userId: userIdFromUrl,
+    userId,
+    title,
+    location,
+    minPrice: minPrice ? Number(minPrice) : null,
+    maxPrice: maxPrice ? Number(maxPrice) : null,
+    startDate: startDate || '',
+    endDate: endDate || '',
+    roomType: roomType || 'Private',
+    bedroomSelected: bedroomSelected || 'Any',
+    bathroomSelected: bathroomSelected || 'Any',
+    amenities: Array.isArray(amenities) ? amenities : [],
+    createdAt: new Date().toISOString().slice(0, 10)
+  }
+
+  roomEssays.push(newEssay)
+  res.status(201).json(newEssay)
+})
+
+// PUT update a room essay
+app.put('/api/user/:userId/room-essays/:id', (req, res) => {
+  const userId = parseInt(req.params.userId)
+  const id = parseInt(req.params.id)
+  const {
     title,
     location,
     minPrice,
@@ -1000,14 +1067,57 @@ app.post('/api/user/:userId/room-essays', (req, res) => {
     roomType,
     bedroomSelected,
     bathroomSelected,
-    amenities,
-    createdAt: new Date().toISOString().slice(0, 10)
-  };
+    amenities
+  } = req.body
 
-  roommateEssays.push(newEssay);
-  res.status(201).json(newEssay);
-});
+  const index = roomEssays.findIndex(e => e.id === id && e.userId === userId)
 
+  if (index === -1) {
+    return res.status(404).json({ 
+      success: false, 
+      message: 'Room essay not found' 
+    })
+  }
+
+  roomEssays[index] = {
+    ...roomEssays[index],
+    title: title ?? roomEssays[index].title,
+    location: location ?? roomEssays[index].location,
+    minPrice: minPrice !== undefined 
+      ? (minPrice ? Number(minPrice) : null)
+      : roomEssays[index].minPrice,
+    maxPrice: maxPrice !== undefined 
+      ? (maxPrice ? Number(maxPrice) : null)
+      : roomEssays[index].maxPrice,
+    startDate: startDate ?? roomEssays[index].startDate,
+    endDate: endDate ?? roomEssays[index].endDate,
+    roomType: roomType ?? roomEssays[index].roomType,
+    bedroomSelected: bedroomSelected ?? roomEssays[index].bedroomSelected,
+    bathroomSelected: bathroomSelected ?? roomEssays[index].bathroomSelected,
+    amenities: amenities !== undefined
+      ? (Array.isArray(amenities) ? amenities : [])
+      : roomEssays[index].amenities
+  }
+
+  res.json(roomEssays[index])
+})
+
+// DELETE a room essay
+app.delete('/api/user/:userId/room-essays/:id', (req, res) => {
+  const userId = parseInt(req.params.userId)
+  const id = parseInt(req.params.id)
+  const index = roomEssays.findIndex(e => e.id === id && e.userId === userId)
+
+  if (index === -1) {
+    return res.status(404).json({ 
+      success: false, 
+      message: 'Room essay not found' 
+    })
+  }
+
+  roomEssays.splice(index, 1)
+  res.json({ success: true })
+})
 
 // ========================================
 // EVENTS MANAGEMENT
