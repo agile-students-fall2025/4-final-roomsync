@@ -246,7 +246,7 @@ describe('DELETE /api/rooms/:roomId/chores/:id', () => {
 
 
 // event test
-describe('More EventDetails Tests', () => {
+describe('Events API', () => {
   
   it('should remove user from attendees', done => {
     request
