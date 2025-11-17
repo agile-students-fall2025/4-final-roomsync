@@ -66,3 +66,42 @@ Nexus is a mobile-friendly web application with three core modules that work tog
   * [Brian Chen](https://github.com/shrimpforfree)
     
 _Note: Scrum Master and Product Owner roles rotate each sprint so everyone gets experience in each role._
+
+## How to Run RoomSync Locally
+
+Follow these steps to set up and run both the front-end and back-end on your local machine.
+
+---
+
+## 1. Prerequisites
+
+Make sure you have:
+
+- **Node.js** (LTS recommended) → https://nodejs.org  
+- **npm** (comes with Node)
+- **Git**
+
+---
+
+## 2. Setting Up Your Local Environment
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/agile-students-fall2025/4-final-roomsync.git
+   cd 4-final-roomsync
+   ```
+
+2. **Install and run front-end dependencies**
+   ```bash
+   cd front-end
+   npm install
+   npm run
+   ```
+
+3. **Install, run, and test back-end dependencies**
+   ```bash
+   cd ../back-end
+   npm install
+   npm start
+   npm test
+   ```
