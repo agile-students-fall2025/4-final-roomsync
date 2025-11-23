@@ -20,3 +20,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+# logs and databases 
+*.log
+*.sql
+*.sqlite

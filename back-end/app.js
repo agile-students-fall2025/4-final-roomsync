@@ -1,19 +1,32 @@
 import express from 'express'
-const app = express()
 import path from 'path'
+import mongoose from 'mongoose'
 import { fileURLToPath } from 'url'
+import dotenv from 'dotenv'
+dotenv.config({ silent: true })
+//jwt middlewares
+import jwt from 'jsonwebtoken'
+import jwtStrategy from './config/jwt-config.js' // import setup options for using JWT in passport
+import passport from 'passport'
+import cookieParser from 'cookie-parser';
+import cors from 'cors'
+import morgan from 'morgan'
+
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-import multer from 'multer'
-import axios from 'axios'
-import dotenv from 'dotenv'
-dotenv.config({ silent: true })
-import morgan from 'morgan'
+const app = express()
 
+passport.use(jwtStrategy)
+app.use(passport.initialize())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
+
+app.use(morgan('dev', { skip: (req, res) => process.env.NODE_ENV === 'test' })) // log all incoming requests, except when in unit test mode.  morgan has a few logging default styles - dev is a nice concise color-coded style
+app.use(cors({ origin: process.env.FRONT_END_DOMAIN, credentials: true })) // allow incoming requests only from a "trusted" host
+
 
 // basic route
 app.get('/', (req, res) => {
@@ -38,6 +51,27 @@ app.post('/api/submit', (req, res) => {
     },
   })
 })
+
+//Call models here
+import cookieRoutes from './routes/cookie-routes.js'
+
+
+// ========================================
+// COOKIE CONNECTION
+// ========================================
+app.use('/cookie', cookieRoutes())
+
+// ========================================
+// MONGOOSE CONNECTION
+// ========================================
+try {
+  // mongoose.connect(process.env.MONGODB_URI) will enable when we do the connection
+  console.log(`Connecting to MongoDB at ${process.env.MONGODB_URI}`)
+} catch (err) {
+  console.log(
+    `Error connecting to MongoDB user account authentication will fail: ${err}`
+  )
+}
 
 // ========================================
 // USER MANAGEMENT
@@ -109,61 +143,7 @@ app.get("/api/users/email/:email", (req, res) => {
 
 
 // POST register user 
-app.post('/api/auth/register', (req, res) => {
-  const { email, password, name } = req.body;
-
-  if (!email || !password || !name) {
-    return res.status(400).json({ 
-      success: false, 
-      message: 'insufficient data' 
-    });
-  }
-
-  if (password.length < 6) {
-    return res.status(400).json({ 
-      success: false, 
-      message: 'insufficient password length' 
-    });
-  }
-
-  if (email.length < 5) {
-    return res.status(400).json({ 
-      success: false, 
-      message: 'insufficient email' 
-    });
-  }
-
-  const existingUser = users.find(u => u.email === email);
-  if (existingUser) {
-    return res.status(400).json({ 
-      success: false, 
-      message: 'existed user' 
-    });
-  }
-
-  const newId = Math.max(...users.map(u => u.id), 0) + 1; // TODO sprint 3: real logic for new user id
-  
-  const newUser = {
-    id: newId,
-    email: email,
-    password: password,
-    name: name,
-    roomId: null //no room for first time user
-  };
-
-  users.push(newUser);
-
-  res.status(201).json({
-    success: true,
-    message: 'Registration successful',
-    user: {
-      id: newUser.id,
-      email: newUser.email,
-      name: newUser.name,
-      roomId: newUser.roomId
-    }
-  });
-});
+// app.use('/api/auth/register', authRoutes); // need to complete auth-routes
 
 //POST user login
 app.post('/api/auth/login', (req, res) => {
@@ -1469,9 +1449,4 @@ app.delete('/api/users/:userId/profile', (req, res) => {
   res.json({ success: true })
 })
 
-export default app
-
-const port = 3000
-app.listen(port, () => {
-  console.log(`Server running on port: ${port}`)
-})
+module.exports = app
