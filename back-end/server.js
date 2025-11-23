@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-const app = require('./app')
-require('dotenv').config({ silent: true }) // load environmental variables from a hidden file named .env
+import app from './app.js'
+import dotenv from 'dotenv'
+dotenv.config({ silent: true }) // load environmental variables from a hidden file named .env
 
 const port = process.env.PORT || 3000
 
@@ -11,11 +12,8 @@ const listener = app.listen(port, function () {
 
 const close = () => {
   listener.close()
-  // mongoose.disonnect()
+  // mongoose.disconnect()
   // process.exit(0)
 }
 
-module.exports = {
-  app: app,
-  close: close,
-}
+export { app, close }

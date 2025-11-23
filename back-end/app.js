@@ -1449,4 +1449,4 @@ app.delete('/api/users/:userId/profile', (req, res) => {
   res.json({ success: true })
 })
 
-module.exports = app
+export default app
