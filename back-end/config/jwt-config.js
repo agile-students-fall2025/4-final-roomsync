@@ -9,8 +9,8 @@ import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt'
 
 // set up some JWT authentication options for passport
 const jwtOptions = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
-  secretOrKey: process.env.JWT_SECRET, 
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET,
 }
 // console.log(jwtOptions) // debug to make sure the secret from the .env file is loaded correctly
 
