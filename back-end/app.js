@@ -36,6 +36,23 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' })
 })
 
+// database connection test route
+// this is just for me debugging and setting up database
+app.get('/api/db-test', (req, res) => {
+  const dbState = mongoose.connection.readyState
+  const states = {
+    0: 'disconnected',
+    1: 'connected',
+    2: 'connecting',
+    3: 'disconnecting'
+  }
+  res.json({
+    status: dbState === 1 ? 'ok' : 'error',
+    database: states[dbState],
+    message: dbState === 1 ? 'MongoDB is connected' : 'MongoDB is not connected'
+  })
+})
+
 // example POST route
 app.post('/api/submit', (req, res) => {
   const { your_name, your_email, agree } = req.body
@@ -51,6 +68,7 @@ app.post('/api/submit', (req, res) => {
 })
 
 //Call models here
+import User from './models/User.js'
 import cookieRoutes from './routes/cookie-routes.js'
 
 
