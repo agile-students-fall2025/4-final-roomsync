@@ -68,14 +68,15 @@ app.post('/api/submit', (req, res) => {
 })
 
 //Call models here
-import User from './models/User.js'
+import authenticationRoutes from './routes/authentication-routes.js'
 import cookieRoutes from './routes/cookie-routes.js'
 
 
 // ========================================
-// COOKIE CONNECTION
+// SPECIALIZED ROUTING FILES
 // ========================================
-app.use('/cookie', cookieRoutes())
+app.use('/auth', authenticationRoutes()) // all requests for /auth/* will be handled by the authenticationRoutes router
+app.use('/cookie', cookieRoutes()) // all requests for /cookie/* will be handled by the cookieRoutes router
 
 // ========================================
 // MONGOOSE CONNECTION
@@ -156,49 +157,6 @@ app.get("/api/users/email/:email", (req, res) => {
     res.status(404).json({ success: false, message: "User not found" });
   }
 })
-
-
-// POST register user 
-// app.use('/api/auth/register', authRoutes); // need to complete auth-routes
-
-//POST user login
-app.post('/api/auth/login', (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ 
-      success: false, 
-      message: 'Email and password are required' 
-    });
-  }
-
-  const user = users.find(u => u.email === email);
-  
-  if (!user) {
-    return res.status(401).json({ 
-      success: false, 
-      message: 'Invalid email or password' 
-    });
-  }
-
-  if (user.password !== password) {
-    return res.status(401).json({ 
-      success: false, 
-      message: 'Invalid email or password' 
-    });
-  }
-
-  res.json({
-    success: true,
-    message: 'Login successful',
-    user: {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      roomId: user.roomId
-    }
-  });
-});
 
 // ========================================
 // CATEGORIES MANAGEMENT
