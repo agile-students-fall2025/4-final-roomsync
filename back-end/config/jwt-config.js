@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config({ silent: true })
+
 import mongoose from 'mongoose'
 const ObjectId = mongoose.Types.ObjectId
 import User from '../models/User.js'

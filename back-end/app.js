@@ -2,8 +2,6 @@ import express from 'express'
 import path from 'path'
 import mongoose from 'mongoose'
 import { fileURLToPath } from 'url'
-import dotenv from 'dotenv'
-dotenv.config({ silent: true })
 //jwt middlewares
 import jwt from 'jsonwebtoken'
 import jwtStrategy from './config/jwt-config.js' // import setup options for using JWT in passport
