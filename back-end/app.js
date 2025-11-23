@@ -64,14 +64,14 @@ app.use('/cookie', cookieRoutes())
 // ========================================
 // MONGOOSE CONNECTION
 // ========================================
-try {
-  // mongoose.connect(process.env.MONGODB_URI) will enable when we do the connection
-  console.log(`Connecting to MongoDB at ${process.env.MONGODB_URI}`)
-} catch (err) {
-  console.log(
-    `Error connecting to MongoDB user account authentication will fail: ${err}`
-  )
-}
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log(`Successfully connected to MongoDB at ${process.env.MONGODB_URI}`)
+  })
+  .catch((err) => {
+    console.error(`Error connecting to MongoDB: ${err.message}`)
+    console.error('User account authentication will fail')
+  })
 
 // ========================================
 // USER MANAGEMENT
