@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: roomsync-mongo
+    ports:
+      - '27017:27017'
+    # volumes:
+    #   - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+
+  backend:
+    image: node:latest
+    container_name: roomsync-backend
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - '3000:3000'
+    environment:
+      - PORT=3000
+      - NODE_ENV=development
+      - FRONT_END_DOMAIN=http://localhost:5173
+      - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+      - MONGODB_URI=mongodb://admin:secret@mongo:27017/roomsync?authSource=admin
+    depends_on:
+      - mongo
+    command: sh -c "npm install && npm start"
