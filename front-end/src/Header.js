@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
  */
 const Header = props => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   if (location.pathname === '/landing' || location.pathname === '/register' || location.pathname === '/login') {
     return null;
