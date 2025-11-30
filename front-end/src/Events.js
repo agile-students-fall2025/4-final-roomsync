@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Events.css'
-import { user, getUsers } from './api/users'
+import { getCurrentUser, getUsers} from './api/users' //note that get users get the users assiged to current room/household
 
 const Events = props => {
+  const user = getCurrentUser; //eslem
   const navigate = useNavigate()
 
   const [events, setEvents] = useState([])
