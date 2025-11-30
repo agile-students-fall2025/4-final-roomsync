@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./EventCalendar.css";
-import { user } from './api/users';
+import { getCurrentUser } from './api/users';
 import { getRoomEvents, getEventsByDate} from './api/events.js';
 
 export default function EventCalendar() {
   const [events, setEvents] = useState([]);
   const [selectedDateEvents, setSelectedDateEvents] = useState([]);
   const navigate = useNavigate();
+  const user = getCurrentUser();
   
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());

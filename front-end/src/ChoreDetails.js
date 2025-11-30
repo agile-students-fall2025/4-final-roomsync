@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import './ChoreDetails.css'
-import { user, getUsers } from './api/users'
+import { getUsers, getCurrentUser } from './api/users'
 
 const ChoreDetails = props => {
+  const user = getCurrentUser();
   const navigate = useNavigate()
   const { id } = useParams()
   const [users, setUsers] = useState([])

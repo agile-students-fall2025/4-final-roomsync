@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './Chores.css'
-import { user, getUsers } from './api/users'
+import { getUsers, getCurrentUser } from './api/users'
 
 const Chores = props => {
+  const user = getCurrentUser() //eslem
   const [chores, setChores] = useState([])
   const [users, setUsers] = useState([])
   const [showOnlyCurrentUser, setShowOnlyCurrentUser] = useState(false)

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './CreateHome.css';
-import { getUsers, assignUserToRoom, user, getUserByEmail, addUser } from './api/users.js';
+import { getUsers, assignUserToRoom, getUserByEmail, addUser, getCurrentUser } from './api/users.js';
 const API_URL = "http://localhost:3000/api";
 
 export default function CreateHome() {
@@ -12,6 +12,7 @@ export default function CreateHome() {
   const [currentUserRoomId, setCurrentUserRoomId] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const user = getCurrentUser();
 
   useEffect(() => {
     checkUserRoomStatus();
