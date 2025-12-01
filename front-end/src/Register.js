@@ -70,10 +70,10 @@ const Register = props => {
       
       <form onSubmit={handleSubmit}>
         <label className="Login-label">Full Name</label>
-        <input 
-          className="Login-input" 
+        <input
+          className="Login-input"
           placeholder="name"
-          value={email}
+          value={name}
           onChange={(e) => setName(e.target.value)}
         />
         <label className="Login-label">Email</label>
