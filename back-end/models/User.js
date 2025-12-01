@@ -20,6 +20,7 @@ const UserSchema = new Schema({
   roomId: {
     type: Schema.Types.ObjectId,
     required: false,
+    default: null,
   }
 })
 
