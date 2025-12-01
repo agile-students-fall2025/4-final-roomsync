@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link , useNavigate } from 'react-router-dom'
 import './Login.css'
-import { loginUser } from './api/users'
+import { loginUser, getCurrentUser} from './api/users'
 
 const Login = props => {
     const [email, setEmail] = useState('')
@@ -23,13 +23,41 @@ const Login = props => {
       return
     }
 
-    const loginRes = loginUser(email , password);
-
-    if(loginRes !== false){
-        navigate('/')
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters')
+      setLoading(false)
+      return
     }
-    else{
-        console.log('Wrong email or password');
+
+    try {
+      const result = await loginUser(email, password)
+      
+      if (result.success) {
+        
+        const currentUser = getCurrentUser()
+        
+        if (currentUser) {
+          
+          if (currentUser.roomId) {
+            // User already has a room, go to dashboard
+            navigate('/dashboard')
+          } else {
+            // User needs to create/join a room
+            navigate('/create')
+          }
+        } else {
+          navigate('/landing')
+        }
+
+      } else {
+        setError(result.message || 'Login failed. Please check your credentials.')
+        console.log('Login failed:', result.message)
+      }
+    } catch (err) {
+      setError('Network error. Please try again.')
+      console.error('Login error:', err)
+    } finally {
+      setLoading(false)
     }
 }
 
@@ -37,6 +65,8 @@ const Login = props => {
         <>
             <div className="Login-container">
                 <h1>Login</h1>
+
+                {error && <p style={{color: 'red'}}>{error}</p>}
 
                 <label className="Login-label">Email</label>
                 <input 
@@ -47,7 +77,8 @@ const Login = props => {
                 />
                 <label className="Login-label">Password</label>
                 <input 
-                    className="Login-input" 
+                    className="Login-input"
+                    type="password" 
                     placeholder="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}

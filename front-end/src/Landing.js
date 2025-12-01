@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import './Landing.css'; // Create this CSS file
+import './Landing.css';
 
 export default function Landing() {
   return (
     <>
-    <head></head>
+    {/* <head></head> */}
     <div className="landing-container">
       <div className="intro">
         <h1>Welcome to RoomSync</h1>

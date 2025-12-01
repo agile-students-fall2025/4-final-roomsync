@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './Payments.css'
-import { user, getUsers } from './api/users'
+import { getCurrentUser, getUsers } from './api/users'
 
 const Payments = props => {
+  const user = getCurrentUser();
   const [users, setUsers] = useState([])
   const [categories, setCategories] = useState([])
   const [expenses, setExpenses] = useState([])

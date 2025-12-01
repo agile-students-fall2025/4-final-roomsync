@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './EventDetails.css'
-import { user } from './api/users'
+import { getCurrentUser } from './api/users'
 
 const EventDetails = props => {
+  const user = getCurrentUser() //eslem
   const navigate = useNavigate()
   const { eventId } = useParams()
 

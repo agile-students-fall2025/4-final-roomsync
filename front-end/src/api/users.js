@@ -23,13 +23,36 @@
  */
 
 
-const API_URL = '/api'
+const API_URL = 'http://localhost:3001'
 
-export const user = { id: 1, name: 'Brian', email: 'brian@agile.com', password: '123456', roomId: 1}
+const getAuthToken = () => {
+  return localStorage.getItem('token')
+}
+
+const getAuthHeaders = () => {
+  const token = getAuthToken()
+  return {
+    'Content-Type': 'application/json',
+    ...(token && { 'Authorization': `Bearer ${token}` })
+  }
+}
+
+export const getCurrentUser = () => {
+  const userStr = localStorage.getItem('user')
+  return userStr ? JSON.parse(userStr) : null
+}
 
 export const getUsers = async () => {
   try {
-    const response = await fetch(`${API_URL}/rooms/${user.roomId}/users`)
+    const currentUser = getCurrentUser()
+    if (!currentUser?.roomId) return []
+
+    const response = await fetch(`${API_URL}/rooms/${currentUser.roomId}/users`, {
+      headers: getAuthHeaders()
+    })
+
+    if (!response.ok) return []
+
     const data = await response.json()
     return data
   } catch (error) {
@@ -39,16 +62,33 @@ export const getUsers = async () => {
 }
 
 export const getUserById = async id => {
-  const users = await getUsers()
-  return users.find(u => u.id === id)
+  try {
+    const response = await fetch(`${API_URL}/users/${id}`, {
+      headers: getAuthHeaders()
+    })
+    
+    if (!response.ok) return null
+    
+    const user = await response.json()
+    return user
+  } catch (error) {
+    console.error('Error fetching user by ID:', error)
+    return null
+  }
 }
 
 export const getUserByEmail = async (email) => {
   try {
-    const response = await fetch(`${API_URL}/users/email/${email}`);
+    const response = await fetch(`${API_URL}/users/email/${email}`, {
+      headers: getAuthHeaders()
+    });
+
     if (response.status === 404) return null;
+    if (!response.ok) return null
+
     const user = await response.json();
     return user;
+
   } catch (error) {
     console.error('Error fetching user by email:', error);
     return null;
@@ -57,20 +97,23 @@ export const getUserByEmail = async (email) => {
 
 export const getUserName = async (id) => {
   const foundUser = await getUserById(id);
-  return foundUser ? foundUser.name : "Unknown";
+  return foundUser ? foundUser.username : "Unknown";
 };
 
-export const addUser = async (name, email) => {
+export const addUser = async (username, email) => {
   try {
-    const response = await fetch(`${API_URL}/rooms/${user.roomId}/users`, {
+    const currentUser = getCurrentUser()
+    if (!currentUser?.roomId) return null
+
+    const response = await fetch(`${API_URL}/rooms/${currentUser.roomId}/users`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name , email }),
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ username , email }),
     });
+
     const newUser = await response.json();
     return newUser;
+
   } catch (error) {
     console.error("Error adding user:", error);
     return null;
@@ -79,11 +122,17 @@ export const addUser = async (name, email) => {
 
 export const removeUser = async (id) => {
   try {
-    const response = await fetch(`${API_URL}/rooms/${user.roomId}/users/${id}`, {
+    const currentUser = getCurrentUser()
+    if (!currentUser?.roomId) return null
+
+    const response = await fetch(`${API_URL}/rooms/${currentUser.roomId}/users/${id}`, {
       method: 'DELETE',
+      headers: getAuthHeaders()
     })
+
     const result = await response.json()
     return result.success
+
   } catch (error) {
     console.error('Error removing user:', error)
     return false
@@ -94,13 +143,13 @@ export const assignUserToRoom = async (userId, roomId) => {
   try {
     const response = await fetch(`${API_URL}/users/${userId}/assign-room`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ roomId }),
     })
+
     const result = await response.json()
     return result.success
+
   } catch (error) {
     console.error('Error assigning user to room:', error)
     return false
@@ -109,31 +158,39 @@ export const assignUserToRoom = async (userId, roomId) => {
 
 
 // register the new user
-export const registerUser = async (name, email, password) => {
+export const registerUser = async (username, email, password) => {
   try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          username: username.trim(),
           email: email.trim(),
-          password: password,
-          name: name.trim()
+          password: password
         }),
       });
 
       const result = await response.json();
 
-      return result.success
+      if (result.success) {
+        // Save token and user data to localStorage
+        localStorage.setItem('token', result.token)
+        localStorage.setItem('user', JSON.stringify(result.user))
+      }
+    
+      return result
+    
     }catch (error) {
+      console.error('Registration error:', error)
       return false
     }
 }
 
 export const loginUser = async(email , password) => {
   try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -146,8 +203,32 @@ export const loginUser = async(email , password) => {
 
       const result = await response.json();
 
-      return result.success
+      if (result.success) {
+      // Save token and user data to localStorage
+      localStorage.setItem('token', result.token)
+      localStorage.setItem('user', JSON.stringify(result.user))
+    }
+
+      return result
     } catch (error) {
+      console.error('Login error:', error)
       return false
     }
+}
+
+// Get current user info from backend (protected)
+export const getCurrentUserInfo = async () => {
+  try {
+    const response = await fetch(`${API_URL}/auth/me`, {
+      headers: getAuthHeaders()
+    })
+    
+    if (!response.ok) return null
+    
+    const result = await response.json()
+    return result.user
+  } catch (error) {
+    console.error('Error fetching current user info:', error)
+    return null
+  }
 }

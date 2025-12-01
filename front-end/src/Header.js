@@ -1,6 +1,8 @@
 import './Header.css'
 import logo from './logo.svg'
 import { Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * A React component that is used for the header displayed at the top of every page of the site.
@@ -8,15 +10,36 @@ import { Link } from 'react-router-dom'
  * @returns The contents of this component, in JSX form.
  */
 const Header = props => {
+  const location = useLocation();
+
+  if (location.pathname === '/landing' || location.pathname === '/register' || location.pathname === '/login') {
+    return null;
+  }
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      await fetch('http://localhost:3001/auth/logout', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+    } catch (error) {
+      console.error('Logout API error:', error);
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
+  };
+
   return (
     <header className="Header-header">
       <nav className="Header-navbar">
         <ul className="nav-links">
           <li className="nav-item">
-            <Link to="/landing">Landing</Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/">Home</Link>
+            <Link to="/dashboard">Home</Link>
           </li>
           <li className="nav-item">
             <Link to="/chores">Chores</Link>
@@ -32,6 +55,9 @@ const Header = props => {
           </li>
           <li className="nav-item">
             <Link to="/compatibility">Compatibility Finder</Link>
+          </li>
+          <li onClick={handleLogout} className="nav-item">
+            <Link to="/landing">Logout</Link>
           </li>
         </ul>
       </nav>

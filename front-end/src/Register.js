@@ -1,13 +1,14 @@
+// Register.js - UPDATED VERSION
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import './Login.css'
-import { registerUser, getUserByEmail } from './api/users'
+import { registerUser, getCurrentUser } from './api/users'
 
 const Register = props => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [name, setName] = useState('')
+  const [username, setUsername] = useState('') 
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -18,6 +19,7 @@ const Register = props => {
     setError('')
     setLoading(true)
 
+    // Validation
     if (password !== confirmPassword) {
       setError('Passwords do not match')
       setLoading(false)
@@ -30,52 +32,65 @@ const Register = props => {
       return;
     }
 
-    if (email.length < 5) {
-      setError('Please enter a valid email');
+    if (!username.trim()) {
+      setError('Username is required');
       setLoading(false)
       return;
     }
 
-    if (getUserByEmail(email)){
-      setError('This user already registered')
+    if (username.length < 3) {
+      setError('Username is must be at leat 3 character');
       setLoading(false)
       return;
     }
 
-    if (!name.trim()) {
-      setError('Name is required');
+      const result = await registerUser(username, email, password)
+
+      if (result.success) {
+        const currentUser = getCurrentUser();
+
+        if (currentUser) {
+          console.log('Logged in user:', currentUser)
+          
+          if (currentUser.roomId) {
+            // User already has a room, go to dashboard
+            navigate('/dashboard')
+          } else {
+            // User needs to create/join a room
+            navigate('/create')
+          }
+        }
+        else {
+          navigate('/landing')
+        }
+
+        return result
+      }
+      else {
+        setError(result.message || 'Registration failed')
+      }
+      
       setLoading(false)
-      return;
-    }
 
-
-    const registerStatus = registerUser(name, email, password)
-
-    if (registerStatus !== false){
-      navigate('/')
-    }
-    else{
-      console.log('Failed registration')
-    }
-
-    
+      
+  
   }
 
   return (
-    <>
-      <div className="Login-container">
+    <div className="Login-container">
       <h1>Register</h1>
 
       {error && <p style={{color: 'red'}}>{error}</p>}
       
       <form onSubmit={handleSubmit}>
-        <label className="Login-label">Full Name</label>
-        <input
-          className="Login-input"
-          placeholder="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+        <label className="Login-label">Username</label> 
+        <input 
+          className="Login-input" 
+          placeholder="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)} 
         />
+        
         <label className="Login-label">Email</label>
         <input 
           className="Login-input" 
@@ -83,28 +98,39 @@ const Register = props => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        
         <label className="Login-label">Password</label>
         <input 
           className="Login-input" 
+          type="password"
           placeholder="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        
         <label className="Login-label">Confirm Password</label>
         <input 
           className="Login-input" 
+          type="password"
           placeholder="Type your password again"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
 
-        <button type="submit" className="Login-button">
-            Register
+        <button 
+          type="submit" 
+          className="Login-button"
+          disabled={loading}
+        >
+          {loading ? 'Registering...' : 'Register'}
         </button>
+        
+        <p style={{textAlign: 'center', marginTop: '1rem'}}>
+          Already have an account? <Link to="/login">Login here</Link>
+        </p>
       </form>
-  </div>
-</>
-    )    
+    </div>
+  )    
 }
 
 export default Register;

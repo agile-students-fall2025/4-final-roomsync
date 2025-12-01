@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './PaymentDetails.css'
-import { user, getUsers } from './api/users'
+import { getCurrentUser, getUsers } from './api/users'
 
 const PaymentDetails = () => {
+  const user = getCurrentUser();
   const navigate = useNavigate()
   const { paymentId } = useParams()
 

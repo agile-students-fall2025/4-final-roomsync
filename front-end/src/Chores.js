@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './Chores.css'
-import { user, getUsers } from './api/users'
+import { getUsers, getCurrentUser } from './api/users'
 
 const Chores = props => {
+  const user = getCurrentUser() //eslem
   const [chores, setChores] = useState([])
   const [users, setUsers] = useState([])
   const [showOnlyCurrentUser, setShowOnlyCurrentUser] = useState(false)
@@ -120,7 +121,7 @@ const Chores = props => {
         </section>
 
         <p className="Chores-footer">
-          <Link to="/chores/add">Add New Chore</Link> | <Link to="/">Back to Home</Link>
+          <Link to="/chores/add">Add New Chore</Link> | <Link to="/dashbard">Back to Home</Link>
         </p>
       </div>
     </>

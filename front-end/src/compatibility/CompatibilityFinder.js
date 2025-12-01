@@ -23,7 +23,7 @@ const CompatibilityFinder = () => {
       </div>
 
       <div className="compat-back">
-        <Link to="/">&#8592; Back to Home</Link>
+        <Link to="/dashboard">&#8592; Back to Home</Link>
       </div>
     </div>
   );

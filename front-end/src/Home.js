@@ -46,12 +46,12 @@ const Home = props => {
 
   return (
     <>
-    <div class="">
+    <div className="">
       {/*TODO form will get the info from backend*/}
       <h2>Welcome {user.assignedTo}</h2>
       <form action="get">
-        <div class="statistics-home">
-          <div class="stats">
+        <div className="statistics-home">
+          <div className="stats">
             <h3>Your Upcoming Chorses</h3>
             <ul id="chorses">
               {filteredChores.map(chore => (
@@ -59,7 +59,7 @@ const Home = props => {
               ))}
             </ul>
           </div>
-          <div class="stats">
+          <div className="stats">
             <h3>Your Upcoming Payments</h3>
             <ul id="payments">
               {filteredPayments.map(payment => (
@@ -72,12 +72,12 @@ const Home = props => {
       </form>
     </div>
 
-    <div class="buttons-home">
-      <a class="button-5" href="skillswap">Skill Swap</a>
-      <a class="button-5" href="/chores">Chores</a>
-      <a class="button-5" href="/payments">Payments</a>
-      <a class="button-5" href="/compatibility">Compatibility Finder</a>
-      <a class="button-5" href="/create">Invite Roommate</a>
+    <div className="buttons-home">
+      <a className="button-5" href="skillswap">Skill Swap</a>
+      <a className="button-5" href="/chores">Chores</a>
+      <a className="button-5" href="/payments">Payments</a>
+      <a className="button-5" href="/compatibility">Compatibility Finder</a>
+      <a className="button-5" href="/create">Invite Roommate</a>
     </div>
     </>
   )

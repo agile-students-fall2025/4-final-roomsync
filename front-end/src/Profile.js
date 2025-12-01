@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import './Profile.css'
-import { user } from './api/users'
+import { getCurrentUser } from './api/users'
 
 const Profile = props => {
+  const user = getCurrentUser() //eslem
   const [profile, setProfile] = useState(null)
   const [isSkillsOpen, setIsSkillsOpen] = useState(false)
 
