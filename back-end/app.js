@@ -70,6 +70,7 @@ app.post('/api/submit', (req, res) => {
 //Call models here
 import authenticationRoutes from './routes/authentication-routes.js'
 import cookieRoutes from './routes/cookie-routes.js'
+import choreRoutes from './routes/chore-routes.js'
 
 
 // ========================================
@@ -77,6 +78,7 @@ import cookieRoutes from './routes/cookie-routes.js'
 // ========================================
 app.use('/auth', authenticationRoutes()) // all requests for /auth/* will be handled by the authenticationRoutes router
 app.use('/cookie', cookieRoutes()) // all requests for /cookie/* will be handled by the cookieRoutes router
+app.use('/api', choreRoutes()) // all requests for /api/rooms/:roomId/chores/* will be handled by the choreRoutes router
 
 // ========================================
 // MONGOOSE CONNECTION
@@ -285,83 +287,6 @@ app.delete('/api/rooms/:roomId/payments/:id', (req, res) => {
   }
 })
 
-// ========================================
-// CHORES MANAGEMENT
-// ========================================
-let chores = [
-  { id: 1, name: 'Clean Kitchen', assignedTo: 1, finished: false, roomId: 1 },
-  { id: 2, name: 'Take Out Trash', assignedTo: 5, finished: false, roomId: 1 },
-  { id: 3, name: 'Vacuum Living Room', assignedTo: 3, finished: true, roomId: 1 },
-  { id: 4, name: 'Clean Bathroom', assignedTo: 2, finished: false, roomId: 1 },
-]
-
-// GET all chores for a specific room
-app.get('/api/rooms/:roomId/chores', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const roomChores = chores.filter(c => c.roomId === roomId)
-  res.json(roomChores)
-})
-
-// GET a specific chore by id
-app.get('/api/rooms/:roomId/chores/:id', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const id = parseInt(req.params.id)
-  const chore = chores.find(c => c.id === id && c.roomId === roomId)
-  if (chore) {
-    res.json(chore)
-  } else {
-    res.status(404).json({ success: false, message: 'Chore not found' })
-  }
-})
-
-// POST new chore to a room
-app.post('/api/rooms/:roomId/chores', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const { name, assignedTo } = req.body
-  const newId = Math.max(...chores.map(c => c.id), 0) + 1
-  const newChore = {
-    id: newId,
-    name,
-    assignedTo: parseInt(assignedTo),
-    finished: false,
-    roomId,
-  }
-  chores.push(newChore)
-  res.json(newChore)
-})
-
-// PUT (update) an existing chore
-app.put('/api/rooms/:roomId/chores/:id', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const id = parseInt(req.params.id)
-  const { name, assignedTo, finished } = req.body
-
-  const index = chores.findIndex(c => c.id === id && c.roomId === roomId)
-  if (index !== -1) {
-    chores[index] = {
-      ...chores[index],
-      name: name !== undefined ? name : chores[index].name,
-      assignedTo: assignedTo !== undefined ? parseInt(assignedTo) : chores[index].assignedTo,
-      finished: finished !== undefined ? Boolean(finished) : chores[index].finished,
-    }
-    res.json(chores[index])
-  } else {
-    res.status(404).json({ success: false, message: 'Chore not found' })
-  }
-})
-
-// DELETE chore from room
-app.delete('/api/rooms/:roomId/chores/:id', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const id = parseInt(req.params.id)
-  const index = chores.findIndex(c => c.id === id && c.roomId === roomId)
-  if (index !== -1) {
-    chores.splice(index, 1)
-    res.json({ success: true })
-  } else {
-    res.status(404).json({ success: false, message: 'Chore not found' })
-  }
-})
 // ========================================
 // COMPATIBILITY FINDER
 // ========================================
