@@ -20,7 +20,7 @@ const Header = props => {
     try {
       const token = localStorage.getItem('token');
       await fetch('http://localhost:3001/auth/logout', {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -29,10 +29,8 @@ const Header = props => {
     } catch (error) {
       console.error('Logout API error:', error);
     } finally {
-      //clear frontend storage
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      
     }
   };
 
@@ -41,7 +39,7 @@ const Header = props => {
       <nav className="Header-navbar">
         <ul className="nav-links">
           <li className="nav-item">
-            <Link to="/">Home</Link>
+            <Link to="/dashboard">Home</Link>
           </li>
           <li className="nav-item">
             <Link to="/chores">Chores</Link>
@@ -59,7 +57,7 @@ const Header = props => {
             <Link to="/compatibility">Compatibility Finder</Link>
           </li>
           <li onClick={handleLogout} className="nav-item">
-            <Link to="/landing">Log-out</Link>
+            <Link to="/landing">Logout</Link>
           </li>
         </ul>
       </nav>

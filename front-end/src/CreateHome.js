@@ -210,7 +210,7 @@ export default function CreateHome() {
              currentUserRoomId ? 'Send Invitations' : 'Create Home & Invite'}
           </button>
           
-          <Link to="/" className="cancel-link">
+          <Link to="/dashboard" className="cancel-link">
             Cancel
           </Link>
         </div>

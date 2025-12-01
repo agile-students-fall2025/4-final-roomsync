@@ -121,7 +121,7 @@ const Chores = props => {
         </section>
 
         <p className="Chores-footer">
-          <Link to="/chores/add">Add New Chore</Link> | <Link to="/">Back to Home</Link>
+          <Link to="/chores/add">Add New Chore</Link> | <Link to="/dashbard">Back to Home</Link>
         </p>
       </div>
     </>
