@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Events.css'
-import { getCurrentUser, getUsers} from './api/users' //note that get users get the users assiged to current room/household
+import { getCurrentUser, getUsers} from './api/users'
 
 const Events = props => {
-  const user = getCurrentUser; //eslem
+  const user = getCurrentUser(); // ✅ WITH parentheses
   const navigate = useNavigate()
 
   const [events, setEvents] = useState([])
@@ -14,23 +14,34 @@ const Events = props => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
+        if (!user || !user.roomId) {
+          console.error('No user or roomId found')
+          return
+        }
+        
         const res = await fetch(`/api/rooms/${user.roomId}/events`)
         const data = await res.json()
-        setEvents(data)
-        if (data.length > 0) {
-          setSelectedEventId(data[0].id)
+        console.log('Fetched events:', data)
+        
+        // Ensure data is an array
+        const eventsArray = Array.isArray(data) ? data : []
+        setEvents(eventsArray)
+        
+        if (eventsArray.length > 0) {
+          setSelectedEventId(eventsArray[0].id)
         }
       } catch (err) {
         console.error('Error fetching events:', err)
+        setEvents([])
       }
     }
 
     fetchEvents()
-  }, [])
+  }, [user])
 
   // Split into "Your Events" and "Upcoming Events" based on createdBy
-  const yourEvents = events.filter(e => e.createdBy === user.id)
-  const upcomingEvents = events.filter(e => e.createdBy !== user.id)
+  const yourEvents = Array.isArray(events) ? events.filter(e => e.createdBy === user.id) : []
+  const upcomingEvents = Array.isArray(events) ? events.filter(e => e.createdBy !== user.id) : []
 
   const handleEdit = eventId => {
     navigate(`/events/${eventId}`)
