@@ -2,3 +2,51 @@
   max-width: 20vw;
   margin: 0 auto;
 }
+
+/* Add to your CreateHome.css */
+
+.existing-roommates-section {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.existing-roommates-section h4 {
+  margin-top: 0;
+  color: #495057;
+  font-size: 1.1rem;
+}
+
+.existing-roommates-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.existing-roommate-item {
+  padding: 8px 12px;
+  margin: 5px 0;
+  background-color: white;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+  color: #6c757d;
+}
+
+.existing-roommate-item span {
+  font-weight: 500;
+}
+
+.roommates-list {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #e7f5ff;
+  border-radius: 8px;
+  border: 1px solid #a5d8ff;
+}
+
+.roommates-list h3 {
+  margin-top: 0;
+  color: #1971c2;
+}
