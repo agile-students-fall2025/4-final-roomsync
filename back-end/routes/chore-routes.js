@@ -3,7 +3,7 @@
 import express from 'express'
 import Chore from '../models/Chore.js'
 
-// Factory function that creates and returns an Express router with chore-related routes
+// this is a router where all chores are handled
 const choreRouter = () => {
   const router = express.Router()
 
