@@ -4,7 +4,7 @@ import './Events.css'
 import { getCurrentUser, getUsers} from './api/users'
 
 const Events = props => {
-  const user = getCurrentUser(); // ✅ WITH parentheses
+  const user = getCurrentUser(); 
   const navigate = useNavigate()
 
   const [events, setEvents] = useState([])
