@@ -1,13 +1,19 @@
+// Chore routes - handles CRUD operations for chores within rooms
+// This module provides REST API endpoints for managing chores assigned to room members
 import express from 'express'
 import Chore from '../models/Chore.js'
 
+// Factory function that creates and returns an Express router with chore-related routes
 const choreRouter = () => {
   const router = express.Router()
 
   // GET all chores for a specific room
+  // Returns chores sorted by creation date (newest first)
   router.get('/rooms/:roomId/chores', async (req, res) => {
     try {
+      // Parse roomId from URL parameter to ensure it's an integer
       const roomId = parseInt(req.params.roomId)
+      // Query database for all chores belonging to this room, sorted by newest first
       const chores = await Chore.find({ roomId }).sort({ createdAt: -1 })
       res.json(chores)
     } catch (err) {
@@ -53,6 +59,7 @@ const choreRouter = () => {
       await newChore.save()
       res.status(201).json(newChore)
     } catch (err) {
+      // when request fails
       console.error('Error creating chore:', err)
       res.status(500).json({ success: false, message: 'Server error' })
     }
@@ -77,6 +84,7 @@ const choreRouter = () => {
       await chore.save()
       res.json(chore)
     } catch (err) {
+      // when request fails
       console.error('Error updating chore:', err)
       res.status(500).json({ success: false, message: 'Server error' })
     }
@@ -94,6 +102,7 @@ const choreRouter = () => {
 
       res.json({ success: true })
     } catch (err) {
+      // when request fails
       console.error('Error deleting chore:', err)
       res.status(500).json({ success: false, message: 'Server error' })
     }
