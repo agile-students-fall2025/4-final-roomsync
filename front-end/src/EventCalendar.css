@@ -1,109 +1,129 @@
 /* Page + card */
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial
+body {
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Arial;
 }
-.cal-page{
-  place-items:center;
-  background:transparent;
-  padding:20px
+.cal-page {
+  place-items: center;
+  background: transparent;
+  padding: 20px;
 }
-.cal-card{
-  background:#fff;
-  border-radius:14px;
-  padding:16px
+.cal-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
 }
 
 /* Header */
-.cal-header h1{
-  margin:0;
-  font-size:22px
+.cal-header h1 {
+  margin: 0;
+  font-size: 22px;
 }
-.muted{color:#8c8c8c}
-.small{font-size:12px}
-.center{text-align:center}
+.muted {
+  color: #8c8c8c;
+}
+.small {
+  font-size: 12px;
+}
+.center {
+  text-align: center;
+}
 
 /* Month bar */
-.cal-bar{
-  display:grid;
-  grid-template-columns:32px 1fr 32px;
-  align-items:center;gap:8px;
-  margin-top:8px;
-  padding-top:10px;
-  border-top:1px solid #e7e7e7
+.cal-bar {
+  display: grid;
+  grid-template-columns: 32px 1fr 32px;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid #e7e7e7;
 }
-.cal-bar button{
-  height:28px;
-  border:1px solid #e7e7e7;
-  background:#fff;
-  border-radius:8px;
-  cursor:pointer
+.cal-bar button {
+  height: 28px;
+  border: 1px solid #e7e7e7;
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
 }
-.cal-month{
-  text-align:center;
-  font-weight:600
+.cal-month {
+  text-align: center;
+  font-weight: 600;
 }
 
 /* Weekdays row */
-.cal-weekdays{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:6px;
-  margin-top:8px;color:#8c8c8c;
-  font-size:11px
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+  color: #8c8c8c;
+  font-size: 11px;
 }
 
 /* Days grid */
-.cal-grid{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:6px;
-  margin-top:6px
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-top: 6px;
 }
-.cell{
-  height:36px;
-  display:grid;
-  place-items:center;
-  border-radius:10px;
-  border:1px solid transparent;
-  font-size:13px;
-  cursor:pointer
+.cell {
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-size: 13px;
+  cursor: pointer;
 }
-.cell:hover{border-color:#e7e7e7}
-.cell--blank{cursor:default}
-.cell--today{
-  background:#e7f0ff;
-  border-color:#d9e7ff;
-  font-weight:600
+.cell:hover {
+  border-color: #e7e7e7;
 }
-.cell--selected{
-  background:#2a71ff;
-  color:#fff;
-  border-color:#2a71ff
+.cell--blank {
+  cursor: default;
+}
+.cell--today {
+  background: #e7f0ff;
+  border-color: #d9e7ff;
+  font-weight: 600;
+}
+.cell--selected {
+  background: #2a71ff;
+  color: #fff;
+  border-color: #2a71ff;
 }
 
 /* Events */
-.events{margin-top:12px}
-.event{
-  display:flex;
-  gap:8px;
-  align-items:flex-start;
-  border:1px solid #e7e7e7;
-  border-radius:12px;
-  padding:10px;
-  margin-bottom:10px
+.events {
+  margin-top: 12px;
+}
+.event {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  border: 1px solid #e7e7e7;
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 .Back-button {
-    background: none;
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 0;
-    color: #333;
-    width: 40px;
-    text-align: left;
-  }
-  
-  .Back-button:hover {
-    color: #666;
-  }
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0;
+  color: #333;
+  width: 40px;
+  text-align: left;
+}
+
+.Back-button:hover {
+  color: #666;
+}
+
