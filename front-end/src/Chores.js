@@ -10,6 +10,8 @@ const Chores = props => {
   const [showOnlyCurrentUser, setShowOnlyCurrentUser] = useState(false)
 
   useEffect(() => {
+    if (!user) return
+
     const fetchData = async () => {
       // Fetch users
       const usersData = await getUsers()
@@ -19,9 +21,10 @@ const Chores = props => {
       try {
         const response = await fetch(`/api/rooms/${user.roomId}/chores`)
         const choresData = await response.json()
-        setChores(choresData)
+        setChores(Array.isArray(choresData) ? choresData : [])
       } catch (error) {
         console.error('Error fetching chores:', error)
+        setChores([])
       }
     }
     fetchData()
@@ -49,6 +52,32 @@ const Chores = props => {
     } catch (error) {
       console.error('Error updating chore:', error)
     }
+  }
+
+  if (!user) {
+    return (
+      <div style={{
+        margin: '20px auto',
+        padding: '20px',
+        textAlign: 'center',
+        maxWidth: '1200px'
+      }}>
+        <h2>Please log in to view chores</h2>
+        <Link to="/login">
+          <button style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}>
+            Go to Login
+          </button>
+        </Link>
+      </div>
+    )
   }
 
   const filteredChores = (showOnlyCurrentUser
