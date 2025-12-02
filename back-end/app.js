@@ -72,6 +72,7 @@ import authenticationRoutes from './routes/authentication-routes.js'
 import cookieRoutes from './routes/cookie-routes.js'
 import choreRoutes from './routes/chore-routes.js'
 import eventRoutes from './routes/event-routes.js'
+import roomRoutes from './routes/room-routes.js'
 
 
 // ========================================
@@ -81,6 +82,7 @@ app.use('/auth', authenticationRoutes()) // all requests for /auth/* will be han
 app.use('/cookie', cookieRoutes()) // all requests for /cookie/* will be handled by the cookieRoutes router
 app.use('/api', choreRoutes()) // all requests for /api/rooms/:roomId/chores/* will be handled by the choreRoutes router
 app.use('/api', eventRoutes()) // all requests for /api/rooms/:roomId/events/* will be handled by the eventRoutes router
+app.use('/api/rooms', roomRoutes())
 
 // ========================================
 // MONGOOSE CONNECTION
@@ -97,55 +99,25 @@ mongoose.connect(process.env.MONGODB_URI)
 // ========================================
 // USER MANAGEMENT
 // ========================================
-let users = [
-  { id: 1, email: "brian@agile.com", name: "Brian", password: "123456", roomId: 1 },
-  { id: 2, email: "ginny@agile.com", name: "Ginny", password: "789101", roomId: 1 },
-  { id: 3, email: "jacob@agile.com", name: "Jacob", password: "213141", roomId: 1 },
-  { id: 4, email: "amish@agile.com", name: "Amish", password: "516171", roomId: 1 },
-  { id: 5, email: "eslem@agile.com", name: "Eslem", password: "819202", roomId: 1 },
-]
-
-// GET users for a specific room
-app.get('/api/rooms/:roomId/users', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const roomUsers = users.filter(u => u.roomId === roomId)
-  res.json(roomUsers)
-})
+// let users = [
+//   { id: 1, email: "brian@agile.com", name: "Brian", password: "123456", roomId: 1 },
+//   { id: 2, email: "ginny@agile.com", name: "Ginny", password: "789101", roomId: 1 },
+//   { id: 3, email: "jacob@agile.com", name: "Jacob", password: "213141", roomId: 1 },
+//   { id: 4, email: "amish@agile.com", name: "Amish", password: "516171", roomId: 1 },
+//   { id: 5, email: "eslem@agile.com", name: "Eslem", password: "819202", roomId: 1 },
+// ]
 
 
-// POST new user to a room
-app.post("/api/rooms/:roomId/users", (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const { name , email } = req.body
-  const newId = Math.max(...users.map(u => u.id), 0) + 1
-  const newUser = { id: newId, name: name, email: email, roomId: roomId }
-  users.push(newUser)
-  res.json(newUser)
-})
-
-// DELETE user from room
-app.delete('/api/rooms/:roomId/users/:id', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const id = parseInt(req.params.id)
-  const index = users.findIndex(u => u.id === id && u.roomId === roomId)
-  if (index !== -1) {
-    users.splice(index, 1)
-    res.json({ success: true })
+// GET user by userId
+app.get("/api/users/:userId", (req, res) => {
+  const email = req.params.userId;
+  const foundUser = users.find(u => u._id === userId);
+  console.log('Found user:', foundUser);
+  
+  if (foundUser) {
+    res.json(foundUser);
   } else {
-    res.status(404).json({ success: false, message: 'User not found' })
-  }
-})
-
-// POST assign user to a room
-app.post('/api/users/:userId/assign-room', (req, res) => {
-  const userId = parseInt(req.params.userId)
-  const { roomId } = req.body
-  const user = users.find(u => u.id === userId)
-  if (user) {
-    user.roomId = roomId
-    res.json({ success: true, user })
-  } else {
-    res.status(404).json({ success: false, message: 'User not found' })
+    res.status(404).json({ success: false, message: "User not found" });
   }
 })
 
@@ -161,6 +133,21 @@ app.get("/api/users/email/:email", (req, res) => {
     res.status(404).json({ success: false, message: "User not found" });
   }
 })
+
+// GET the room status by email of user
+app.get("/api/users/:email/room-status", (req, res) => {
+  const email = req.params.email;
+  const foundUser = users.find(u => u.email === email);
+
+  if (foundUser) {
+    res.json({
+      hasRoom: !!foundUser.roomId,
+      roomId: foundUser.roomId
+    });
+  } else {
+    res.status(404).json({ success: false, message: "User not found" });
+  }
+});
 
 // ========================================
 // CATEGORIES MANAGEMENT
@@ -1000,24 +987,6 @@ app.delete('/api/user/:userId/room-essays/:id', (req, res) => {
   res.json({ success: true })
 })
 
-
-// ========================================
-// ROOM MANAGEMENT
-// ========================================
-
-app.get("/api/users/:email/room-status", (req, res) => {
-  const email = req.params.email;
-  const foundUser = users.find(u => u.email === email);
-
-  if (foundUser) {
-    res.json({
-      hasRoom: !!foundUser.roomId,
-      roomId: foundUser.roomId
-    });
-  } else {
-    res.status(404).json({ success: false, message: "User not found" });
-  }
-});
 
 // ========================================
 // PROFILE MANAGEMENT

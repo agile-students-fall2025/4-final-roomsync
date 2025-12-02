@@ -6,13 +6,14 @@
  * - roomId: Associates users with a specific room/household
  *
  * Available Functions:
- * - getUsers(): Get all users in the current user's room
+ * - getCurrentUser(): get the current user 
+ * - getUsers(): Get all users in the current user's room 
+ * - addUser(name, email): Add a new user to the current(existing) room by using email
+ * - removeUser(id): Remove a user from the current(existing) room
+ * 
  * - getUserById(id): Get a specific user by ID
  * - getUserByEmail(email): Get a specific user by email
  * - getUserName(id): Get a user's name by ID
- * - addUser(name, email): Add a new user to the current(existing) room by using email
- * - removeUser(id): Remove a user from the current(existing) room
- * - assignUserToRoom(userId, roomId): Assign a user to a different room
  * 
  *
  * Back-end Endpoints:
@@ -47,30 +48,141 @@ export const getUsers = async () => {
     const currentUser = getCurrentUser()
     if (!currentUser?.roomId) return []
 
-    const response = await fetch(`${API_URL}/rooms/${currentUser.roomId}/users`, {
+    const response = await fetch(`${API_URL}/api/rooms/members`, {
       headers: getAuthHeaders()
     })
 
     if (!response.ok) return []
 
     const data = await response.json()
-    return data
+    return data.members || []
+
   } catch (error) {
     console.error('Error fetching users:', error)
     return []
   }
 }
 
-export const getUserById = async id => {
+
+export const addUser = async (username, email) => {
   try {
-    const response = await fetch(`${API_URL}/users/${id}`, {
+    // const inviter = getCurrentUser()
+
+    const response = await fetch(`${API_URL}/api/rooms/invite`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ emails: [email] }),
+    });
+
+    const newUser = await response.json();
+    return newUser;
+
+  } catch (error) {
+    console.error("Error adding user:", error);
+    return null;
+  }
+};
+
+// Leave current room
+export const leaveRoom = async () => {
+  try {
+    const response = await fetch(`${API_URL}/api/rooms/leave`, {
+      method: 'POST',
+      headers: getAuthHeaders()
+    })
+    
+    const result = await response.json()
+    
+    if (result.success) {
+      // Update local user data
+      const user = getCurrentUser()
+      if (user) {
+        user.roomId = null
+        localStorage.setItem('user', JSON.stringify(user))
+      }
+    }
+    
+    return result
+  } catch (error) {
+    console.error('Leave room error:', error)
+    return { success: false, message: 'Network error' }
+  }
+}
+
+// Delete entire room (creator only)
+export const deleteRoom = async () => {
+  try {
+    const response = await fetch(`${API_URL}/api/rooms/delete`, {
+      method: 'DELETE',
+      headers: getAuthHeaders()
+    })
+    
+    const result = await response.json()
+    
+    if (result.success) {
+      // Update local user data
+      const user = getCurrentUser()
+      if (user) {
+        user.roomId = null
+        localStorage.setItem('user', JSON.stringify(user))
+      }
+    }
+    
+    return result
+  } catch (error) {
+    console.error('Delete room error:', error)
+    return { success: false, message: 'Network error' }
+  }
+}
+
+
+export const getRoomInfo = async () => {
+  try {
+    const response = await fetch(`${API_URL}/api/rooms/my-room`, {
       headers: getAuthHeaders()
     })
     
     if (!response.ok) return null
     
-    const user = await response.json()
-    return user
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Error fetching room info:', error)
+    return null
+  }
+}
+
+export const inviteRoommates = async (emails) => {
+  try {
+    const response = await fetch(`${API_URL}/api/rooms/invite`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ emails })
+    })
+    
+    const result = await response.json()
+    return result
+  } catch (error) {
+    console.error('Error inviting roommates:', error)
+    return { success: false, message: 'Network error' }
+  }
+}
+
+
+
+
+
+
+export const getUserById = async userId => {
+  try {
+    const response = await fetch(`${API_URL}/users/${userId}`, {
+      headers: getAuthHeaders()
+    })
+    
+    if (!response.ok) return null
+    
+    const data = await response.json()
+    return data.user
   } catch (error) {
     console.error('Error fetching user by ID:', error)
     return null
@@ -86,8 +198,8 @@ export const getUserByEmail = async (email) => {
     if (response.status === 404) return null;
     if (!response.ok) return null
 
-    const user = await response.json();
-    return user;
+    const data = await response.json();
+    return data.user;
 
   } catch (error) {
     console.error('Error fetching user by email:', error);
@@ -100,61 +212,6 @@ export const getUserName = async (id) => {
   return foundUser ? foundUser.username : "Unknown";
 };
 
-export const addUser = async (username, email) => {
-  try {
-    const currentUser = getCurrentUser()
-    if (!currentUser?.roomId) return null
-
-    const response = await fetch(`${API_URL}/rooms/${currentUser.roomId}/users`, {
-      method: "POST",
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ username , email }),
-    });
-
-    const newUser = await response.json();
-    return newUser;
-
-  } catch (error) {
-    console.error("Error adding user:", error);
-    return null;
-  }
-};
-
-export const removeUser = async (id) => {
-  try {
-    const currentUser = getCurrentUser()
-    if (!currentUser?.roomId) return null
-
-    const response = await fetch(`${API_URL}/rooms/${currentUser.roomId}/users/${id}`, {
-      method: 'DELETE',
-      headers: getAuthHeaders()
-    })
-
-    const result = await response.json()
-    return result.success
-
-  } catch (error) {
-    console.error('Error removing user:', error)
-    return false
-  }
-}
-
-export const assignUserToRoom = async (userId, roomId) => {
-  try {
-    const response = await fetch(`${API_URL}/users/${userId}/assign-room`, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({ roomId }),
-    })
-
-    const result = await response.json()
-    return result.success
-
-  } catch (error) {
-    console.error('Error assigning user to room:', error)
-    return false
-  }
-}
 
 
 // register the new user
