@@ -88,14 +88,15 @@
   .landing-container {
     padding: 1rem;
   }
-  
+
   .auth-buttons {
     flex-direction: column;
     width: 100%;
     max-width: 300px;
   }
-  
+
   .btn {
     width: 100%;
   }
 }
+
