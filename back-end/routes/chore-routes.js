@@ -1,6 +1,7 @@
 import express from 'express'
 import Chore from '../models/Chore.js'
 
+// this is a router where all chores are handled
 const choreRouter = () => {
   const router = express.Router()
 
