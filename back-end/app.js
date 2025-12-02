@@ -71,6 +71,7 @@ app.post('/api/submit', (req, res) => {
 import authenticationRoutes from './routes/authentication-routes.js'
 import cookieRoutes from './routes/cookie-routes.js'
 import choreRoutes from './routes/chore-routes.js'
+import eventRoutes from './routes/event-routes.js'
 import roomRoutes from './routes/room-routes.js'
 
 
@@ -80,6 +81,7 @@ import roomRoutes from './routes/room-routes.js'
 app.use('/auth', authenticationRoutes()) // all requests for /auth/* will be handled by the authenticationRoutes router
 app.use('/cookie', cookieRoutes()) // all requests for /cookie/* will be handled by the cookieRoutes router
 app.use('/api', choreRoutes()) // all requests for /api/rooms/:roomId/chores/* will be handled by the choreRoutes router
+app.use('/api', eventRoutes()) // all requests for /api/rooms/:roomId/events/* will be handled by the eventRoutes router
 app.use('/api/rooms', roomRoutes())
 
 // ========================================
@@ -985,213 +987,6 @@ app.delete('/api/user/:userId/room-essays/:id', (req, res) => {
   res.json({ success: true })
 })
 
-// ========================================
-// EVENTS MANAGEMENT
-// ========================================
-
-// Mock events data
-let events = [
-  {
-    id: 1,
-    name: 'Birthday Party',
-    location: 'Living Room',
-    date: '2025-11-15',
-    time: '18:00',
-    roomId: 1,
-    createdBy: 1,
-    attendees: [1, 2],
-    description: 'Celebrate with friends!',
-  },
-  {
-    id: 2,
-    name: 'Study Group',
-    location: 'Library',
-    date: '2025-11-10',
-    time: '14:00',
-    roomId: 1,
-    createdBy: 2,
-    attendees: [2],
-    description: 'CS study session.',
-  },
-  {
-    id: 3,
-    name: 'Movie Night',
-    location: 'Living Room',
-    date: '2025-11-08',
-    time: '20:00',
-    roomId: 1,
-    createdBy: 3,
-    attendees: [1, 3, 4],
-    description: 'Movie + snacks in the living room.',
-  },
-  {
-    id: 4,
-    name: 'Apartment Inspection',
-    location: 'Entire Apartment',
-    date: '2025-11-20',
-    time: '10:00',
-    roomId: 1,
-    createdBy: 1,
-    attendees: [],
-    description: 'Landlord inspection.',
-  },
-  {
-    id: 5,
-    name: 'Rent Due',
-    location: 'Online Payment Portal',
-    date: '2025-12-01',
-    time: '09:00',
-    roomId: 1,
-    createdBy: 4,
-    attendees: [],
-    description: 'Monthly rent payment reminder.',
-  },
-  {
-    id: 6,
-    name: 'Holiday Party',
-    location: 'Common Area',
-    date: '2025-12-15',
-    time: '19:00',
-    roomId: 1,
-    createdBy: 5,
-    attendees: [1, 2, 3, 4, 5],
-    description: 'End-of-year party.',
-  },
-]
-
-app.get('/api/rooms/:roomId/events', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const roomEvents = events.filter(e => e.roomId === roomId)
-  res.json(roomEvents)
-})
-
-app.get('/api/rooms/:roomId/events/:id', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const id = parseInt(req.params.id)
-
-  const event = events.find(e => e.id === id && e.roomId === roomId)
-
-  if (!event) {
-    return res.status(404).json({ success: false, message: 'Event not found' })
-  }
-
-  res.json(event)
-})
-
-// GET events for a specific date
-app.get('/api/rooms/:roomId/events/date/:date', (req, res) => {
-  const roomId = parseInt(req.params.roomId);
-  const date = req.params.date; // YYYY-MM-DD format
-  
-  const dayEvents = events.filter(event => 
-    event.roomId === roomId && event.date === date
-  );
-  res.json(dayEvents);
-});
-
-// GET events for a specific month
-app.get('/api/rooms/:roomId/events/month/:year/:month', (req, res) => {
-  const roomId = parseInt(req.params.roomId);
-  const year = parseInt(req.params.year);
-  const month = parseInt(req.params.month);
-  
-  const monthEvents = events.filter(event => {
-    if (event.roomId !== roomId) return false;
-    
-    const eventDate = new Date(event.date);
-    return eventDate.getFullYear() === year && eventDate.getMonth() === month;
-  });
-  
-  res.json(monthEvents);
-});
-app.put('/api/rooms/:roomId/events/:id', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const id = parseInt(req.params.id)
-  const { name, location, date, time, description } = req.body
-
-  const index = events.findIndex(e => e.id === id && e.roomId === roomId)
-
-  if (index === -1) {
-    return res.status(404).json({ success: false, message: 'Event not found' })
-  }
-
-  events[index] = {
-    ...events[index],
-    name: name !== undefined ? name : events[index].name,
-    location: location !== undefined ? location : events[index].location,
-    date: date !== undefined ? date : events[index].date,
-    time: time !== undefined ? time : events[index].time,
-    description: description !== undefined ? description : events[index].description,
-  }
-
-  res.json(events[index])
-})
-
-app.post('/api/rooms/:roomId/events/:id/attendance', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const id = parseInt(req.params.id)
-  const { userId, isAttending } = req.body
-
-  const index = events.findIndex(e => e.id === id && e.roomId === roomId)
-
-  if (index === -1) {
-    return res.status(404).json({ success: false, message: 'Event not found' })
-  }
-
-  const attendingUserId = parseInt(userId)
-  const event = events[index]
-
-  if (!Array.isArray(event.attendees)) {
-    event.attendees = []
-  }
-
-  const isAlreadyAttending = event.attendees.includes(attendingUserId)
-
-  if (isAttending && !isAlreadyAttending) {
-    event.attendees.push(attendingUserId)
-  } else if (!isAttending && isAlreadyAttending) {
-    event.attendees = event.attendees.filter(uid => uid !== attendingUserId)
-  }
-
-  res.json({ success: true, event: events[index] })
-})
-
-app.post('/api/rooms/:roomId/events', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const { name, location, date, time, description, createdBy } = req.body
-
-  const newId = Math.max(...events.map(e => e.id), 0) + 1
-
-  const newEvent = {
-    id: newId,
-    name,
-    location,
-    date,
-    time,
-    description: description || '',
-    roomId,
-    createdBy: parseInt(createdBy),
-    attendees: [parseInt(createdBy)], 
-  }
-
-  events.push(newEvent)
-  res.status(201).json(newEvent)
-})
-
-// delete is optional for now, going to implement it later, need to discuss wiht the team
-app.delete('/api/rooms/:roomId/events/:id', (req, res) => {
-  const roomId = parseInt(req.params.roomId)
-  const id = parseInt(req.params.id)
-
-  const index = events.findIndex(e => e.id === id && e.roomId === roomId)
-
-  if (index === -1) {
-    return res.status(404).json({ success: false, message: 'Event not found' })
-  }
-
-  events.splice(index, 1)
-  res.json({ success: true })
-})
 
 // ========================================
 // PROFILE MANAGEMENT
