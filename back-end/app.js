@@ -74,7 +74,7 @@ import choreRoutes from './routes/chore-routes.js'
 import eventRoutes from './routes/event-routes.js'
 import roomRoutes from './routes/room-routes.js'
 import profileRoutes from './routes/profile-routes.js'
-
+import roommateRoutes from './routes/roommate-routes.js'
 
 // ========================================
 // SPECIALIZED ROUTING FILES
@@ -85,7 +85,7 @@ app.use('/api', choreRoutes()) // all requests for /api/rooms/:roomId/chores/* w
 app.use('/api', eventRoutes()) // all requests for /api/rooms/:roomId/events/* will be handled by the eventRoutes router
 app.use('/api/rooms', roomRoutes())
 app.use('/api', profileRoutes()) // all requests for /api/users/:userId/profile/* will be handled by profileRoutes
-
+app.use('/api/roommates', roommateRoutes())
 
 // ========================================
 // MONGOOSE CONNECTION

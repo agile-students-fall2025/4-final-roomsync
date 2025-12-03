@@ -11,7 +11,7 @@ const CompatibilityFinder = () => {
       </p>
 
       <div className="compat-buttons">
-        <Link className="compat-btn compat-btn-primary"
+        <Link className="compat-btn"
               to="/compatibility/roommate/essay">
           Looking for roommate
         </Link>
@@ -22,9 +22,9 @@ const CompatibilityFinder = () => {
         </Link>
       </div>
 
-      <div className="compat-back">
+      {/* <div className="compat-back">
         <Link to="/dashboard">&#8592; Back to Home</Link>
-      </div>
+      </div> */}
     </div>
   );
 };

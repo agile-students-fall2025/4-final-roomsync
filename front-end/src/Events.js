@@ -54,9 +54,6 @@ const Events = props => {
   return (
     <div className="Events-container">
       <div className="Events-header">
-        <button className="Back-button" onClick={() => navigate('/SkillSwap')}>
-          &lt;
-        </button>
         <h1>Events</h1>
       </div>
 
