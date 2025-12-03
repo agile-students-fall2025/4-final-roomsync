@@ -9,6 +9,8 @@ import passport from 'passport'
 import cookieParser from 'cookie-parser';
 import cors from 'cors'
 import morgan from 'morgan'
+import RoommateEssay from './models/Compatibility/RoommateEssay.js'
+
 
 
 const __filename = fileURLToPath(import.meta.url)
@@ -76,6 +78,7 @@ import roomRoutes from './routes/room-routes.js'
 import profileRoutes from './routes/profile-routes.js'
 import roommateRoutes from './routes/roommate-routes.js'
 
+
 // ========================================
 // SPECIALIZED ROUTING FILES
 // ========================================
@@ -99,24 +102,6 @@ mongoose.connect(process.env.MONGODB_URI)
     console.error('User account authentication will fail')
   })
 
-// ========================================
-// COMPATIBILITY FINDER MODELS
-// ========================================
-
-const roommateEssaySchema = new mongoose.Schema(
-  {
-    userId: { type: Number, required: false },
-    roomId: { type: Number, required: true },
-    title: { type: String, required: true },
-    aboutMe: { type: String, required: true },
-    idealRoommate: { type: String, default: '' },
-    lifestyleDetails: { type: String, default: '' },
-    createdAt: { type: Date, default: Date.now }
-  },
-  { collection: 'roommate_essays' }
-)
-
-const RoommateEssay = mongoose.model('RoommateEssay', roommateEssaySchema)
 
 // ========================================
 // USER MANAGEMENT
