@@ -289,3 +289,51 @@ export const getCurrentUserInfo = async () => {
     return null
   }
 }
+
+export const getProfile = async (userId) => {
+  try {
+    const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
+      headers: getAuthHeaders()
+    })
+
+    if (!response.ok) return null
+
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Error fetching profile:', error)
+    return null
+  }
+}
+
+export const createProfile = async (userId, profileData) => {
+  try {
+    const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(profileData)
+    })
+
+    const result = await response.json()
+    return result
+  } catch (error) {
+    console.error('Error creating profile:', error)
+    return { success: false, message: 'Network error' }
+  }
+}
+
+export const updateProfile = async (userId, profileData) => {
+  try {
+    const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(profileData)
+    })
+
+    const result = await response.json()
+    return result
+  } catch (error) {
+    console.error('Error updating profile:', error)
+    return { success: false, message: 'Network error' }
+  }
+}

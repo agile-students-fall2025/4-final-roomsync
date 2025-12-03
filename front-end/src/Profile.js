@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import './Profile.css'
-import { getCurrentUser } from './api/users'
+import { getCurrentUser, getProfile, createProfile, updateProfile } from './api/users'
 
 const Profile = props => {
-  const user = getCurrentUser() //eslem
+  const user = getCurrentUser()
   const [profile, setProfile] = useState(null)
+  const [loading, setLoading] = useState(true)
   const [isSkillsOpen, setIsSkillsOpen] = useState(false)
 
   const [formData, setFormData] = useState({
@@ -15,28 +16,53 @@ const Profile = props => {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      if (!user?.id) {
+        setLoading(false)
+        return
+      }
+
       try {
-        const res = await fetch(`/api/users/${user.id}/profile`)
+        setLoading(true)
+        const data = await getProfile(user.id)
 
-        if (!res.ok) {
-          console.error('Failed to fetch profile')
-          return
+        if (data) {
+          setProfile(data)
+          setFormData({
+            about: data.about || '',
+            isPublic: data.isPublic ?? true,
+            community: data.community || '',
+          })
+        } else {
+          // Profile doesn't exist, create one automatically
+          console.log('Profile not found, creating new profile...')
+          const newProfile = await createProfile(user.id, {
+            about: '',
+            isPublic: true,
+            community: '',
+            skills: [],
+            profilePicture: null
+          })
+
+          if (newProfile && newProfile.success !== false) {
+            setProfile(newProfile)
+            setFormData({
+              about: newProfile.about || '',
+              isPublic: newProfile.isPublic ?? true,
+              community: newProfile.community || '',
+            })
+          } else {
+            console.error('Failed to create profile:', newProfile?.message)
+          }
         }
-
-        const data = await res.json()
-        setProfile(data)
-        setFormData({
-          about: data.about || '',
-          isPublic: data.isPublic ?? true,
-          community: data.community || '',
-        })
       } catch (err) {
         console.error('Error fetching profile:', err)
+      } finally {
+        setLoading(false)
       }
     }
 
     fetchProfile()
-  }, [])
+  }, [user?.id])
 
   const handleInputChange = e => {
     const { name, value } = e.target
@@ -59,38 +85,62 @@ const Profile = props => {
 
   const handleSave = async () => {
     try {
-      const res = await fetch(`/api/users/${user.id}/profile`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          about: formData.about,
-          isPublic: formData.isPublic,
-          community: formData.community,
-        }),
+      const result = await updateProfile(user.id, {
+        about: formData.about,
+        isPublic: formData.isPublic,
+        community: formData.community,
       })
 
-      if (!res.ok) {
+      if (result.success === false) {
         console.error('Failed to save profile changes')
+        alert(result.message || 'Failed to save profile')
         return
       }
 
-      const updatedProfile = await res.json()
-      setProfile(updatedProfile)
+      setProfile(result)
       setFormData({
-        about: updatedProfile.about || '',
-        isPublic: updatedProfile.isPublic ?? true,
-        community: updatedProfile.community || '',
+        about: result.about || '',
+        isPublic: result.isPublic ?? true,
+        community: result.community || '',
       })
-      console.log('Profile saved:', updatedProfile)
+      alert('Profile saved successfully!')
     } catch (err) {
       console.error('Error saving profile:', err)
+      alert('Error saving profile')
     }
   }
 
+  if (!user) {
+    return (
+      <div className="Profile-container">
+        <div className="Profile-header">
+          <h1>Profile</h1>
+        </div>
+        <p>Please log in to view your profile.</p>
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className="Profile-container">
+        <div className="Profile-header">
+          <h1>Profile</h1>
+        </div>
+        <p>Loading profile...</p>
+      </div>
+    )
+  }
+
   if (!profile) {
-    return <div className="Profile-container">Loading profile...</div>
+    return (
+      <div className="Profile-container">
+        <div className="Profile-header">
+          <h1>Profile</h1>
+        </div>
+        <p>Unable to load or create profile. Please try refreshing the page or contact support.</p>
+      </div>
+    )
   }
 
   return (
@@ -109,7 +159,7 @@ const Profile = props => {
             )}
           </div>
           <div className="Profile-info">
-            <h2>{user.name}</h2>
+            <h2>{user.username}</h2>
             <p>Community: {formData.community || 'Not set'}</p>
           </div>
         </div>
@@ -142,6 +192,7 @@ const Profile = props => {
             <button
               className="Skills-header"
               onClick={toggleSkillsDropdown}
+              type="button"
             >
               <span>Skills</span>
               <span className={`arrow ${isSkillsOpen ? 'open' : ''}`}>▼</span>
@@ -153,9 +204,11 @@ const Profile = props => {
                     {skill}
                   </div>
                 ))}
-                <div className="skill-item others">
-                  Others: ...
-                </div>
+                {profile.skills?.length === 0 && (
+                  <div className="skill-item others">
+                    No skills added yet
+                  </div>
+                )}
               </div>
             )}
           </div>
