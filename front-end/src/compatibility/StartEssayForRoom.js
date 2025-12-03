@@ -199,16 +199,16 @@ const StartEssayForRoom = () => {
             <label className="chip">
               <input 
                 type="checkbox" 
-                checked={amenities.includes('Wi-Fi')}
-                onChange={() => toggleAmenity('Wi-Fi')}
-              /> Wi-Fi
+                checked={amenities.includes('Pet-friendly')}
+                onChange={() => toggleAmenity('Pet-friendly')}
+              /> Pet-friendly
             </label>
             <label className="chip">
               <input
                 type="checkbox"
-                checked={amenities.includes('Laundry')}
-                onChange={() => toggleAmenity('Laundry')}
-              /> Laundry
+                checked={amenities.includes('In-unit-Laundry')}
+                onChange={() => toggleAmenity('In-unit-Laundry')}
+              /> In-unit Laundry
             </label>
             <label className="chip">
               <input
@@ -234,13 +234,6 @@ const StartEssayForRoom = () => {
             <label className="chip">
               <input
                 type="checkbox"
-                checked={amenities.includes('Furnished')}
-                onChange={() => toggleAmenity('Furnished')}
-              /> Furnished
-            </label>
-            <label className="chip">
-              <input
-                type="checkbox"
                 checked={amenities.includes('Doorman')}
                 onChange={() => toggleAmenity('Doorman')}
               /> Doorman
@@ -253,7 +246,7 @@ const StartEssayForRoom = () => {
 
         {/* Actions */}
         <div className="form-actions">
-          <Link className="compat-btn" to="/compatibility/roommate/essay">← Back</Link>
+          <Link className="compat-btn" to="/compatibility/room/potentialrooms">← Back</Link>
           <button 
             type="submit"
             className="compat-btn compat-btn-primary" 

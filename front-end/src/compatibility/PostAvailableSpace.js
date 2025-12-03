@@ -168,9 +168,9 @@ const PostAvailableSpace = () => {
             <label className="chip">
               <input
                 type="checkbox"
-                checked={amenities.includes('Wi-Fi')}
-                onChange={() => toggleAmenity('Wi-Fi')}
-              /> Wi-Fi
+                checked={amenities.includes('Pet-friendly')}
+                onChange={() => toggleAmenity('Pet-friendly')}
+              /> Pet-friendly
             </label>
             <label className="chip">
               <input
@@ -203,9 +203,9 @@ const PostAvailableSpace = () => {
             <label className="chip">
               <input
                 type="checkbox"
-                checked={amenities.includes('Furnished')}
-                onChange={() => toggleAmenity('Furnished')}
-              /> Furnished
+                checked={amenities.includes('Doorman')}
+                onChange={() => toggleAmenity('Doorman')}
+              /> Doorman
             </label>
           </div>
         </section>
