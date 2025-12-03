@@ -129,7 +129,7 @@ export default function CreateHome() {
         alert(`Some invitations failed:\n${errorMessages}`);
       } 
       else {
-        alert('All invitations sent successfully!');
+        alert('User added household successfully');
         await checkUserRoomStatus(); // Refresh room status
         navigate('/create');
       }

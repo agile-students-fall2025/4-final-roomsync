@@ -1,4 +1,4 @@
-import { Link,useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './SkillSwap.css'
 
 const SkillSwap = props => {
@@ -6,14 +6,12 @@ const SkillSwap = props => {
 
   return (
     <div className="SkillSwap-container">
-      <div className="SkillSwap-header">
-        {/* We may not need this */}
-        {/* <button className="Back-button" onClick={() => navigate(-1)}> 
-          &lt;
-        </button> */}  
-        <h1>Skill Swap</h1>
+      <div>
+       
+        <h1 className="title">Skill Swap</h1>
+        <p className="subtitle">See the events around your neighborhood</p>
       </div>
-      <p>See the events around your neighborhood</p>
+      
 
       <div className="SkillSwap-buttons">
         <button 

@@ -26,17 +26,13 @@
 }
 
 .compat-btn {
-  display: inline-block;
-  text-decoration: none;
-  text-align: center;
-  padding: 12px 18px;
-  min-width: 260px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  background: #f4f6ff;           
-  color: #333;
-  font-weight: 600;
-  transition: transform 0.02s ease, opacity 0.1s ease;
+  width: 100%;
+  max-width: 400px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  font-weight: 400;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .compat-btn:hover {
@@ -45,11 +41,6 @@
 
 .compat-btn:active {
   transform: translateY(1px);
-}
-
-.compat-btn-primary {
-  background: #e5e9ff;           
-  border-color: #cfd7ff;
 }
 
 .compat-back {
