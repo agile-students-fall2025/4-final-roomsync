@@ -36,12 +36,8 @@ const Login = props => {
         
         const currentUser = getCurrentUser()
         
-        if (currentUser) {
-          navigate('/create')
-        } 
-        else {
-          navigate('/landing')
-        }
+        if (currentUser) navigate('/dashboard')
+
 
       } else {
         setError(result.message || 'Login failed. Please check your credentials.')
