@@ -396,7 +396,7 @@ let availableSpaces = [
     startDate: '2025-12-01',
     endDate: '',
     roomType: 'Private',
-    amenities: ['Wi-Fi', 'Laundry', 'A/C'],
+    amenities: ['Pet-friendly', 'In-unit-Laundry', 'A/C'],
     houseRules: 'Quiet on weeknights, no indoor smoking, guests with heads-up.',
     idealRoommateTags: ['student', 'tidy', 'early riser'],
     createdAt: '2025-11-01',
