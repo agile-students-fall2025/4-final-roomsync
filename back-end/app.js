@@ -77,6 +77,7 @@ import roomRoutes from './routes/room-routes.js'
 import profileRoutes from './routes/profile-routes.js'
 import roommateRoutes from './routes/roommate-routes.js'
 import roommateEssayRoutes from './routes/roommate-essay-routes.js'
+import apartmentRoutes from './routes/apartment-routes.js'
 
 // ========================================
 // SPECIALIZED ROUTING FILES
@@ -89,6 +90,7 @@ app.use('/api/rooms', roomRoutes())
 app.use('/api', profileRoutes()) // all requests for /api/users/:userId/profile/* will be handled by profileRoutes
 app.use('/api/roommates', roommateRoutes())
 app.use('/api', roommateEssayRoutes())
+app.use('/api', apartmentRoutes())
 
 // ========================================
 // MONGOOSE CONNECTION
