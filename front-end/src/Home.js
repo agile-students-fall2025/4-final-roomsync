@@ -136,7 +136,6 @@ const Home = props => {
         <Link className="button-5" to="/payments">Payments</Link>
         <Link className="button-5" to="/compatibility">Compatibility Finder</Link>
         <Link className="button-5" to="/create-home">Invite Roommate</Link>
-        <Link className="button-5" to="/events">Event Calendar</Link>
       </div>
     </>
   )
