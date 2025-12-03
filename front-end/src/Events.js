@@ -110,6 +110,7 @@ const Events = props => {
           ))}
         </ul>
       </section>
+      <p>Go <a href="./skillswap">back</a> to skillswap menu</p>
     </div>
   )
 }
