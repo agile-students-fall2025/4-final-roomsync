@@ -73,6 +73,7 @@ import cookieRoutes from './routes/cookie-routes.js'
 import choreRoutes from './routes/chore-routes.js'
 import eventRoutes from './routes/event-routes.js'
 import roomRoutes from './routes/room-routes.js'
+import profileRoutes from './routes/profile-routes.js'
 
 
 // ========================================
@@ -83,6 +84,8 @@ app.use('/cookie', cookieRoutes()) // all requests for /cookie/* will be handled
 app.use('/api', choreRoutes()) // all requests for /api/rooms/:roomId/chores/* will be handled by the choreRoutes router
 app.use('/api', eventRoutes()) // all requests for /api/rooms/:roomId/events/* will be handled by the eventRoutes router
 app.use('/api/rooms', roomRoutes())
+app.use('/api', profileRoutes()) // all requests for /api/users/:userId/profile/* will be handled by profileRoutes
+
 
 // ========================================
 // MONGOOSE CONNECTION
@@ -984,131 +987,6 @@ app.delete('/api/user/:userId/room-essays/:id', (req, res) => {
   }
 
   roomEssays.splice(index, 1)
-  res.json({ success: true })
-})
-
-
-// ========================================
-// PROFILE MANAGEMENT
-// ========================================
-let profiles = [
-  { 
-    id: 1, 
-    userId: 1, 
-    about: '', 
-    skills: ['Guitar', 'Cooking', 'Photography'],
-    isPublic: true,
-    profilePicture: null,
-    community: 'Midtown West'
-  },
-  { 
-    id: 2, 
-    userId: 2, 
-    about: '', 
-    skills: ['Coding', 'Gaming'],
-    isPublic: true,
-    profilePicture: null,
-    community: 'Downtown Brooklyn'
-  },
-  { 
-    id: 3, 
-    userId: 3, 
-    about: '', 
-    skills: ['Photography', 'Music'],
-    isPublic: false,
-    profilePicture: null,
-    community: 'East Village'
-  },
-  { 
-    id: 4, 
-    userId: 4, 
-    about: '', 
-    skills: ['Cooking', 'Baking'],
-    isPublic: true,
-    profilePicture: null,
-    community: 'Midtown East'
-  },
-  { 
-    id: 5, 
-    userId: 5, 
-    about: '', 
-    skills: ['Sports', 'Fitness'],
-    isPublic: true,
-    profilePicture: null,
-    community: 'Upper West Side'
-  }
-]
-
-app.get('/api/users/:userId/profile', (req, res) => {
-  const userId = parseInt(req.params.userId)
-  const profile = profiles.find(p => p.userId === userId)
-  
-  if (profile) {
-    res.json(profile)
-  } else {
-    res.status(404).json({ success: false, message: 'Profile not found' })
-  }
-})
-
-app.post('/api/users/:userId/profile', (req, res) => {
-  const userId = parseInt(req.params.userId)
-  const { about, skills, isPublic, profilePicture, community } = req.body
-  
-  const existingProfile = profiles.find(p => p.userId === userId)
-  if (existingProfile) {
-    return res.status(400).json({ success: false, message: 'Profile already exists' })
-  }
-  
-  const newId = profiles.length > 0
-    ? Math.max(...profiles.map(p => p.id)) + 1
-    : 1
-
-  const newProfile = {
-    id: newId,
-    userId: userId,
-    about: about || '',
-    skills: Array.isArray(skills) ? skills : [],
-    isPublic: isPublic !== undefined ? Boolean(isPublic) : true,
-    profilePicture: profilePicture || null,
-    community: community || ''
-  }
-  
-  profiles.push(newProfile)
-  res.status(201).json(newProfile)
-})
-
-app.put('/api/users/:userId/profile', (req, res) => {
-  const userId = parseInt(req.params.userId)
-  const { about, skills, isPublic, profilePicture, community } = req.body
-  
-  const index = profiles.findIndex(p => p.userId === userId)
-  if (index === -1) {
-    return res.status(404).json({ success: false, message: 'Profile not found' })
-  }
-  
-  profiles[index] = {
-    ...profiles[index],
-    about: about !== undefined ? about : profiles[index].about,
-    skills: skills !== undefined
-      ? (Array.isArray(skills) ? skills : profiles[index].skills)
-      : profiles[index].skills,
-    isPublic: isPublic !== undefined ? Boolean(isPublic) : profiles[index].isPublic,
-    profilePicture: profilePicture !== undefined ? profilePicture : profiles[index].profilePicture,
-    community: community !== undefined ? community : profiles[index].community
-  }
-  
-  res.json(profiles[index])
-})
-
-app.delete('/api/users/:userId/profile', (req, res) => {
-  const userId = parseInt(req.params.userId)
-  const index = profiles.findIndex(p => p.userId === userId)
-  
-  if (index === -1) {
-    return res.status(404).json({ success: false, message: 'Profile not found' })
-  }
-  
-  profiles.splice(index, 1)
   res.json({ success: true })
 })
 
