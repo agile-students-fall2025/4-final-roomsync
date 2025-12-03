@@ -117,9 +117,27 @@ Our back-end is a simple Express server located in the `back-end` directory.
 
 ### Running the Back-end
 
-From the project root:
-
+1. **Set up environment variables**
+   
+   Create a `.env` file in the `back-end` directory and ask your Scrum Master or Product Owner for the MongoDB credentials to put in it.
 ```bash
-cd back-end
-npm install
-npm start        
+   cd back-end
+   touch .env
+```
+
+2. **Start the servers**
+   
+   Back-end (from `/back-end` directory):
+```bash
+   npm start
+```
+   
+   Front-end (from `/front-end` directory):
+```bash
+   npm start
+```
+   
+   If MongoDB connects successfully, you'll see:
+```
+   Successfully connected to MongoDB
+```
