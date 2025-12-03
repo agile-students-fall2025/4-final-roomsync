@@ -11,6 +11,8 @@ const Payments = props => {
   const [collapsedIds, setCollapsedIds] = useState(new Set())
 
   useEffect(() => {
+    if (!user) return
+
     const fetchData = async () => {
       // Fetch users
       const usersData = await getUsers()
@@ -76,6 +78,32 @@ const Payments = props => {
     })
 
     return (totalPaid - totalOwed).toFixed(2)
+  }
+
+  if (!user) {
+    return (
+      <div style={{
+        margin: '20px auto',
+        padding: '20px',
+        textAlign: 'center',
+        maxWidth: '1200px'
+      }}>
+        <h2>Please log in to view payments</h2>
+        <Link to="/login">
+          <button style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}>
+            Go to Login
+          </button>
+        </Link>
+      </div>
+    )
   }
 
   const userBalance = calculateBalance(user.id)
