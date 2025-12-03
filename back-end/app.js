@@ -73,7 +73,7 @@ import cookieRoutes from './routes/cookie-routes.js'
 import choreRoutes from './routes/chore-routes.js'
 import eventRoutes from './routes/event-routes.js'
 import roomRoutes from './routes/room-routes.js'
-
+import roommateRoutes from './routes/roommate-routes.js'
 
 // ========================================
 // SPECIALIZED ROUTING FILES
@@ -83,6 +83,7 @@ app.use('/cookie', cookieRoutes()) // all requests for /cookie/* will be handled
 app.use('/api', choreRoutes()) // all requests for /api/rooms/:roomId/chores/* will be handled by the choreRoutes router
 app.use('/api', eventRoutes()) // all requests for /api/rooms/:roomId/events/* will be handled by the eventRoutes router
 app.use('/api/rooms', roomRoutes())
+app.use('/api/roommates', roommateRoutes())
 
 // ========================================
 // MONGOOSE CONNECTION
