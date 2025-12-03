@@ -51,14 +51,8 @@ const Register = props => {
 
         if (currentUser) {
           console.log('Logged in user:', currentUser)
-          
-          if (currentUser.roomId) {
-            // User already has a room, go to dashboard
-            navigate('/dashboard')
-          } else {
-            // User needs to create/join a room
+               
             navigate('/create')
-          }
         }
         else {
           navigate('/landing')
