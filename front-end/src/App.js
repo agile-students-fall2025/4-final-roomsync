@@ -19,7 +19,7 @@ import StartEssayForRoommate from './compatibility/StartEssayForRoommate';
 import PostAvailableSpace from './compatibility/PostAvailableSpace';
 import PotentialRoommates from './compatibility/PotentialRoommates';
 import PotentialRoommateProfile from './compatibility/PotentialRoommateProfile';
-import StartEssayForRoom from './compatibility/StartEssayForRoom';
+import StartEssayForRoom from './compatibility/StartEssayForRoom.js';
 import Login from './Login';
 import Register from './Register';
 import Profile from './Profile';
