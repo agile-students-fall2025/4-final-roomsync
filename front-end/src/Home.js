@@ -1,21 +1,56 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './Home.css'
+import { getCurrentUser } from './api/users.js';
 
-/**
- * A React component that represents the Home page of the app.
- * @param {*} param0 an object holding any props passed to this component from its parent component
- * @returns The contents of this component, in JSX form.
- */
+const API_BASE = 'http://localhost:3001';
+
 const Home = props => {
-  //Temperary data from chores page
-    const [chores, setChores] = useState([
-      { id: 1, name: 'Clean Kitchen', assignedTo: 'Brian', finished: false },
-      { id: 2, name: 'Take Out Trash', assignedTo: 'Eslem', finished: false },
-      { id: 3, name: 'Vacuum Living Room', assignedTo: 'Jacod', finished: true }
-    ])
+  const user = getCurrentUser()
+  const [chores, setChores] = useState([])
+  const [loading, setLoading] = useState(false)
+  
+  useEffect(() => {
+    // Only fetch if user has a room
+    if (user?.roomId) {
+      const fetchData = async () => {
+        setLoading(true)
+        try {
+          const token = localStorage.getItem('token')
+          
+          const response = await fetch(`${API_BASE}/api/rooms/${user.roomId}/chores`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          })
+          
+          if (response.ok) {
+            const data = await response.json()
+            // Ensure it's an array
+            setChores(Array.isArray(data) ? data : [])
+          }
+        } catch (error) {
+          console.error('Error fetching chores:', error)
+          setChores([])
+        } finally {
+          setLoading(false)
+        }
+      }
+      fetchData()
+    }
+  }, [user?.roomId])
 
-    const [payments, setPayments] = useState([
+  // Safe filtering
+  const filteredChores = Array.isArray(chores) 
+    ? chores.filter(chore => 
+        chore.assignedTo === user?.id && 
+        chore.finished === false
+      )
+    : []
+
+  // Hardcoded for now
+  const [payments] = useState([
     { id: 1, name: "Pay electricity bill", amount: 120.5, createdAt: "2025-10-20", cleared: false, categoryId: 1, paidBy: 1, owedBy: [1, 2, 3, 4, 5] },
     { id: 2, name: "Refill water filter", amount: 35.0,  createdAt: "2025-10-18", cleared: true,  categoryId: 1, paidBy: 2, owedBy: [1, 2, 3] },
     { id: 3, name: "Buy milk",            amount: 4.25,  createdAt: "2025-10-25", cleared: true,  categoryId: 2, paidBy: 3, owedBy: [1, 3, 4] },
@@ -25,63 +60,86 @@ const Home = props => {
     { id: 7, name: "Check smoke detector",amount: 10.0,  createdAt: "2025-10-19", cleared: true,  categoryId: 3, paidBy: 2, owedBy: [2, 3, 5] },
   ]);
 
-    //TODO : this filteres accoring to the user id (use Brian for sprint 1)
-    const userID = 1; // this will be userId in the backend
-    
-    const filteredChores = chores.filter(chore => chore.id == userID && chore.finished == false && chore.assignedTo);
-    const user = chores.find(user => user.id = userID )
-
-
-
-    const filteredPayments = payments
-  .filter(payment => 
-    payment.paidBy === userID && 
-    payment.cleared === false && 
-    payment.owedBy.includes(1)
-  )
-  .map(payment => ({
-    ...payment,
-    amountPerPerson: payment.amount / payment.owedBy.length
-  }));
+  // Filter payments for current user
+  const filteredPayments = payments
+    .filter(payment => 
+      payment.owedBy.includes(user?.id) && 
+      payment.cleared === false &&
+      payment.paidBy !== user?.id
+    )
+    .map(payment => ({
+      ...payment,
+      amountPerPerson: payment.amount / payment.owedBy.length
+    }));
 
   return (
     <>
-    <div className="">
-      {/*TODO form will get the info from backend*/}
-      <h2>Welcome {user.assignedTo}</h2>
-      <form action="get">
-        <div className="statistics-home">
-          <div className="stats">
-            <h3>Your Upcoming Chorses</h3>
-            <ul id="chorses">
-              {filteredChores.map(chore => (
-                <li key={chores.id}>{chore.name}</li>
-              ))}
-            </ul>
+      <div className="home-container">
+        <h2>Welcome {user?.username || 'User'}</h2>
+        
+        {/* Show message if no room */}
+        {!user?.roomId && (
+          <div className="no-room-message" style={{
+            backgroundColor: '#fff3cd',
+            border: '1px solid #ffeaa7',
+            borderRadius: '8px',
+            padding: '15px',
+            margin: '20px 0',
+            color: '#856404'
+          }}>
+            <p>You are not in a household yet. Join or create one to see chores and payments.</p>
           </div>
-          <div className="stats">
-            <h3>Your Upcoming Payments</h3>
-            <ul id="payments">
-              {filteredPayments.map(payment => (
-                <li key={payments.id}>{payment.name} | {payment.amount}</li>
-              ))}
-            </ul>
-          </div>
-          
-        </div>
-      </form>
-    </div>
+        )}
+        
+        {user?.roomId && (
+          <form>
+            <div className="statistics-home">
+              <div className="stats">
+                <h3>Your Upcoming Chores</h3>
+                {loading ? (
+                  <p>Loading chores...</p>
+                ) : filteredChores.length === 0 ? (
+                  <p>No upcoming chores! 🎉</p>
+                ) : (
+                  <ul id="chores">
+                    {filteredChores.map(chore => (
+                      <li key={chore.id || chore._id || Math.random()}>
+                        {chore.name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              
+              <div className="stats">
+                <h3>Your Upcoming Payments</h3>
+                {filteredPayments.length === 0 ? (
+                  <p>No pending payments! 💰</p>
+                ) : (
+                  <ul id="payments">
+                    {filteredPayments.map(payment => (
+                      <li key={payment.id}>
+                        {payment.name} | ${payment.amountPerPerson?.toFixed(2)}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </form>
+        )}
+      </div>
 
-    <div className="buttons-home">
-      <a className="button-5" href="skillswap">Skill Swap</a>
-      <a className="button-5" href="/chores">Chores</a>
-      <a className="button-5" href="/payments">Payments</a>
-      <a className="button-5" href="/compatibility">Compatibility Finder</a>
-      <a className="button-5" href="/create">Invite Roommate</a>
-    </div>
+      <div className="buttons-home">
+        <Link className="button-5" to="/skillswap">Skill Swap</Link>
+        <Link className="button-5" to="/chores">Chores</Link>
+        <Link className="button-5" to="/payments">Payments</Link>
+        <Link className="button-5" to="/compatibility">Compatibility Finder</Link>
+        <Link className="button-5" to="/create-home">Invite Roommate</Link>
+        <Link className="button-5" to="/events">Event Calendar</Link>
+      </div>
     </>
   )
 }
 
-// make this component available to be imported into any other file
 export default Home
