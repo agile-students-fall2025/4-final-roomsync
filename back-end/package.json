@@ -16,6 +16,7 @@
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "dependencies": "^0.0.1",
     "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "express-validator": "^7.3.1",
