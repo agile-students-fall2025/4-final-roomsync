@@ -78,6 +78,7 @@ import profileRoutes from './routes/profile-routes.js'
 import roommateRoutes from './routes/roommate-routes.js'
 import roommateEssayRoutes from './routes/roommate-essay-routes.js'
 import apartmentRoutes from './routes/apartment-routes.js'
+import potentialRoommateRoutes from './routes/potential-roommate-routes.js'
 
 // ========================================
 // SPECIALIZED ROUTING FILES
@@ -91,6 +92,7 @@ app.use('/api', profileRoutes()) // all requests for /api/users/:userId/profile/
 app.use('/api/roommates', roommateRoutes())
 app.use('/api', roommateEssayRoutes())
 app.use('/api', apartmentRoutes())
+app.use('/api', potentialRoommateRoutes())
 
 // ========================================
 // MONGOOSE CONNECTION
@@ -463,73 +465,6 @@ app.delete('/api/rooms/:roomId/available-spaces/:id', (req, res) => {
   res.json({ success: true })
 })
 
-// POTENTIAL ROOMMATES (VIEW-ONLY)
-let potentialRoommates = [
-  {
-    id: 1,
-    name: 'Alex Kim',
-    budget: '$1,600–$1,800',
-    areas: ['Union Square', 'East Village'],
-    tags: ['student', 'early riser', 'gym'],
-    essay: {
-      about:
-        'CS student who trains MMA and lifts. Pretty focused during the week, more social on weekends.',
-      prefs:
-        'Prefer a fairly tidy place, quiet-ish on weeknights, totally fine with guests as long as there is a heads-up.',
-      dealbreakers:
-        'Full-time party house, smoking inside the apartment, or people who never clean shared spaces.',
-    },
-  },
-  {
-    id: 2,
-    name: 'Jordan Lee',
-    budget: '$1,400–$1,600',
-    areas: ['Brooklyn Heights', 'Lower Manhattan'],
-    tags: ['grad student', 'night owl', 'music'],
-    essay: {
-      about:
-        'Grad student who produces music on headphones on low volume. Laid-back and friendly.',
-      prefs:
-        'Okay with some noise later at night, prefers roommates who communicate directly about issues.',
-      dealbreakers:
-        'Passive-aggressive notes, people who never pay their share on time.',
-    },
-  },
-  {
-    id: 3,
-    name: 'Taylor Rivera',
-    budget: '$1,700–$2,000',
-    areas: ['Chelsea', 'Flatiron'],
-    tags: ['professional', 'tidy', 'chef'],
-    essay: {
-      about:
-        'Young professional working hybrid. Loves cooking and sharing meals if roommates are down.',
-      prefs:
-        'Really values cleanliness in the kitchen and bathroom, open communication about guests.',
-      dealbreakers:
-        'Unwashed dishes piling up for days, surprise overnight guests every week.',
-    },
-  },
-]
-
-// GET all potential roommates
-app.get('/api/potential-roommates', (req, res) => {
-  res.json(potentialRoommates)
-})
-
-// GET a single potential roommate by id
-app.get('/api/potential-roommates/:id', (req, res) => {
-  const id = parseInt(req.params.id)
-  const roommate = potentialRoommates.find((r) => r.id === id)
-
-  if (!roommate) {
-    return res
-      .status(404)
-      .json({ success: false, message: 'Potential roommate not found' })
-  }
-
-  res.json(roommate)
-})
 
 // ========================================
 // LOOING FOR MANAGEMENT
