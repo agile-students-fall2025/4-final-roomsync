@@ -61,6 +61,11 @@ const ApartmentSchema = new Schema({
       },
       message: 'No more than 10 images'
     }
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: false
   }
 }, {
   timestamps: true
