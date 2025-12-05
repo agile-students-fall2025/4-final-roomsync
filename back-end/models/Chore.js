@@ -16,7 +16,7 @@ const ChoreSchema = new Schema({
     default: false,
   },
   roomId: {
-    type: Number,
+    type: Schema.Types.ObjectId,
     required: true,
   },
 }, {
