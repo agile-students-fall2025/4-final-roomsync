@@ -3,10 +3,19 @@ import { useNavigate, useParams } from 'react-router-dom'
 import './PaymentDetails.css'
 import { getCurrentUser, getUsers } from './api/users'
 
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token')
+  return {
+    'Content-Type': 'application/json',
+    ...(token && { 'Authorization': `Bearer ${token}` })
+  }
+}
+
 const PaymentDetails = () => {
   const user = getCurrentUser();
   const navigate = useNavigate()
   const { paymentId } = useParams()
+  const isEditMode = !!paymentId
 
   // users from API
   const [users, setUsers] = useState([])
@@ -24,49 +33,42 @@ const PaymentDetails = () => {
   })
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const data = await getUsers()
-      setUsers(data)
-    }
-    fetchUsers()
-  }, [])
+    const fetchData = async () => {
+      // Fetch users first
+      const usersData = await getUsers()
+      setUsers(usersData)
 
-  useEffect(() => {
-    const fetchPayment = async () => {
-      const idNum = Number(paymentId)
-      if (!Number.isFinite(idNum)) {
-        setPayment(null)
-        return
-      }
-
-      try {
-        const response = await fetch(`/api/rooms/${user.roomId}/payments/${idNum}`)
-        if (!response.ok) {
-          setPayment(null)
-          return
-        }
-        const fetched = await response.json()
-        setPayment(fetched)
-
-        if (fetched) {
+      // If editing, fetch the payment data
+      if (paymentId) {
+        try {
+          const response = await fetch(`/api/rooms/${user.roomId}/payments/${paymentId}`, {
+            headers: getAuthHeaders()
+          })
+          if (!response.ok) {
+            console.error('Failed to fetch payment')
+            return
+          }
+          const fetched = await response.json()
+          setPayment(fetched)
           setFormData({
             id: fetched.id,
             name: fetched.name,
             amount: fetched.amount,
-            createdAt: fetched.createdAt,
+            createdAt: fetched.createdAt || new Date().toISOString().split('T')[0],
             cleared: fetched.cleared,
             categoryId: fetched.categoryId,
             paidBy: fetched.paidBy,
             owedBy: [...fetched.owedBy],
           })
+        } catch (error) {
+          console.error('Error fetching payment:', error)
         }
-      } catch (error) {
-        console.error('Error fetching payment:', error)
-        setPayment(null)
+      } else {
+        // Add mode - set default payment object
+        setPayment({})
       }
     }
-
-    fetchPayment()
+    fetchData()
   }, [paymentId])
 
   const getUserNameSync = id => {
@@ -109,16 +111,19 @@ const PaymentDetails = () => {
 
   const handleSave = async () => {
     try {
-      const response = await fetch(`/api/rooms/${user.roomId}/payments/${formData.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const url = isEditMode
+        ? `/api/rooms/${user.roomId}/payments/${paymentId}`
+        : `/api/rooms/${user.roomId}/payments`
+      const method = isEditMode ? 'PUT' : 'POST'
+
+      const response = await fetch(url, {
+        method,
+        headers: getAuthHeaders(),
         body: JSON.stringify(formData),
       })
 
       if (response.ok) {
-        console.log('Payment saved successfully')
+        console.log(isEditMode ? 'Payment updated' : 'Payment created')
         navigate('/payments')
       } else {
         console.error('Error saving payment')
@@ -128,7 +133,7 @@ const PaymentDetails = () => {
     }
   }
 
-  if (!payment) {
+  if (payment === null) {
     return <div className="PaymentDetails-loading">Loading...</div>
   }
 
@@ -138,11 +143,11 @@ const PaymentDetails = () => {
         <button className="Back-button" onClick={() => navigate('/payments')}>
           &lt;
         </button>
-        <strong>{payment.name}</strong>
+        <strong>{isEditMode ? payment.name : 'New Payment'}</strong>
       </div>
 
       <section className="PaymentDetails-section">
-        <h2>Edit Payment</h2>
+        <h2>{isEditMode ? 'Edit Payment' : 'Add New Payment'}</h2>
 
         <div className="form-group">
           <label htmlFor="name">Payment Name:</label>
@@ -200,7 +205,7 @@ const PaymentDetails = () => {
       </section>
 
       <button className="Save-button" onClick={handleSave}>
-        Save Changes
+        {isEditMode ? 'Save Changes' : 'Add Payment'}
       </button>
     </div>
   )

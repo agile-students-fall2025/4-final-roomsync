@@ -3,6 +3,14 @@ import { Link } from 'react-router-dom'
 import './Payments.css'
 import { getCurrentUser, getUsers } from './api/users'
 
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token')
+  return {
+    'Content-Type': 'application/json',
+    ...(token && { 'Authorization': `Bearer ${token}` })
+  }
+}
+
 const Payments = props => {
   const user = getCurrentUser();
   const [users, setUsers] = useState([])
@@ -20,7 +28,9 @@ const Payments = props => {
 
       // Fetch categories
       try {
-        const categoriesResponse = await fetch('/api/categories')
+        const categoriesResponse = await fetch('/api/categories', {
+          headers: getAuthHeaders()
+        })
         const categoriesData = await categoriesResponse.json()
         setCategories(categoriesData)
         setCollapsedIds(new Set(categoriesData.map(category => category.id)))
@@ -30,11 +40,21 @@ const Payments = props => {
 
       // Fetch payments
       try {
-        const paymentsResponse = await fetch(`/api/rooms/${user.roomId}/payments`)
+        const paymentsResponse = await fetch(`/api/rooms/${user.roomId}/payments`, {
+          headers: getAuthHeaders()
+        })
+
+        if (!paymentsResponse.ok) {
+          console.error('Failed to fetch payments:', paymentsResponse.status)
+          setExpenses([])
+          return
+        }
+
         const paymentsData = await paymentsResponse.json()
-        setExpenses(paymentsData)
+        setExpenses(Array.isArray(paymentsData) ? paymentsData : [])
       } catch (error) {
         console.error('Error fetching payments:', error)
+        setExpenses([])
       }
     }
     fetchData()
@@ -64,13 +84,17 @@ const Payments = props => {
     let totalPaid = 0
     let totalOwed = 0
 
+    if (!Array.isArray(expenses)) {
+      return '0.00'
+    }
+
     expenses.forEach(expense => {
       if (!expense.cleared) {
         if (expense.paidBy === userId) {
           totalPaid += expense.amount
         }
 
-        if (expense.owedBy.includes(userId)) {
+        if (Array.isArray(expense.owedBy) && expense.owedBy.includes(userId)) {
           const share = expense.amount / expense.owedBy.length
           totalOwed += share
         }
@@ -134,6 +158,22 @@ const Payments = props => {
         <div style={{ marginTop: '10px', fontSize: '16px' }}>
           {userBalance >= 0 ? <span style={{ color: '#2d5016' }}>You are owed: ${userBalance}</span> : <span style={{ color: '#8b0000' }}>You owe: ${Math.abs(userBalance)}</span>}
         </div>
+      </div>
+
+      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+        <Link to="/payments/add">
+          <button style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#28a745',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}>
+            Add New Payment
+          </button>
+        </Link>
       </div>
 
       <ul className="Payments-list">
