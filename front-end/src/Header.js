@@ -53,6 +53,9 @@ const Header = props => {
           <li className="nav-item">
             <Link to="/compatibility">Compatibility Finder</Link>
           </li>
+          <li className="nav-item">
+            <Link to="/profile">Profile</Link>
+          </li>
           <li onClick={handleLogout} className="nav-item">
             <Link to="/landing">Logout</Link>
           </li>
