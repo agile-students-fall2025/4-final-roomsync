@@ -22,6 +22,17 @@ const UserSchema = new Schema({
     required: false,
     default: null,
   }
+}, {
+  toJSON: {
+    virtuals: true,
+    transform: function(doc, ret) {
+      ret.id = ret._id
+      ret.name = ret.username
+      delete ret.password
+      delete ret.__v
+      return ret
+    }
+  }
 })
 
 const User = mongoose.model('User', UserSchema)
