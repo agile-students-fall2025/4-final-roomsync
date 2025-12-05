@@ -22,7 +22,13 @@ const ChoreDetails = props => {
       // If editing, fetch the chore data
       if (id) {
         try {
-          const response = await fetch(`/api/rooms/${user.roomId}/chores/${id}`)
+          const token = localStorage.getItem('token')
+          const response = await fetch(`/api/rooms/${user.roomId}/chores/${id}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          })
           const chore = await response.json()
           setChoreName(chore.name)
           setAssignedTo(chore.assignedTo.toString())
@@ -38,7 +44,7 @@ const ChoreDetails = props => {
     e.preventDefault()
     const choreData = {
       name: choreName,
-      assignedTo: parseInt(assignedTo)
+      assignedTo: assignedTo
     }
 
     try {
@@ -46,10 +52,12 @@ const ChoreDetails = props => {
         ? `/api/rooms/${user.roomId}/chores/${id}`
         : `/api/rooms/${user.roomId}/chores`
       const method = isEditMode ? 'PUT' : 'POST'
+      const token = localStorage.getItem('token')
 
       const response = await fetch(url, {
         method,
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(choreData),

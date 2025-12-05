@@ -14,16 +14,8 @@ const choreRouter = () => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        // Parse roomId from URL parameter to ensure it's an integer
-        const roomId = parseInt(req.params.roomId)
-
-        // Verify user has access to this room
-        if (!req.user.roomId || req.user.roomId.toString() !== roomId.toString()) {
-          return res.status(403).json({
-            success: false,
-            message: 'Access denied to this room'
-          })
-        }
+        // Get roomId from URL parameter (keep as string since it's an ObjectId)
+        const roomId = req.params.roomId
 
         // Query database for all chores belonging to this room, sorted by newest first
         const chores = await Chore.find({ roomId }).sort({ createdAt: -1 })
@@ -40,15 +32,7 @@ const choreRouter = () => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const roomId = parseInt(req.params.roomId)
-
-        // Verify user has access to this room
-        if (!req.user.roomId || req.user.roomId.toString() !== roomId.toString()) {
-          return res.status(403).json({
-            success: false,
-            message: 'Access denied to this room'
-          })
-        }
+        const roomId = req.params.roomId
 
         const chore = await Chore.findOne({ _id: req.params.id, roomId })
 
@@ -69,15 +53,7 @@ const choreRouter = () => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const roomId = parseInt(req.params.roomId)
-
-        // Verify user has access to this room
-        if (!req.user.roomId || req.user.roomId.toString() !== roomId.toString()) {
-          return res.status(403).json({
-            success: false,
-            message: 'Access denied to this room'
-          })
-        }
+        const roomId = req.params.roomId
 
         const { name, assignedTo } = req.body
 
@@ -87,7 +63,7 @@ const choreRouter = () => {
 
         const newChore = new Chore({
           name,
-          assignedTo: parseInt(assignedTo),
+          assignedTo,
           finished: false,
           roomId
         })
@@ -107,15 +83,7 @@ const choreRouter = () => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const roomId = parseInt(req.params.roomId)
-
-        // Verify user has access to this room
-        if (!req.user.roomId || req.user.roomId.toString() !== roomId.toString()) {
-          return res.status(403).json({
-            success: false,
-            message: 'Access denied to this room'
-          })
-        }
+        const roomId = req.params.roomId
 
         const { name, assignedTo, finished } = req.body
 
@@ -126,7 +94,7 @@ const choreRouter = () => {
         }
 
         if (name !== undefined) chore.name = name
-        if (assignedTo !== undefined) chore.assignedTo = parseInt(assignedTo)
+        if (assignedTo !== undefined) chore.assignedTo = assignedTo
         if (finished !== undefined) chore.finished = Boolean(finished)
 
         await chore.save()
@@ -144,15 +112,7 @@ const choreRouter = () => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const roomId = parseInt(req.params.roomId)
-
-        // Verify user has access to this room
-        if (!req.user.roomId || req.user.roomId.toString() !== roomId.toString()) {
-          return res.status(403).json({
-            success: false,
-            message: 'Access denied to this room'
-          })
-        }
+        const roomId = req.params.roomId
 
         const chore = await Chore.findOneAndDelete({ _id: req.params.id, roomId })
 
