@@ -246,7 +246,7 @@ const StartEssayForRoom = () => {
 
         {/* Actions */}
         <div className="form-actions">
-          <Link className="compat-btn" to="/compatibility/room/potentialrooms">← Back</Link>
+          <Link className="compat-btn" to="/compatibility/">← Back</Link>
           <button 
             type="submit"
             className="compat-btn compat-btn-primary" 

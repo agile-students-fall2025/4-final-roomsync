@@ -19,7 +19,13 @@ const Chores = props => {
 
       // Fetch chores
       try {
-        const response = await fetch(`/api/rooms/${user.roomId}/chores`)
+        const token = localStorage.getItem('token')
+        const response = await fetch(`/api/rooms/${user.roomId}/chores`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
         const choresData = await response.json()
         setChores(Array.isArray(choresData) ? choresData : [])
       } catch (error) {
@@ -40,9 +46,11 @@ const Chores = props => {
     if (!chore) return
 
     try {
+      const token = localStorage.getItem('token')
       const response = await fetch(`/api/rooms/${user.roomId}/chores/${id}`, {
         method: 'PUT',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ finished: !chore.finished }),

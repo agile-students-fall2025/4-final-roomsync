@@ -49,6 +49,7 @@ const App = props => {
 
             {/* a route for the payments page */}
             <Route path="/payments" element={<Payments />} />
+            <Route path="/payments/add" element={<PaymentDetails />} />
             <Route path="/payments/:paymentId" element={<PaymentDetails />} />
 
             {/* a route for the invite roommate to create a new home */}
