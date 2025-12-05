@@ -131,7 +131,7 @@ const Home = props => {
       </div>
 
       <div className="buttons-home">
-        <Link className="button-5" to="/skillswap">Skill Swap</Link>
+        {/* <Link className="button-5" to="/skillswap">Skill Swap</Link> */}
         <Link className="button-5" to="/chores">Chores</Link>
         <Link className="button-5" to="/payments">Payments</Link>
         <Link className="button-5" to="/compatibility">Compatibility Finder</Link>

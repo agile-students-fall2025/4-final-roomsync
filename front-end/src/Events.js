@@ -18,8 +18,13 @@ const Events = props => {
           console.error('No user or roomId found')
           return
         }
-        
-        const res = await fetch(`/api/rooms/${user.roomId}/events`)
+        const token = localStorage.getItem('token')
+        const res = await fetch(`/api/rooms/${user.roomId}/events`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          }) 
         const data = await res.json()
         console.log('Fetched events:', data)
         
