@@ -9,7 +9,7 @@ const roommateRouter = () => {
 
   // Validation rules
   const roommateValidationRules = [
-    body('aboutMe').trim().notEmpty().withMessage('About me is requred')
+    body('aboutMe').trim().notEmpty().withMessage('About me is required')
   ]
 
   // GET all roommates
@@ -19,8 +19,8 @@ const roommateRouter = () => {
       try {
         const roommates = await Roommate.find()
         res.json(roommates)
-      } catch (error) {
-        res.status(500).json({ message: error.message })
+      } catch (err) {
+        res.status(500).json({ message: err.message })
       }
     }
   )
@@ -37,9 +37,9 @@ const roommateRouter = () => {
         }
 
         res.json(roommate)
-      } catch (error) {
+      } catch (err) {
         console.error('Error fetching roommate:', err)
-        res.status(500).json({ success:false, message: error.message })
+        res.status(500).json({ success:false, message: err.message })
       }
     }
   )
@@ -99,7 +99,7 @@ const roommateRouter = () => {
   )
 
   // DELETE roommate
-  router.delete('/:id', 
+  router.delete('/roommate/:id', 
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
