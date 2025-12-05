@@ -8,7 +8,7 @@ const ChoreSchema = new Schema({
     required: true,
   },
   assignedTo: {
-    type: Number,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   finished: {

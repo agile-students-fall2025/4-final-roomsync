@@ -63,7 +63,7 @@ const choreRouter = () => {
 
         const newChore = new Chore({
           name,
-          assignedTo: parseInt(assignedTo),
+          assignedTo,
           finished: false,
           roomId
         })
@@ -94,7 +94,7 @@ const choreRouter = () => {
         }
 
         if (name !== undefined) chore.name = name
-        if (assignedTo !== undefined) chore.assignedTo = parseInt(assignedTo)
+        if (assignedTo !== undefined) chore.assignedTo = assignedTo
         if (finished !== undefined) chore.finished = Boolean(finished)
 
         await chore.save()

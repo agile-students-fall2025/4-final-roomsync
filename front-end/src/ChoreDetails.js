@@ -44,7 +44,7 @@ const ChoreDetails = props => {
     e.preventDefault()
     const choreData = {
       name: choreName,
-      assignedTo: parseInt(assignedTo)
+      assignedTo: assignedTo
     }
 
     try {
