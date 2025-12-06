@@ -24,7 +24,7 @@
  */
 
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000'
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api'
 
 const getAuthToken = () => {
   return localStorage.getItem('token')
@@ -48,7 +48,7 @@ export const getUsers = async () => {
     const currentUser = getCurrentUser()
     if (!currentUser?.roomId) return []
 
-    const response = await fetch(`${API_URL}/api/rooms/members`, {
+    const response = await fetch(`${API_URL}/rooms/members`, {
       headers: getAuthHeaders()
     })
 
@@ -68,7 +68,7 @@ export const addUser = async (username, email) => {
   try {
     // const inviter = getCurrentUser()
 
-    const response = await fetch(`${API_URL}/api/rooms/invite`, {
+    const response = await fetch(`${API_URL}/rooms/invite`, {
       method: "POST",
       headers: getAuthHeaders(),
       body: JSON.stringify({ emails: [email] }),
@@ -86,13 +86,13 @@ export const addUser = async (username, email) => {
 // Leave current room
 export const leaveRoom = async () => {
   try {
-    const response = await fetch(`${API_URL}/api/rooms/leave`, {
+    const response = await fetch(`${API_URL}/rooms/leave`, {
       method: 'POST',
       headers: getAuthHeaders()
     })
-    
+
     const result = await response.json()
-    
+
     if (result.success) {
       // Update local user data
       const user = getCurrentUser()
@@ -101,7 +101,7 @@ export const leaveRoom = async () => {
         localStorage.setItem('user', JSON.stringify(user))
       }
     }
-    
+
     return result
   } catch (error) {
     console.error('Leave room error:', error)
@@ -112,13 +112,13 @@ export const leaveRoom = async () => {
 // Delete entire room (creator only)
 export const deleteRoom = async () => {
   try {
-    const response = await fetch(`${API_URL}/api/rooms/delete`, {
+    const response = await fetch(`${API_URL}/rooms/delete`, {
       method: 'DELETE',
       headers: getAuthHeaders()
     })
-    
+
     const result = await response.json()
-    
+
     if (result.success) {
       // Update local user data
       const user = getCurrentUser()
@@ -127,7 +127,7 @@ export const deleteRoom = async () => {
         localStorage.setItem('user', JSON.stringify(user))
       }
     }
-    
+
     return result
   } catch (error) {
     console.error('Delete room error:', error)
@@ -138,12 +138,12 @@ export const deleteRoom = async () => {
 
 export const getRoomInfo = async () => {
   try {
-    const response = await fetch(`${API_URL}/api/rooms/my-room`, {
+    const response = await fetch(`${API_URL}/rooms/my-room`, {
       headers: getAuthHeaders()
     })
-    
+
     if (!response.ok) return null
-    
+
     const data = await response.json()
     return data
   } catch (error) {
@@ -154,12 +154,12 @@ export const getRoomInfo = async () => {
 
 export const inviteRoommates = async (emails) => {
   try {
-    const response = await fetch(`${API_URL}/api/rooms/invite`, {
+    const response = await fetch(`${API_URL}/rooms/invite`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({ emails })
     })
-    
+
     const result = await response.json()
     return result
   } catch (error) {
@@ -236,9 +236,9 @@ export const registerUser = async (username, email, password) => {
         localStorage.setItem('token', result.token)
         localStorage.setItem('user', JSON.stringify(result.user))
       }
-    
+
       return result
-    
+
     }catch (error) {
       console.error('Registration error:', error)
       return false
@@ -279,9 +279,9 @@ export const getCurrentUserInfo = async () => {
     const response = await fetch(`${API_URL}/auth/me`, {
       headers: getAuthHeaders()
     })
-    
+
     if (!response.ok) return null
-    
+
     const result = await response.json()
     return result.user
   } catch (error) {
@@ -292,7 +292,7 @@ export const getCurrentUserInfo = async () => {
 
 export const getProfile = async (userId) => {
   try {
-    const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
+    const response = await fetch(`${API_URL}/users/${userId}/profile`, {
       headers: getAuthHeaders()
     })
 
@@ -308,7 +308,7 @@ export const getProfile = async (userId) => {
 
 export const createProfile = async (userId, profileData) => {
   try {
-    const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
+    const response = await fetch(`${API_URL}/users/${userId}/profile`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(profileData)
@@ -324,7 +324,7 @@ export const createProfile = async (userId, profileData) => {
 
 export const updateProfile = async (userId, profileData) => {
   try {
-    const response = await fetch(`${API_URL}/api/users/${userId}/profile`, {
+    const response = await fetch(`${API_URL}/users/${userId}/profile`, {
       method: 'PUT',
       headers: getAuthHeaders(),
       body: JSON.stringify(profileData)

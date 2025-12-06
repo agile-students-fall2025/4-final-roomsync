@@ -20,7 +20,7 @@ const Events = props => {
           return
         }
         const token = localStorage.getItem('token')
-        const res = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/events`, {
+        const res = await fetch(`${API_BASE_URL}/rooms/${user.roomId}/events`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'

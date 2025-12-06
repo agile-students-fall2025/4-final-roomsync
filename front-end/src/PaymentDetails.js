@@ -42,7 +42,7 @@ const PaymentDetails = () => {
       // If editing, fetch the payment data
       if (paymentId) {
         try {
-          const response = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/payments/${paymentId}`, {
+          const response = await fetch(`${API_BASE_URL}/rooms/${user.roomId}/payments/${paymentId}`, {
             headers: getAuthHeaders()
           })
           if (!response.ok) {
@@ -113,8 +113,8 @@ const PaymentDetails = () => {
   const handleSave = async () => {
     try {
       const url = isEditMode
-        ? `${API_BASE_URL}/api/rooms/${user.roomId}/payments/${paymentId}`
-        : `${API_BASE_URL}/api/rooms/${user.roomId}/payments`
+        ? `${API_BASE_URL}/rooms/${user.roomId}/payments/${paymentId}`
+        : `${API_BASE_URL}/rooms/${user.roomId}/payments`
       const method = isEditMode ? 'PUT' : 'POST'
 
       const response = await fetch(url, {

@@ -24,7 +24,7 @@ const ChoreDetails = props => {
       if (id) {
         try {
           const token = localStorage.getItem('token')
-          const response = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/chores/${id}`, {
+          const response = await fetch(`${API_BASE_URL}/rooms/${user.roomId}/chores/${id}`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
@@ -50,8 +50,8 @@ const ChoreDetails = props => {
 
     try {
       const url = isEditMode
-        ? `${API_BASE_URL}/api/rooms/${user.roomId}/chores/${id}`
-        : `${API_BASE_URL}/api/rooms/${user.roomId}/chores`
+        ? `${API_BASE_URL}/rooms/${user.roomId}/chores/${id}`
+        : `${API_BASE_URL}/rooms/${user.roomId}/chores`
       const method = isEditMode ? 'PUT' : 'POST'
       const token = localStorage.getItem('token')
 

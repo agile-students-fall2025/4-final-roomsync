@@ -12,7 +12,7 @@ const PotentialRooms = () => {
     const fetchRooms = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/api/potential-rooms`);
+        const response = await fetch(`${API_BASE_URL}/potential-rooms`);
 
         if (!response.ok) {
           throw new Error('Failed to fetch rooms');

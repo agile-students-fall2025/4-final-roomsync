@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import './Home.css'
 import { getCurrentUser } from './api/users.js';
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
 
 const Home = props => {
   const user = getCurrentUser()
@@ -18,7 +18,7 @@ const Home = props => {
         try {
           const token = localStorage.getItem('token')
           
-          const response = await fetch(`${API_BASE}/api/rooms/${user.roomId}/chores`, {
+          const response = await fetch(`${API_BASE}/rooms/${user.roomId}/chores`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'

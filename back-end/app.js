@@ -83,8 +83,8 @@ import potentialRoommateRoutes from './routes/potential-roommate-routes.js'
 // ========================================
 // SPECIALIZED ROUTING FILES
 // ========================================
-app.use('/auth', authenticationRoutes()) // all requests for /auth/* will be handled by the authenticationRoutes router
-app.use('/cookie', cookieRoutes()) // all requests for /cookie/* will be handled by the cookieRoutes router
+app.use('/api/auth', authenticationRoutes()) // all requests for /api/auth/* will be handled by the authenticationRoutes router
+app.use('/api/cookie', cookieRoutes()) // all requests for /api/cookie/* will be handled by the cookieRoutes router
 app.use('/api', choreRoutes()) // all requests for /api/rooms/:roomId/chores/* will be handled by the choreRoutes router
 app.use('/api', eventRoutes()) // all requests for /api/rooms/:roomId/events/* will be handled by the eventRoutes router
 app.use('/api/rooms', roomRoutes())

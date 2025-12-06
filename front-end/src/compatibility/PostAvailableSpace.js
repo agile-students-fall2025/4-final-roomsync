@@ -40,7 +40,7 @@ const PostAvailableSpace = () => {
       setSaving(true);
       const roomId = 1;
 
-      const res = await fetch(`${API_BASE_URL}/api/rooms/${roomId}/available-spaces`, {
+      const res = await fetch(`${API_BASE_URL}/rooms/${roomId}/available-spaces`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

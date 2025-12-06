@@ -26,7 +26,7 @@ const PotentialRoommates = () => {
         setLoading(true);
         setError('');
 
-        const res = await fetch(`${API_BASE_URL}/api/potential-roommates`, {
+        const res = await fetch(`${API_BASE_URL}/potential-roommates`, {
           signal: controller.signal
         });
 

@@ -19,7 +19,7 @@ const Header = props => {
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('token');
-      await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3000'}/auth/logout`, {
+      await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3000/api'}/auth/logout`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

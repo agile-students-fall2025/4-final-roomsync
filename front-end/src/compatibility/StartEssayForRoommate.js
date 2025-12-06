@@ -28,7 +28,7 @@ const StartEssayForRoommate = () => {
       const userId = 1;
       
 
-      const res = await fetch(`${API_BASE_URL}/api/rooms/${roomId}/roommate-essays`, {
+      const res = await fetch(`${API_BASE_URL}/rooms/${roomId}/roommate-essays`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
