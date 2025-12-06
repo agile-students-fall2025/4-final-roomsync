@@ -21,7 +21,7 @@ const Chores = props => {
       // Fetch chores
       try {
         const token = localStorage.getItem('token')
-        const response = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/chores`, {
+        const response = await fetch(`${API_BASE_URL}/rooms/${user.roomId}/chores`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -48,7 +48,7 @@ const Chores = props => {
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/chores/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/rooms/${user.roomId}/chores/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

@@ -24,7 +24,7 @@ const EventDetails = props => {
       try {
         const token = localStorage.getItem('token')
 
-        const res = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/events/${eventId}`, {
+        const res = await fetch(`${API_BASE_URL}/rooms/${user.roomId}/events/${eventId}`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
@@ -76,7 +76,7 @@ const EventDetails = props => {
 
     try {
       const token = localStorage.getItem('token')
-      const res = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/events/${eventId}/attendance`, {
+      const res = await fetch(`${API_BASE_URL}/rooms/${user.roomId}/events/${eventId}/attendance`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -102,7 +102,7 @@ const EventDetails = props => {
     try {
       const token = localStorage.getItem('token')
 
-      const res = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/events/${eventId}`, {
+      const res = await fetch(`${API_BASE_URL}/rooms/${user.roomId}/events/${eventId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

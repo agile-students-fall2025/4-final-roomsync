@@ -29,7 +29,7 @@ const Payments = props => {
 
       // Fetch categories
       try {
-        const categoriesResponse = await fetch(`${API_BASE_URL}/api/categories`, {
+        const categoriesResponse = await fetch(`${API_BASE_URL}/categories`, {
           headers: getAuthHeaders()
         })
         const categoriesData = await categoriesResponse.json()
@@ -41,7 +41,7 @@ const Payments = props => {
 
       // Fetch payments
       try {
-        const paymentsResponse = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/payments`, {
+        const paymentsResponse = await fetch(`${API_BASE_URL}/rooms/${user.roomId}/payments`, {
           headers: getAuthHeaders()
         })
 
