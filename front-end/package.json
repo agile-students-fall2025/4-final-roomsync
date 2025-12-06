@@ -2,6 +2,7 @@
   "name": "front-end",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/roomsync",
   "proxy": "http://localhost:3000",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
