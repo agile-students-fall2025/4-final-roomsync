@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './PotentialRooms.css';
+import { API_BASE_URL } from '../api/config';
 
 const PotentialRooms = () => {
   const [rooms, setRooms] = useState([]);
@@ -11,7 +12,7 @@ const PotentialRooms = () => {
     const fetchRooms = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/potential-rooms');
+        const response = await fetch(`${API_BASE_URL}/api/potential-rooms`);
 
         if (!response.ok) {
           throw new Error('Failed to fetch rooms');

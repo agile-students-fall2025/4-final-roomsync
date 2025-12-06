@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './PaymentDetails.css'
 import { getCurrentUser, getUsers } from './api/users'
+import { API_BASE_URL } from './api/config'
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token')
@@ -41,7 +42,7 @@ const PaymentDetails = () => {
       // If editing, fetch the payment data
       if (paymentId) {
         try {
-          const response = await fetch(`/api/rooms/${user.roomId}/payments/${paymentId}`, {
+          const response = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/payments/${paymentId}`, {
             headers: getAuthHeaders()
           })
           if (!response.ok) {
@@ -112,8 +113,8 @@ const PaymentDetails = () => {
   const handleSave = async () => {
     try {
       const url = isEditMode
-        ? `/api/rooms/${user.roomId}/payments/${paymentId}`
-        : `/api/rooms/${user.roomId}/payments`
+        ? `${API_BASE_URL}/api/rooms/${user.roomId}/payments/${paymentId}`
+        : `${API_BASE_URL}/api/rooms/${user.roomId}/payments`
       const method = isEditMode ? 'PUT' : 'POST'
 
       const response = await fetch(url, {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './StartEssayForRoom.css';
+import { API_BASE_URL } from '../api/config';
 
 const StartEssayForRoom = () => {
   const [location, setLocation] = useState('');
@@ -46,7 +47,7 @@ const StartEssayForRoom = () => {
       const roomId = 1;
       const userId = 1;
 
-      const res = await fetch(`/api/user/${userId}/room-essays`, {
+      const res = await fetch(`${API_BASE_URL}/api/user/${userId}/room-essays`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

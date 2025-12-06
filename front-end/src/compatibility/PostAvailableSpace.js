@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './PostAvailableSpace.css';
+import { API_BASE_URL } from '../api/config';
 
 const PostAvailableSpace = () => {
   const [title, setTitle] = useState('');
@@ -39,7 +40,7 @@ const PostAvailableSpace = () => {
       setSaving(true);
       const roomId = 1;
 
-      const res = await fetch(`/api/rooms/${roomId}/available-spaces`, {
+      const res = await fetch(`${API_BASE_URL}/api/rooms/${roomId}/available-spaces`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

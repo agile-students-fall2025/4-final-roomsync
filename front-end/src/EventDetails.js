@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './EventDetails.css'
 import { getCurrentUser } from './api/users'
+import { API_BASE_URL } from './api/config'
 
 const EventDetails = props => {
   const user = getCurrentUser() //eslem
@@ -23,7 +24,7 @@ const EventDetails = props => {
       try {
         const token = localStorage.getItem('token')
 
-        const res = await fetch(`/api/rooms/${user.roomId}/events/${eventId}`, {
+        const res = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/events/${eventId}`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
@@ -75,7 +76,7 @@ const EventDetails = props => {
 
     try {
       const token = localStorage.getItem('token')
-      const res = await fetch(`/api/rooms/${user.roomId}/events/${eventId}/attendance`, {
+      const res = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/events/${eventId}/attendance`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -101,7 +102,7 @@ const EventDetails = props => {
     try {
       const token = localStorage.getItem('token')
 
-      const res = await fetch(`/api/rooms/${user.roomId}/events/${eventId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/events/${eventId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

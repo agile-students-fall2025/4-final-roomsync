@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import './ChoreDetails.css'
 import { getUsers, getCurrentUser } from './api/users'
+import { API_BASE_URL } from './api/config'
 
 const ChoreDetails = props => {
   const user = getCurrentUser();
@@ -23,7 +24,7 @@ const ChoreDetails = props => {
       if (id) {
         try {
           const token = localStorage.getItem('token')
-          const response = await fetch(`/api/rooms/${user.roomId}/chores/${id}`, {
+          const response = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/chores/${id}`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
@@ -49,8 +50,8 @@ const ChoreDetails = props => {
 
     try {
       const url = isEditMode
-        ? `/api/rooms/${user.roomId}/chores/${id}`
-        : `/api/rooms/${user.roomId}/chores`
+        ? `${API_BASE_URL}/api/rooms/${user.roomId}/chores/${id}`
+        : `${API_BASE_URL}/api/rooms/${user.roomId}/chores`
       const method = isEditMode ? 'PUT' : 'POST'
       const token = localStorage.getItem('token')
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './Payments.css'
 import { getCurrentUser, getUsers } from './api/users'
+import { API_BASE_URL } from './api/config'
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token')
@@ -28,7 +29,7 @@ const Payments = props => {
 
       // Fetch categories
       try {
-        const categoriesResponse = await fetch('/api/categories', {
+        const categoriesResponse = await fetch(`${API_BASE_URL}/api/categories`, {
           headers: getAuthHeaders()
         })
         const categoriesData = await categoriesResponse.json()
@@ -40,7 +41,7 @@ const Payments = props => {
 
       // Fetch payments
       try {
-        const paymentsResponse = await fetch(`/api/rooms/${user.roomId}/payments`, {
+        const paymentsResponse = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/payments`, {
           headers: getAuthHeaders()
         })
 
