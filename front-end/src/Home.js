@@ -18,7 +18,7 @@ const Home = props => {
         try {
           const token = localStorage.getItem('token')
           
-          const response = await fetch(`${API_BASE}/api/rooms/${user.roomId}/chores`, {
+          const response = await fetch(`${API_BASE}/rooms/${user.roomId}/chores`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
