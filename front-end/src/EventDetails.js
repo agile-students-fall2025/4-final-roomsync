@@ -21,7 +21,16 @@ const EventDetails = props => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await fetch(`/api/rooms/${user.roomId}/events/${eventId}`)
+        const token = localStorage.getItem('token')
+
+        const res = await fetch(`/api/rooms/${user.roomId}/events/${eventId}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+
+
         if (!res.ok) {
           console.error('Failed to fetch event details')
           navigate('/events')
@@ -65,9 +74,11 @@ const EventDetails = props => {
     setIsAttending(newAttendanceStatus)
 
     try {
+      const token = localStorage.getItem('token')
       const res = await fetch(`/api/rooms/${user.roomId}/events/${eventId}/attendance`, {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -88,9 +99,12 @@ const EventDetails = props => {
 
   const handleSave = async () => {
     try {
+      const token = localStorage.getItem('token')
+
       const res = await fetch(`/api/rooms/${user.roomId}/events/${eventId}`, {
         method: 'PUT',
         headers: {
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),

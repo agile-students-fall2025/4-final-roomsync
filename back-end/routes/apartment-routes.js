@@ -14,6 +14,7 @@ export default function apartmentRoutes () {
   // GET /api/apartments
   // Return all apartment records (newest first)
   router.get('/apartments',
+    passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
         const apartments = await Apartment.find().sort({ createdAt: -1 })
@@ -30,7 +31,8 @@ export default function apartmentRoutes () {
 
   // GET /api/apartments/:id
   // Return a single apartment by id
-  router.get('/apartments/:id', 
+  router.get('/apartments/:id',
+    passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
         const { id } = req.params

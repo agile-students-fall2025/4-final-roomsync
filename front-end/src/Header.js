@@ -46,12 +46,15 @@ const Header = props => {
           </li>
           {/* <li className="nav-item">
             <Link to="/payments">Payments</Link>
+          </li>
+          {/* <li className="nav-item">
+            <Link to="/skillswap">SkillSwap</Link>
           </li> */}
           <li className="nav-item">
-            <Link to="/skillswap">SkillSwap</Link>
+            <Link to="/compatibility">Compatibility Finder</Link>
           </li>
           <li className="nav-item">
-            <Link to="/compatibility">Compatibility Finder</Link>
+            <Link to="/profile">Profile</Link>
           </li>
           <li onClick={handleLogout} className="nav-item">
             <Link to="/landing">Logout</Link>

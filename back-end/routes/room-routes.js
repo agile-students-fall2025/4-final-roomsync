@@ -1,4 +1,3 @@
-// routes/room-routes.js - CORRECTED VERSION
 import express from 'express'
 import passport from 'passport'
 import mongoose from 'mongoose'
