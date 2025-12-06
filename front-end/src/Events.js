@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Events.css'
 import { getCurrentUser, getUsers} from './api/users'
+import { API_BASE_URL } from './api/config'
 
 const Events = props => {
   const user = getCurrentUser(); 
@@ -19,7 +20,7 @@ const Events = props => {
           return
         }
         const token = localStorage.getItem('token')
-        const res = await fetch(`/api/rooms/${user.roomId}/events`, {
+        const res = await fetch(`${API_BASE_URL}/api/rooms/${user.roomId}/events`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'

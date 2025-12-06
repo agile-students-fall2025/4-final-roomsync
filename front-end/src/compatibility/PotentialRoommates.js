@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './PotentialRoommates.css';
+import { API_BASE_URL } from '../api/config';
 
 /**
  * Profiles list
@@ -25,7 +26,7 @@ const PotentialRoommates = () => {
         setLoading(true);
         setError('');
 
-        const res = await fetch('/api/potential-roommates', {
+        const res = await fetch(`${API_BASE_URL}/api/potential-roommates`, {
           signal: controller.signal
         });
 
