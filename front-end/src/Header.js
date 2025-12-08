@@ -1,8 +1,7 @@
 import './Header.css'
-import logo from './logo.svg'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 /**
  * A React component that is used for the header displayed at the top of every page of the site.
@@ -11,8 +10,9 @@ import { useNavigate } from 'react-router-dom';
  */
 const Header = props => {
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  if (location.pathname === '/landing' || location.pathname === '/register' || location.pathname === '/login') {
+  if (location.pathname === '/' || location.pathname === '/register' || location.pathname === '/login') {
     return null;
   }
 
@@ -35,31 +35,30 @@ const Header = props => {
   };
 
   return (
-    <header className="Header-header">
-      <nav className="Header-navbar">
-        <ul className="nav-links">
-          <li className="nav-item">
-            <Link to="/dashboard">Home</Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/chores">Chores</Link>
-          </li>
-          {/* <li className="nav-item">
-            <Link to="/payments">Payments</Link>
-          </li>
-          {/* <li className="nav-item">
-            <Link to="/skillswap">SkillSwap</Link>
-          </li> */}
-          <li className="nav-item">
-            <Link to="/compatibility">Compatibility Finder</Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/profile">Profile</Link>
-          </li>
-          <li onClick={handleLogout} className="nav-item">
-            <Link to="/landing">Logout</Link>
-          </li>
+    <header className="header">
+      <nav className="navbar">
+
+        {/* LOGO OR TITLE */}
+        <div className="nav-logo">
+          <Link to="/dashboard">RoomSync</Link>
+        </div>
+
+        {/* HAMBURGER MENU BUTTON */}
+        <button 
+          className="hamburger"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          ☰
+        </button>
+
+        <ul className={menuOpen ? "nav-links mobile-open" : "nav-links"}>
+          <li><Link to="/dashboard" onClick={() => setMenuOpen(false)}>Home</Link></li>
+          <li><Link to="/chores" onClick={() => setMenuOpen(false)}>Chores</Link></li>
+          <li><Link to="/compatibility" onClick={() => setMenuOpen(false)}>Compatibility Finder</Link></li>
+          <li><Link to="/profile" onClick={() => setMenuOpen(false)}>Profile</Link></li>
+          <li onClick={handleLogout}><Link to="/" onClick={() => setMenuOpen(false)}>Logout</Link></li>
         </ul>
+
       </nav>
     </header>
   )

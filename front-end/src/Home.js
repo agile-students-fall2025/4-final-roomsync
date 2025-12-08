@@ -72,6 +72,31 @@ const Home = props => {
   //     amountPerPerson: payment.amount / payment.owedBy.length
   //   }));
 
+  if (!user) {
+    return (
+      <div style={{
+        margin: '20px auto',
+        padding: '20px',
+        textAlign: 'center',
+        maxWidth: '1200px'
+      }}>
+        <h2>Please log in to view dasboard</h2>
+        <Link to="/login">
+          <button style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}>
+            Go to Login
+          </button>
+        </Link>
+      </div>
+    )}
+
   return (
     <>
       <div className="home-container">
