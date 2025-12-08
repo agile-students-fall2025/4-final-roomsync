@@ -62,7 +62,6 @@ const Chores = props => {
       console.error('Error updating chore:', error)
     }
   }
-
   if (!user) {
     return (
       <div style={{
