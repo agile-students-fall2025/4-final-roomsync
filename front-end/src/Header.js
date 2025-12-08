@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 const Header = props => {
   const location = useLocation();
 
-  if (location.pathname === '/landing' || location.pathname === '/register' || location.pathname === '/login') {
+  if (location.pathname === '/' || location.pathname === '/register' || location.pathname === '/login') {
     return null;
   }
 
@@ -57,7 +57,7 @@ const Header = props => {
             <Link to="/profile">Profile</Link>
           </li>
           <li onClick={handleLogout} className="nav-item">
-            <Link to="/landing">Logout</Link>
+            <Link to="/">Logout</Link>
           </li>
         </ul>
       </nav>

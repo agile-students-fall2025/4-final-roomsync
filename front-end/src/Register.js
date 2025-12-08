@@ -55,7 +55,7 @@ const Register = props => {
             navigate('/create')
         }
         else {
-          navigate('/landing')
+          navigate('/')
         }
 
         return result

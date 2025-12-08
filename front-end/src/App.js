@@ -36,7 +36,7 @@ const App = props => {
           <Routes>
             {/* a route for the home page */}
             <Route path="/dashboard" element={<Home />} />
-            <Route path="/landing" element={<Landing />} />
+            <Route path="/" element={<Landing />} />
             
             {/* a route for login and register page */}
             <Route path="/login" element={<Login />} />
