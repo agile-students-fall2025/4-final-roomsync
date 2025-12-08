@@ -1,4 +1,6 @@
+// back-end/routes/event-routes.js
 import express from 'express'
+import mongoose from 'mongoose'
 import Event from '../models/Events.js'
 import { body, validationResult } from 'express-validator'
 import passport from 'passport'
@@ -11,18 +13,30 @@ const eventRouter = () => {
     body('location').trim().notEmpty().withMessage('Location is required'),
     body('date').notEmpty().withMessage('Date is required'),
     body('time').notEmpty().withMessage('Time is required'),
-    body('createdBy').isInt().withMessage('CreatedBy must be a valid user ID')
   ]
+
+  // Helper function to validate ObjectId
+  const isValidObjectId = (id) => {
+    return mongoose.Types.ObjectId.isValid(id)
+  }
 
   // GET all events for a specific room
   router.get('/rooms/:roomId/events', 
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const roomId = parseInt(req.params.roomId)
+        const roomId = req.params.roomId
+        
+        // Validate ObjectId
+        if (!isValidObjectId(roomId)) {
+          return res.status(400).json({ 
+            success: false, 
+            message: 'Invalid room ID' 
+          })
+        }
         
         // Verify user has access to this room
-        if (!req.user.roomId || req.user.roomId.toString() !== roomId.toString()) {
+        if (!req.user.roomId || req.user.roomId.toString() !== roomId) {
           return res.status(403).json({ 
             success: false, 
             message: 'Access denied to this room' 
@@ -43,17 +57,26 @@ const eventRouter = () => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const roomId = parseInt(req.params.roomId)
+        const roomId = req.params.roomId
+        const eventId = req.params.id
+        
+        // Validate ObjectIds
+        if (!isValidObjectId(roomId) || !isValidObjectId(eventId)) {
+          return res.status(400).json({ 
+            success: false, 
+            message: 'Invalid ID' 
+          })
+        }
         
         // Verify user has access to this room
-        if (!req.user.roomId || req.user.roomId.toString() !== roomId.toString()) {
+        if (!req.user.roomId || req.user.roomId.toString() !== roomId) {
           return res.status(403).json({ 
             success: false, 
             message: 'Access denied to this room' 
           })
         }
 
-        const event = await Event.findOne({ _id: req.params.id, roomId })
+        const event = await Event.findOne({ _id: eventId, roomId })
 
         if (!event) {
           return res.status(404).json({ success: false, message: 'Event not found' })
@@ -72,11 +95,19 @@ const eventRouter = () => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const roomId = parseInt(req.params.roomId)
+        const roomId = req.params.roomId
         const date = req.params.date
         
+        // Validate ObjectId
+        if (!isValidObjectId(roomId)) {
+          return res.status(400).json({ 
+            success: false, 
+            message: 'Invalid room ID' 
+          })
+        }
+        
         // Verify user has access to this room
-        if (!req.user.roomId || req.user.roomId.toString() !== roomId.toString()) {
+        if (!req.user.roomId || req.user.roomId.toString() !== roomId) {
           return res.status(403).json({ 
             success: false, 
             message: 'Access denied to this room' 
@@ -97,12 +128,20 @@ const eventRouter = () => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const roomId = parseInt(req.params.roomId)
+        const roomId = req.params.roomId
         const year = parseInt(req.params.year)
         const month = parseInt(req.params.month)
         
+        // Validate ObjectId
+        if (!isValidObjectId(roomId)) {
+          return res.status(400).json({ 
+            success: false, 
+            message: 'Invalid room ID' 
+          })
+        }
+        
         // Verify user has access to this room
-        if (!req.user.roomId || req.user.roomId.toString() !== roomId.toString()) {
+        if (!req.user.roomId || req.user.roomId.toString() !== roomId) {
           return res.status(403).json({ 
             success: false, 
             message: 'Access denied to this room' 
@@ -135,10 +174,17 @@ const eventRouter = () => {
           return res.status(400).json({ success: false, errors: errors.array() })
         }
 
-        const roomId = parseInt(req.params.roomId)
+        const roomId = req.params.roomId
+        
+        if (!isValidObjectId(roomId)) {
+          return res.status(400).json({ 
+            success: false, 
+            message: 'Invalid room ID' 
+          })
+        }
         
         // Verify user has access to this room
-        if (!req.user.roomId || req.user.roomId.toString() !== roomId.toString()) {
+        if (!req.user.roomId || req.user.roomId.toString() !== roomId) {
           return res.status(403).json({ 
             success: false, 
             message: 'Access denied to this room' 
@@ -146,6 +192,13 @@ const eventRouter = () => {
         }
 
         const { name, location, date, time, description, createdBy } = req.body
+        
+        if (!isValidObjectId(createdBy)) {
+          return res.status(400).json({ 
+            success: false, 
+            message: 'Invalid creator ID' 
+          })
+        }
 
         const newEvent = new Event({
           name,
@@ -154,8 +207,8 @@ const eventRouter = () => {
           time,
           description: description || '',
           roomId,
-          createdBy: parseInt(createdBy),
-          attendees: [parseInt(createdBy)]
+          createdBy,
+          attendees: [createdBy]
         })
 
         await newEvent.save()
@@ -172,10 +225,19 @@ const eventRouter = () => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const roomId = parseInt(req.params.roomId)
+        const roomId = req.params.roomId
+        const eventId = req.params.id
+        
+        // Validate ObjectIds
+        if (!isValidObjectId(roomId) || !isValidObjectId(eventId)) {
+          return res.status(400).json({ 
+            success: false, 
+            message: 'Invalid ID' 
+          })
+        }
         
         // Verify user has access to this room
-        if (!req.user.roomId || req.user.roomId.toString() !== roomId.toString()) {
+        if (!req.user.roomId || req.user.roomId.toString() !== roomId) {
           return res.status(403).json({ 
             success: false, 
             message: 'Access denied to this room' 
@@ -184,7 +246,7 @@ const eventRouter = () => {
 
         const { name, location, date, time, description } = req.body
 
-        const event = await Event.findOne({ _id: req.params.id, roomId })
+        const event = await Event.findOne({ _id: eventId, roomId })
 
         if (!event) {
           return res.status(404).json({ success: false, message: 'Event not found' })
@@ -210,10 +272,19 @@ const eventRouter = () => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const roomId = parseInt(req.params.roomId)
+        const roomId = req.params.roomId
+        const eventId = req.params.id
+        
+        // Validate ObjectIds
+        if (!isValidObjectId(roomId) || !isValidObjectId(eventId)) {
+          return res.status(400).json({ 
+            success: false, 
+            message: 'Invalid ID' 
+          })
+        }
         
         // Verify user has access to this room
-        if (!req.user.roomId || req.user.roomId.toString() !== roomId.toString()) {
+        if (!req.user.roomId || req.user.roomId.toString() !== roomId) {
           return res.status(403).json({ 
             success: false, 
             message: 'Access denied to this room' 
@@ -221,25 +292,36 @@ const eventRouter = () => {
         }
 
         const { userId, isAttending } = req.body
+        
+        // Validate userId is a valid ObjectId
+        if (!isValidObjectId(userId)) {
+          return res.status(400).json({ 
+            success: false, 
+            message: 'Invalid user ID' 
+          })
+        }
 
-        const event = await Event.findOne({ _id: req.params.id, roomId })
+        const event = await Event.findOne({ _id: eventId, roomId })
 
         if (!event) {
           return res.status(404).json({ success: false, message: 'Event not found' })
         }
 
-        const attendingUserId = parseInt(userId)
-
         if (!Array.isArray(event.attendees)) {
           event.attendees = []
         }
 
-        const isAlreadyAttending = event.attendees.includes(attendingUserId)
+        // Convert to string for comparison since attendees are ObjectIds
+        const isAlreadyAttending = event.attendees.some(
+          attendeeId => attendeeId.toString() === userId.toString()
+        )
 
         if (isAttending && !isAlreadyAttending) {
-          event.attendees.push(attendingUserId)
+          event.attendees.push(userId)
         } else if (!isAttending && isAlreadyAttending) {
-          event.attendees = event.attendees.filter(uid => uid !== attendingUserId)
+          event.attendees = event.attendees.filter(
+            attendeeId => attendeeId.toString() !== userId.toString()
+          )
         }
 
         await event.save()
@@ -256,17 +338,26 @@ const eventRouter = () => {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        const roomId = parseInt(req.params.roomId)
+        const roomId = req.params.roomId
+        const eventId = req.params.id
+        
+        // Validate ObjectIds
+        if (!isValidObjectId(roomId) || !isValidObjectId(eventId)) {
+          return res.status(400).json({ 
+            success: false, 
+            message: 'Invalid ID' 
+          })
+        }
         
         // Verify user has access to this room
-        if (!req.user.roomId || req.user.roomId.toString() !== roomId.toString()) {
+        if (!req.user.roomId || req.user.roomId.toString() !== roomId) {
           return res.status(403).json({ 
             success: false, 
             message: 'Access denied to this room' 
           })
         }
 
-        const event = await Event.findOneAndDelete({ _id: req.params.id, roomId })
+        const event = await Event.findOneAndDelete({ _id: eventId, roomId })
 
         if (!event) {
           return res.status(404).json({ success: false, message: 'Event not found' })
