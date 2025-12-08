@@ -26,6 +26,7 @@ export default function CreateHome() {
     checkUserRoomStatus();
   }, []);
 
+  
   const checkUserRoomStatus = async () => {
     const user = getCurrentUser();
     setCurrentUser(user);

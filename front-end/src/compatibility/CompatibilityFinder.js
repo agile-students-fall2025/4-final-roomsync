@@ -1,8 +1,35 @@
 import { Link } from 'react-router-dom';
 import './CompatibilityFinder.css';
-
+import { getCurrentUser } from '/Users/eslemvarank/agileDev/4-final-roomsync/front-end/src/api/users.js'
 
 const CompatibilityFinder = () => {
+  const user = getCurrentUser();
+
+  if (!user) {
+    return (
+      <div style={{
+        margin: '20px auto',
+        padding: '20px',
+        textAlign: 'center',
+        maxWidth: '1200px'
+      }}>
+        <h2>Please log in to view compatibility finder</h2>
+        <Link to="/login">
+          <button style={{
+            padding: '10px 20px',
+            fontSize: '16px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}>
+            Go to Login
+          </button>
+        </Link>
+      </div>
+    )}
+
   return (
     <div className="compat-page">
       <h1 className="compat-title">Compatibility Finder</h1>
