@@ -52,7 +52,7 @@ const Register = props => {
         if (currentUser) {
           console.log('Logged in user:', currentUser)
                
-            navigate('/create')
+            navigate('/dashboard')
         }
         else {
           navigate('/')
