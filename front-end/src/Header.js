@@ -55,6 +55,7 @@ const Header = props => {
           <li><Link to="/dashboard" onClick={() => setMenuOpen(false)}>Home</Link></li>
           <li><Link to="/chores" onClick={() => setMenuOpen(false)}>Chores</Link></li>
           <li><Link to="/compatibility" onClick={() => setMenuOpen(false)}>Compatibility Finder</Link></li>
+          <li><Link to="/SkillSwap" onClick={() => setMenuOpen(false)}>Skill Swap</Link></li>
           <li><Link to="/profile" onClick={() => setMenuOpen(false)}>Profile</Link></li>
           <li onClick={handleLogout}><Link to="/" onClick={() => setMenuOpen(false)}>Logout</Link></li>
         </ul>

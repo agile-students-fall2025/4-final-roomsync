@@ -217,7 +217,7 @@ export const getUserName = async (id) => {
 // register the new user
 export const registerUser = async (username, email, password) => {
   try {
-      const response = await fetch(`${API_URL}/auth/register`, {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -247,7 +247,7 @@ export const registerUser = async (username, email, password) => {
 
 export const loginUser = async(email , password) => {
   try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -276,7 +276,7 @@ export const loginUser = async(email , password) => {
 // Get current user info from backend (protected)
 export const getCurrentUserInfo = async () => {
   try {
-    const response = await fetch(`${API_URL}/auth/me`, {
+    const response = await fetch(`${API_URL}/api/auth/me`, {
       headers: getAuthHeaders()
     })
 

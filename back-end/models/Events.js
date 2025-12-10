@@ -1,3 +1,4 @@
+// back-end/models/Events.js
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
@@ -26,15 +27,18 @@ const EventSchema = new Schema({
     default: ''
   },
   roomId: {
-    type: Number,
+    type: Schema.Types.ObjectId,
+    ref: 'Room',
     required: true
   },
   createdBy: {
-    type: Number,
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
   attendees: [{
-    type: Number
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   }]
 }, {
   timestamps: true,

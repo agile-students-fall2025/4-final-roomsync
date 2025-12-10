@@ -1,192 +1,161 @@
+/* Profile container */
 .Profile-container {
-  padding: 2rem;
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
-  background-color: #ffffff;
-  min-height: auto;
+  padding: 2rem;
 }
 
 .Profile-header {
-  display: flex;
-  align-items: center;
+  text-align: center;
   margin-bottom: 2rem;
-  gap: 1rem;
+  border-bottom: 2px solid #333;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #333;
-}
-
-.Back-button {
-  background: none;
-  border: none;
-  font-size: 2rem;
-  cursor: pointer;
-  padding: 0;
-  color: #333;
-  width: 40px;
-  text-align: left;
-}
-
-.Back-button:hover {
-  color: #666;
 }
 
 .Profile-header h1 {
-  font-size: 2rem;
   margin: 0;
-  flex: 1;
-  font-weight: 400;
+  font-size: 2rem;
 }
 
-.Profile-content {
-  padding: 1rem 0;
-}
-
+/* Profile top section - centered */
 .Profile-top {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-  margin-bottom: 3rem;
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-.Profile-picture {
-  width: 150px;
-  height: 150px;
-  flex-shrink: 0;
-}
-
-.picture-placeholder {
-  width: 100%;
-  height: 100%;
-  background-color: #c4c4c4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  color: #666;
-}
-
-.Profile-picture img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.Profile-info {
+  margin: 0 auto;
 }
 
 .Profile-info h2 {
-  font-size: 2rem;
-  margin: 0 0 0.5rem 0;
-  font-weight: 400;
+  margin: 0.5rem 0;
+  font-size: 1.8rem;
 }
 
 .Profile-info p {
-  margin: 0;
+  margin: 0.5rem 0;
+  color: #666;
   font-size: 1rem;
-  color: #333;
 }
 
+/* Profile sections */
 .Profile-section {
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .Profile-section label {
   display: block;
-  font-size: 1rem;
   margin-bottom: 0.5rem;
+  font-weight: 500;
   color: #333;
 }
 
+.Profile-section input[type="text"],
 .Profile-section textarea {
   width: 100%;
-  padding: 1rem;
-  border: 2px solid #333;
-  border-radius: 8px;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   font-size: 1rem;
-  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.Profile-section textarea {
   resize: vertical;
-  min-height: 100px;
+  font-family: inherit;
 }
 
-.Profile-section textarea:focus {
-  outline: none;
-  border-color: #000;
-}
-
-.Skills-dropdown {
-  position: relative;
-}
-
-.Skills-header {
-  width: 100%;
-  max-width: 220px;
-  padding: 0.75rem 1rem;
-  background-color: white;
-  border: 2px solid #333;
-  border-radius: 8px;
+/* Skill input container */
+.skill-input-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.skill-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.add-skill-button {
+  padding: 0.75rem 1.5rem;
+  background-color: #5a8fd6;
+  color: white;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
-  text-align: left;
-}
-
-.Skills-header:hover {
-  background-color: #f9f9f9;
-}
-
-.arrow {
-  transition: transform 0.2s ease;
-  font-size: 0.8rem;
-}
-
-.arrow.open {
-  transform: rotate(180deg);
-}
-
-.Skills-list {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  max-width: 220px;
-  background-color: white;
-  border: 2px solid #333;
-  border-top: none;
-  border-radius: 0 0 8px 8px;
-  margin-top: -8px;
-  z-index: 10;
-}
-
-.skill-item {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e0e0e0;
-  font-size: 1rem;
-}
-
-.skill-item:last-child {
-  border-bottom: none;
-}
-
-.skill-item.others {
-  color: #666;
-}
-
-.privacy-section {
-  padding: 1.5rem;
-  border: 2px solid #333;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-}
-
-.privacy-section label {
-  font-size: 1.1rem;
   font-weight: 500;
-  margin-bottom: 1rem;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.add-skill-button:hover {
+  background-color: #4a7fc6;
+}
+
+/* Skills display */
+.skills-list-container {
+  margin-top: 0.5rem;
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f0f0f0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.remove-skill-button {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.remove-skill-button:hover {
+  color: #d32f2f;
+}
+
+.no-skills-message {
+  color: #666;
+  font-style: italic;
+  margin: 0.5rem 0;
+}
+
+/* Privacy section */
+.privacy-section {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1rem;
 }
 
 .Privacy-options {
   display: flex;
-  gap: 3rem;
-  margin-bottom: 1rem;
+  gap: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .radio-option {
@@ -194,45 +163,53 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
-  font-size: 1rem;
 }
 
-.radio-option input[type='radio'] {
-  width: 20px;
-  height: 20px;
+.radio-option input[type="radio"] {
   cursor: pointer;
 }
 
 .privacy-note {
-  margin: 1rem 0 0 0;
-  font-size: 0.9rem;
+  margin: 0.5rem 0 0 0;
   color: #666;
+  font-size: 0.9rem;
   font-style: italic;
-  line-height: 1.4;
 }
 
+/* Save button - matching style with Add button */
+.Save-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #5a8fd6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.Save-button:hover {
+  background-color: #4a7fc6;
+}
+
+/* Remove picture */
+.Profile-picture {
+  display: none;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
   .Profile-container {
-    padding: 1.5rem;
+    padding: 1rem;
   }
 
-  .Profile-top {
+  .skill-input-container {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
   }
 
-  .Profile-picture {
-    width: 120px;
-    height: 120px;
-  }
-
-  .Profile-info h2 {
-    font-size: 1.5rem;
-  }
-
-  .Privacy-options {
-    gap: 2rem;
+  .add-skill-button {
+    width: 100%;
   }
 }
-

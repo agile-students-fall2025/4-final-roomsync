@@ -1,15 +1,18 @@
+// front-end/src/EventDetails.js
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './EventDetails.css'
 import { getCurrentUser } from './api/users'
-import { API_BASE_URL } from './api/config'
+import { getEventById, updateEvent, toggleAttendance } from './api/events'
 
-const EventDetails = props => {
-  const user = getCurrentUser() //eslem
+const EventDetails = () => {
   const navigate = useNavigate()
   const { eventId } = useParams()
+  const user = getCurrentUser()
 
   const [event, setEvent] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [isEditable, setIsEditable] = useState(false)
   const [isAttending, setIsAttending] = useState(false)
   const [formData, setFormData] = useState({
@@ -20,25 +23,22 @@ const EventDetails = props => {
   })
 
   useEffect(() => {
+    // Early return if no user or eventId
+    if (!user || !eventId) {
+      setLoading(false)
+      return
+    }
+
     const fetchEvent = async () => {
       try {
-        const token = localStorage.getItem('token')
-
-        const res = await fetch(`${API_BASE_URL}/rooms/${user.roomId}/events/${eventId}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          });
-
-
-        if (!res.ok) {
-          console.error('Failed to fetch event details')
+        const fetchedEvent = await getEventById(eventId)
+        
+        if (!fetchedEvent) {
+          console.error('Event not found')
           navigate('/events')
           return
         }
 
-        const fetchedEvent = await res.json()
         setEvent(fetchedEvent)
 
         setFormData({
@@ -56,11 +56,14 @@ const EventDetails = props => {
         )
       } catch (err) {
         console.error('Error fetching event details:', err)
+        navigate('/events')
+      } finally {
+        setLoading(false)
       }
     }
 
     fetchEvent()
-  }, [eventId, user.roomId, user.id, navigate])
+  }, [eventId]) // Only depend on eventId, not user or navigate
 
   const handleInputChange = e => {
     const { name, value } = e.target
@@ -72,60 +75,69 @@ const EventDetails = props => {
 
   const handleAttendanceChange = async (e) => {
     const newAttendanceStatus = e.target.checked
+    const previousStatus = isAttending
     setIsAttending(newAttendanceStatus)
 
     try {
-      const token = localStorage.getItem('token')
-      const res = await fetch(`${API_BASE_URL}/rooms/${user.roomId}/events/${eventId}/attendance`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: user.id,
-          isAttending: newAttendanceStatus,
-        }),
-      })
+      const result = await toggleAttendance(eventId, user.id, newAttendanceStatus)
 
-      if (!res.ok) {
-        console.error('Failed to update attendance')
-        setIsAttending(!newAttendanceStatus)
+      if (!result.success) {
+        console.error('Failed to update attendance:', result.message)
+        setIsAttending(previousStatus)
+        alert(result.message || 'Failed to update attendance')
       }
     } catch (err) {
       console.error('Error updating attendance:', err)
-      setIsAttending(!newAttendanceStatus)
+      setIsAttending(previousStatus)
+      alert('Failed to update attendance')
     }
   }
 
   const handleSave = async () => {
     try {
-      const token = localStorage.getItem('token')
+      setSaving(true)
+      
+      const result = await updateEvent(eventId, formData)
 
-      const res = await fetch(`${API_BASE_URL}/rooms/${user.roomId}/events/${eventId}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-
-      if (!res.ok) {
-        console.error('Failed to save event changes')
+      if (!result.success) {
+        console.error('Failed to save event changes:', result.message)
+        alert(result.message || 'Failed to save changes')
+        setSaving(false)
         return
       }
 
-      const updatedEvent = await res.json()
-      setEvent(updatedEvent)
-      navigate('/events')
+      setEvent(result)
+      navigate('/events', { replace: true })
     } catch (err) {
       console.error('Error saving event:', err)
+      alert('Failed to save changes')
+      setSaving(false)
     }
   }
 
-  if (!event) {
+  // Show loading only initially
+  if (loading) {
     return <div className="EventDetails-loading">Loading...</div>
+  }
+
+  // Check for user after loading is done
+  if (!user) {
+    return (
+      <div className="EventDetails-container">
+        <p>Please log in to view event details.</p>
+        <button onClick={() => navigate('/login')}>Go to Login</button>
+      </div>
+    )
+  }
+
+  // Check for event after loading is done
+  if (!event) {
+    return (
+      <div className="EventDetails-container">
+        <p>Event not found</p>
+        <button onClick={() => navigate('/events')}>Back to Events</button>
+      </div>
+    )
   }
 
   return (
@@ -210,8 +222,12 @@ const EventDetails = props => {
       </section>
 
       {isEditable && (
-        <button className="Save-button" onClick={handleSave}>
-          Save Changes
+        <button 
+          className="Save-button" 
+          onClick={handleSave}
+          disabled={saving}
+        >
+          {saving ? 'Saving...' : 'Save Changes'}
         </button>
       )}
 
