@@ -65,7 +65,8 @@ const ApartmentSchema = new Schema({
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: false
+    required: false,
+    index: true
   }
 }, {
   timestamps: true
