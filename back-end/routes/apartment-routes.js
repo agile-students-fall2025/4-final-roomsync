@@ -18,10 +18,6 @@ export default function apartmentRoutes () {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
-        console.log('🔍 GET /apartments endpoint called')
-        console.log('📊 Database:', mongoose.connection.db.databaseName)
-        console.log('📋 Collection:', Apartment.collection.name)
-
         const apartments = await Apartment.find().sort({ createdAt: -1 })
         res.json(apartments)
       } catch (err) {
