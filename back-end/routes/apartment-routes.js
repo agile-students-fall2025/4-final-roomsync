@@ -140,5 +140,90 @@ export default function apartmentRoutes () {
     }
   )
 
+  // GET /api/apartments/search
+  // Search apartments with filters
+  router.get('/apartments/search',
+    passport.authenticate('jwt', { session: false }),
+    async (req, res) => {
+      try {
+        const {
+          location,
+          minPrice,
+          maxPrice,
+          startDate,
+          endDate,
+          roomType,
+          bedroomSelected,
+          bathroomSelected,
+          amenities
+        } = req.query
+
+        console.log('🔍 Search filters:', req.query)
+
+        // Build query object
+        let query = {}
+
+        // Location filter (case-insensitive partial match)
+        if (location) {
+          query.location = { $regex: location, $options: 'i' }
+        }
+
+        // Price range filter
+        if (minPrice || maxPrice) {
+          query.monthlyRent = {}
+          if (minPrice) query.monthlyRent.$gte = Number(minPrice)
+          if (maxPrice) query.monthlyRent.$lte = Number(maxPrice)
+        }
+
+        // Date filters
+        if (startDate) {
+          query.startDate = { $lte: new Date(startDate) }
+        }
+        if (endDate) {
+          query.$or = [
+            { endDate: null }, // No end date (ongoing)
+            { endDate: { $gte: new Date(endDate) } }
+          ]
+        }
+
+        // Room type filter
+        if (roomType) {
+          query.isPrivate = roomType === 'Private'
+        }
+
+        // Amenities filter (apartment must have ALL selected amenities)
+        if (amenities) {
+          const amenitiesArray = Array.isArray(amenities) 
+            ? amenities 
+            : [amenities]
+          
+          if (amenitiesArray.length > 0) {
+            query.amenities = { $all: amenitiesArray }
+          }
+        }
+
+        console.log('📊 MongoDB query:', JSON.stringify(query, null, 2))
+
+        // Execute search
+        const apartments = await Apartment.find(query).sort({ createdAt: -1 })
+
+        console.log(`✅ Found ${apartments.length} matching apartments`)
+
+        res.json({
+          success: true,
+          count: apartments.length,
+          apartments: apartments
+        })
+
+      } catch (err) {
+        console.error('❌ Error searching apartments:', err)
+        res.status(500).json({
+          success: false,
+          message: 'Error searching apartments'
+        })
+      }
+    }
+  )
+
   return router
 }
