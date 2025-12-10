@@ -5,10 +5,10 @@ import './EventDetails.css'
 import { getCurrentUser } from './api/users'
 import { getEventById, updateEvent, toggleAttendance } from './api/events'
 
-const EventDetails = props => {
-  const user = getCurrentUser()
+const EventDetails = () => {
   const navigate = useNavigate()
   const { eventId } = useParams()
+  const user = getCurrentUser()
 
   const [event, setEvent] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -23,10 +23,14 @@ const EventDetails = props => {
   })
 
   useEffect(() => {
+    // Early return if no user or eventId
+    if (!user || !eventId) {
+      setLoading(false)
+      return
+    }
+
     const fetchEvent = async () => {
       try {
-        setLoading(true)
-        
         const fetchedEvent = await getEventById(eventId)
         
         if (!fetchedEvent) {
@@ -58,10 +62,8 @@ const EventDetails = props => {
       }
     }
 
-    if (eventId && user) {
-      fetchEvent()
-    }
-  }, [eventId, user, navigate])
+    fetchEvent()
+  }, [eventId]) // Only depend on eventId, not user or navigate
 
   const handleInputChange = e => {
     const { name, value } = e.target
@@ -82,11 +84,12 @@ const EventDetails = props => {
       if (!result.success) {
         console.error('Failed to update attendance:', result.message)
         setIsAttending(previousStatus)
+        alert(result.message || 'Failed to update attendance')
       }
     } catch (err) {
       console.error('Error updating attendance:', err)
-      // Revert on error
       setIsAttending(previousStatus)
+      alert('Failed to update attendance')
     }
   }
 
@@ -99,23 +102,35 @@ const EventDetails = props => {
       if (!result.success) {
         console.error('Failed to save event changes:', result.message)
         alert(result.message || 'Failed to save changes')
+        setSaving(false)
         return
       }
 
       setEvent(result)
-      navigate('/events')
+      navigate('/events', { replace: true })
     } catch (err) {
       console.error('Error saving event:', err)
       alert('Failed to save changes')
-    } finally {
       setSaving(false)
     }
   }
 
+  // Show loading only initially
   if (loading) {
     return <div className="EventDetails-loading">Loading...</div>
   }
 
+  // Check for user after loading is done
+  if (!user) {
+    return (
+      <div className="EventDetails-container">
+        <p>Please log in to view event details.</p>
+        <button onClick={() => navigate('/login')}>Go to Login</button>
+      </div>
+    )
+  }
+
+  // Check for event after loading is done
   if (!event) {
     return (
       <div className="EventDetails-container">

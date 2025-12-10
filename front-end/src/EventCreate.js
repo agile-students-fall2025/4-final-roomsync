@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './EventDetails.css'
 import { getCurrentUser } from './api/users'
 import { addEvent } from './api/events'
 
 const EventCreate = () => {
-  const user = getCurrentUser()
   const navigate = useNavigate()
+  const user = getCurrentUser()
 
   const [formData, setFormData] = useState({
     name: '',
@@ -17,6 +17,35 @@ const EventCreate = () => {
   })
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+
+  // Check if user is logged in and has a room
+  if (!user) {
+    return (
+      <div className="EventDetails-container">
+        <div className="EventDetails-header">
+          <button className="Back-button" onClick={() => navigate('/events')}>
+            &lt;
+          </button>
+          <strong>Create New Event</strong>
+        </div>
+        <p>Please log in to create events.</p>
+      </div>
+    )
+  }
+
+  if (!user.roomId) {
+    return (
+      <div className="EventDetails-container">
+        <div className="EventDetails-header">
+          <button className="Back-button" onClick={() => navigate('/events')}>
+            &lt;
+          </button>
+          <strong>Create New Event</strong>
+        </div>
+        <p>You need to join a room before creating events.</p>
+      </div>
+    )
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -42,14 +71,15 @@ const EventCreate = () => {
 
       if (result.success === false) {
         setError(result.message || 'Failed to create event')
+        setSaving(false)
         return
       }
 
-      navigate('/events')
+      // Navigate with replace to avoid going back to create form
+      navigate('/events', { replace: true })
     } catch (err) {
       setError('Error creating event')
       console.error('Error:', err)
-    } finally {
       setSaving(false)
     }
   }
