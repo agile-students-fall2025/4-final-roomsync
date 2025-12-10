@@ -1,7 +1,7 @@
 # RoomSync
 
 [Link to our Repo](https://github.com/agile-students-fall2025/4-final-roomsync)
-[Link to our](https://room-sync-mmdu6.ondigitalocean.app/landing)
+[Link to our deployed software](https://room-sync-mmdu6.ondigitalocean.app/landing)
 
 ### **Project Proposal**
 
