@@ -1,6 +1,7 @@
 import express from 'express'
 import Apartment from '../models/Compatibility/Apartment.js'
 import passport from'passport'
+import mongoose from 'mongoose'
 
 export default function apartmentRoutes () {
   const router = express.Router()
@@ -17,6 +18,10 @@ export default function apartmentRoutes () {
     passport.authenticate('jwt', { session: false }),
     async (req, res) => {
       try {
+        console.log('🔍 GET /apartments endpoint called')
+        console.log('📊 Database:', mongoose.connection.db.databaseName)
+        console.log('📋 Collection:', Apartment.collection.name)
+
         const apartments = await Apartment.find().sort({ createdAt: -1 })
         res.json(apartments)
       } catch (err) {
