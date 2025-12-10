@@ -54,7 +54,7 @@ const Header = props => {
         <ul className={menuOpen ? "nav-links mobile-open" : "nav-links"}>
           <li><Link to="/dashboard" onClick={() => setMenuOpen(false)}>Home</Link></li>
           <li><Link to="/chores" onClick={() => setMenuOpen(false)}>Chores</Link></li>
-          <li><Link to="/events" onClick={() => setMenuOpen(false)}>Chores</Link></li>
+          <li><Link to="/events" onClick={() => setMenuOpen(false)}>Events</Link></li>
           <li><Link to="/compatibility" onClick={() => setMenuOpen(false)}>Compatibility Finder</Link></li>
           <li><Link to="/profile" onClick={() => setMenuOpen(false)}>Profile</Link></li>
           <li onClick={handleLogout}><Link to="/" onClick={() => setMenuOpen(false)}>Logout</Link></li>
