@@ -1,4 +1,3 @@
-// back-end/models/Events.js
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
@@ -45,7 +44,10 @@ const EventSchema = new Schema({
   toJSON: {
     virtuals: true,
     transform: function(doc, ret) {
-      ret.id = ret._id
+      ret.id = ret._id.toString()
+      ret.createdBy = ret.createdBy.toString()
+      ret.roomId = ret.roomId.toString()
+      ret.attendees = ret.attendees.map(a => a.toString())
       delete ret._id
       delete ret.__v
       return ret
