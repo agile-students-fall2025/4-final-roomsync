@@ -13,7 +13,6 @@ const PotentialRoomProfile = () => {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    // If we don't have apartment data from navigation state, fetch it
     if (!apartment && user) {
       const fetchApartment = async () => {
         try {
