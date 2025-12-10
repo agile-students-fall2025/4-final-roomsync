@@ -4,6 +4,14 @@ import RoommateEssay from '../models/Compatibility/Roommate-Essay.js'
 export default function roommateEssayRoutes () {
   const router = express.Router()
 
+  const handleServerError = (res, logMessage, err) => {
+    console.error(logMessage, err)
+    res.status(500).json({
+      success: false,
+      message: logMessage
+    })
+  }
+
   // ========================================
   // ROOMMATE ESSAYS MANAGEMENT (MongoDB)
   // ========================================
@@ -11,22 +19,18 @@ export default function roommateEssayRoutes () {
   // GET all roommate essays for a room
   router.get('/rooms/:roomId/roommate-essays', async (req, res) => {
     try {
-      const roomId = parseInt(req.params.roomId)
+      const roomId = parseInt(req.params.roomId, 10)
       const essays = await RoommateEssay.find({ roomId }).sort({ createdAt: -1 })
       res.json(essays)
     } catch (err) {
-      console.error('Error fetching roommate essays', err)
-      res.status(500).json({
-        success: false,
-        message: 'Error fetching roommate essays'
-      })
+      handleServerError(res, 'Error fetching roommate essays', err)
     }
   })
 
   // GET a single essay
   router.get('/rooms/:roomId/roommate-essays/:id', async (req, res) => {
     try {
-      const roomId = parseInt(req.params.roomId)
+      const roomId = parseInt(req.params.roomId, 10)
       const { id } = req.params
 
       const essay = await RoommateEssay.findOne({ _id: id, roomId })
@@ -39,18 +43,14 @@ export default function roommateEssayRoutes () {
 
       res.json(essay)
     } catch (err) {
-      console.error('Error fetching roommate essay', err)
-      res.status(500).json({
-        success: false,
-        message: 'Error fetching roommate essay'
-      })
+      handleServerError(res, 'Error fetching roommate essay', err)
     }
   })
 
   // POST create new essay
   router.post('/rooms/:roomId/roommate-essays', async (req, res) => {
     try {
-      const roomId = parseInt(req.params.roomId)
+      const roomId = parseInt(req.params.roomId, 10)
       const { userId, title, aboutMe, idealRoommate, lifestyleDetails } = req.body
 
       if (!title || !aboutMe) {
@@ -71,18 +71,14 @@ export default function roommateEssayRoutes () {
 
       res.status(201).json(essay)
     } catch (err) {
-      console.error('Error creating roommate essay', err)
-      res.status(500).json({
-        success: false,
-        message: 'Error creating roommate essay'
-      })
+      handleServerError(res, 'Error creating roommate essay', err)
     }
   })
 
   // PUT update essay
   router.put('/rooms/:roomId/roommate-essays/:id', async (req, res) => {
     try {
-      const roomId = parseInt(req.params.roomId)
+      const roomId = parseInt(req.params.roomId, 10)
       const { id } = req.params
       const { title, aboutMe, idealRoommate, lifestyleDetails } = req.body
 
@@ -106,18 +102,14 @@ export default function roommateEssayRoutes () {
 
       res.json(essay)
     } catch (err) {
-      console.error('Error updating roommate essay', err)
-      res.status(500).json({
-        success: false,
-        message: 'Error updating roommate essay'
-      })
+      handleServerError(res, 'Error updating roommate essay', err)
     }
   })
 
   // DELETE essay
   router.delete('/rooms/:roomId/roommate-essays/:id', async (req, res) => {
     try {
-      const roomId = parseInt(req.params.roomId)
+      const roomId = parseInt(req.params.roomId, 10)
       const { id } = req.params
 
       const result = await RoommateEssay.findOneAndDelete({ _id: id, roomId })
@@ -130,11 +122,7 @@ export default function roommateEssayRoutes () {
 
       res.json({ success: true })
     } catch (err) {
-      console.error('Error deleting roommate essay', err)
-      res.status(500).json({
-        success: false,
-        message: 'Error deleting roommate essay'
-      })
+      handleServerError(res, 'Error deleting roommate essay', err)
     }
   })
 

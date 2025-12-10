@@ -7,14 +7,17 @@ import passport from 'passport'
 const roommateRouter = () => {
   const router = express.Router()
 
+  const requireAuth = passport.authenticate('jwt', { session: false })
+
   // Validation rules
   const roommateValidationRules = [
     body('aboutMe').trim().notEmpty().withMessage('About me is required')
   ]
 
   // GET all roommates
-  router.get('/roommate',
-    passport.authenticate('jwt', { session: false }),
+  router.get(
+    '/roommate',
+    requireAuth,
     async (req, res) => {
       try {
         const roommates = await Roommate.find()
@@ -26,8 +29,9 @@ const roommateRouter = () => {
   )
 
   // GET single roommate by ID
-  router.get('/roommate/:id', 
-    passport.authenticate('jwt', { session: false }),
+  router.get(
+    '/roommate/:id',
+    requireAuth,
     async (req, res) => {
       try {
         const roommate = await Roommate.findById(req.params.id)
@@ -45,9 +49,10 @@ const roommateRouter = () => {
   )
 
   // POST create new roommate
-  router.post('/roommate', 
-    passport.authenticate('jwt', { session: false }),
-    roommateValidationRules, 
+  router.post(
+    '/roommate',
+    requireAuth,
+    roommateValidationRules,
     async (req, res) => {
       try {
         const errors = validationResult(req)
@@ -73,8 +78,9 @@ const roommateRouter = () => {
   )
 
   // PUT update roommate
-  router.put('/roommate/:id', 
-    passport.authenticate('jwt', { session: false }),
+  router.put(
+    '/roommate/:id',
+    requireAuth,
     async (req, res) => {
       try {
         const { aboutMe, livingPreferences, habitsDealBreakers } = req.body
@@ -99,8 +105,9 @@ const roommateRouter = () => {
   )
 
   // DELETE roommate
-  router.delete('/roommate/:id', 
-    passport.authenticate('jwt', { session: false }),
+  router.delete(
+    '/roommate/:id',
+    requireAuth,
     async (req, res) => {
       try {
         const roommate = await Roommate.findByIdAndDelete(req.params.id)
