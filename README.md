@@ -1,13 +1,14 @@
 # RoomSync
 
 [Link to our Repo](https://github.com/agile-students-fall2025/4-final-roomsync)
+[Link to our deployed software](https://room-sync-mmdu6.ondigitalocean.app/landing)
 
 ### **Project Proposal**
 
 **1. Introduction & Problem Statement**
 
 Living with roommates can be a rewarding experience, but it often comes with significant friction. Current solutions are fragmented:
-*   **Chore and expense tracking** is handled through a mix of notes, texts, and memory, leading to ambiguity and conflict.
+*   **Chore tracking** is handled through a mix of notes, texts, and memory, leading to ambiguity and conflict.
 *   **Finding a compatible roommate** is often reduced to a game of chance on classified sites, with little focus on living habits and personality compatibility.
 *   **Building a genuine community** within a shared home is left to chance, with no tools to facilitate bonding and mutual growth.
 
@@ -19,8 +20,8 @@ Nexus is a mobile-friendly web application with three core modules that work tog
 
     This is the logistical core for managing the shared physical space.
     *   **Chore Wheel:** Assign, rotate, and track chores. Automated reminders and a visual calendar ensure fairness.
-    *   **Shared Inventory:** Track shared items like milk, toilet paper, or coffee. Users can check off when an item is running low or add it to a shared shopping list.
-    *   **Expense Splitting:** Easily split bills (utilities, rent) and shared grocery costs. Tracks who has paid and who owes what.
+    *   **Create Household:** Create a household by adding new roommates.
+
 
 *   **Module 2: The Compatibility Finder**
 
@@ -57,6 +58,20 @@ Nexus is a mobile-friendly web application with three core modules that work tog
   * **Scrum Master:** Eslem Varank
   * _Note: To be able run our program and see all the sprint 1 implementation: 1- Fork the file, 2- Install npm, 3- run 'npm start' on terminal in front-end folder_
 
+* **Sprint 2 Roles**
+  * **Product Owner:** Eslem Varank
+  * **Scrum Master:** Brian Chen
+  * _Note: To be able run our program and see all the sprint 2 implementation: 1- Fork the file, 2- Install npm, 3- run 'npm start' on terminal in front-end folder_
+
+* **Sprint 3 Roles**
+  * **Product Owner:** Jacob Kang
+  * **Scrum Master:** Amish Vandse
+  * _Note: To be able run our program and see all the sprint 3 implementation: 1- Fork the file, 2- Install npm,3-Add .env, 4- run 'npm start' on terminal in front-end folder_
+
+  * **Sprint 3 Roles**
+  * **Product Owner:** Amish Vandse
+  * **Scrum Master:** Chenyu (Ginny) Jiang
+  * _Note: To be able run our program and see all the sprint 4, click on our website link 
 
 * **Developers**
   * [Eslem Varank](https://github.com/eselmsenavarank)
