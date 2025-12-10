@@ -7,7 +7,8 @@ const PotentialRoommateSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: false,
-      default: null
+      default: null,
+      index: true
     },
 
     displayName: {
