@@ -44,35 +44,71 @@ const StartEssayForRoom = () => {
     try {
       setSaving(true);
 
-      const roomId = 1;
-      const userId = 1;
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('Please login to search for apartments');
+      }
 
-      const res = await fetch(`${API_BASE_URL}/user/${userId}/room-essays`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId,
-          title: 'Room compatibility essay',
-          location,
-          minPrice,
-          maxPrice,
-          startDate,
-          endDate,
-          roomType,
-          bedroomSelected,
-          bathroomSelected,
-          amenities
-        })
+      // Query parameters
+      const params = new URLSearchParams();
+      
+      if (location) params.append('location', location);
+      if (minPrice) params.append('minPrice', minPrice);
+      if (maxPrice) params.append('maxPrice', maxPrice);
+      if (startDate) params.append('startDate', startDate);
+      if (endDate) params.append('endDate', endDate);
+      if (roomType) params.append('roomType', roomType);
+      if (bedroomSelected && bedroomSelected !== 'Any') {
+        params.append('bedroomSelected', bedroomSelected);
+      }
+      if (bathroomSelected && bathroomSelected !== 'Any') {
+        params.append('bathroomSelected', bathroomSelected);
+      }
+      
+      // Add amenity
+      amenities.forEach(amenity => {
+        params.append('amenities', amenity);
+      });
+
+      console.log('🔍 Search params:', params.toString());
+
+      const res = await fetch(`${API_BASE_URL}/apartments/search?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        throw new Error(body.message || 'Failed to save essay');
+        throw new Error(body.message || 'Failed to search apartments');
       }
 
-      navigate('/compatibility/room/potentialrooms');
+      const data = await res.json();
+      console.log('✅ Search results:', data);
+
+      navigate('/compatibility/room/potentialrooms', {
+        state: {
+          searchResults: data.apartments,
+          filters: {
+            location,
+            minPrice,
+            maxPrice,
+            startDate,
+            endDate,
+            roomType,
+            bedroomSelected,
+            bathroomSelected,
+            amenities
+          }
+        }
+      });
+
     } catch (err) {
-      setError(err.message || 'Failed saving your essay.');
+      console.error('Search error:', err);
+      setError(err.message || 'Failed to search apartments.');
     } finally {
       setSaving(false);
     }
@@ -200,43 +236,50 @@ const StartEssayForRoom = () => {
             <label className="chip">
               <input 
                 type="checkbox" 
-                checked={amenities.includes('Pet-friendly')}
-                onChange={() => toggleAmenity('Pet-friendly')}
+                checked={amenities.includes('pet-friendly')}
+                onChange={() => toggleAmenity('pet-friendly')}
               /> Pet-friendly
             </label>
             <label className="chip">
               <input
                 type="checkbox"
-                checked={amenities.includes('In-unit-Laundry')}
-                onChange={() => toggleAmenity('In-unit-Laundry')}
+                checked={amenities.includes('in-unit-laundry')}
+                onChange={() => toggleAmenity('in-unit-laundry')}
               /> In-unit Laundry
             </label>
             <label className="chip">
               <input
                 type="checkbox"
-                checked={amenities.includes('A/C')}
-                onChange={() => toggleAmenity('A/C')}
+                checked={amenities.includes('air-conditioning')}
+                onChange={() => toggleAmenity('air-conditioning')}
               /> A/C
             </label>
             <label className="chip">
               <input
                 type="checkbox"
-                checked={amenities.includes('Gym')}
-                onChange={() => toggleAmenity('Gym')}
+                checked={amenities.includes('gym')}
+                onChange={() => toggleAmenity('gym')}
               /> Gym
             </label>
             <label className="chip">
               <input
                 type="checkbox"
-                checked={amenities.includes('Elevator')}
-                onChange={() => toggleAmenity('Elevator')}
+                checked={amenities.includes('elevator')}
+                onChange={() => toggleAmenity('elevator')}
               /> Elevator
             </label>
             <label className="chip">
               <input
                 type="checkbox"
-                checked={amenities.includes('Doorman')}
-                onChange={() => toggleAmenity('Doorman')}
+                checked={amenities.includes('furnished')}
+                onChange={() => toggleAmenity('furnished')}
+              /> Furnished
+            </label>
+            <label className="chip">
+              <input
+                type="checkbox"
+                checked={amenities.includes('doorman')}
+                onChange={() => toggleAmenity('doorman')}
               /> Doorman
             </label>
           </div>
