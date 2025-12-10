@@ -1,6 +1,7 @@
 import express from 'express'
 import Apartment from '../models/Compatibility/Apartment.js'
-import passport from 'passport'
+import passport from'passport'
+import mongoose from 'mongoose'
 
 export default function apartmentRoutes () {
   const requireAuth = passport.authenticate('jwt', { session: false })

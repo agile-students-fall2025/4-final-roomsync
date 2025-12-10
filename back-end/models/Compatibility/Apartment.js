@@ -37,7 +37,7 @@ const ApartmentSchema = new Schema({
   },
   amenities: {
     type: [String],
-    enum: ['pet-friendly', 'in-unit-laudry', 'air-conditioning', 'gym', 'elevator', 'furnished', 'doorman'],
+    enum: ['pet-friendly', 'in-unit-laundry', 'air-conditioning', 'gym', 'elevator', 'furnished', 'doorman'],
     required: false,
     default: [],
   },
