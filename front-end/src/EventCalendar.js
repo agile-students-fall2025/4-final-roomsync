@@ -152,7 +152,7 @@ export default function EventCalendar() {
                   <ul>
                     {selectedDateEvents.map(event => (
                       <li key={event.id} className="event-item">
-                        <strong>{event.name}</strong>
+                        <strong>{event.name} | {event.time} | {event.location}</strong>
                         <p className="muted small">{event.description}</p>
                       </li>
                     ))}
