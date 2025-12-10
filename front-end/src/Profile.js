@@ -2,16 +2,18 @@ import { useState, useEffect } from 'react'
 import './Profile.css'
 import { getCurrentUser, getProfile, createProfile, updateProfile } from './api/users'
 
-const Profile = props => {
+const Profile = () => {
   const user = getCurrentUser()
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [isSkillsOpen, setIsSkillsOpen] = useState(false)
+  const [newSkill, setNewSkill] = useState('')
 
   const [formData, setFormData] = useState({
     about: '',
     isPublic: true,
     community: '',
+    skills: []
   })
 
   useEffect(() => {
@@ -31,6 +33,7 @@ const Profile = props => {
             about: data.about || '',
             isPublic: data.isPublic ?? true,
             community: data.community || '',
+            skills: data.skills || []
           })
         } else {
           // Profile doesn't exist, create one automatically
@@ -49,6 +52,7 @@ const Profile = props => {
               about: newProfile.about || '',
               isPublic: newProfile.isPublic ?? true,
               community: newProfile.community || '',
+              skills: newProfile.skills || []
             })
           } else {
             console.error('Failed to create profile:', newProfile?.message)
@@ -83,12 +87,47 @@ const Profile = props => {
     setIsSkillsOpen(prev => !prev)
   }
 
+  const handleAddSkill = () => {
+    const trimmedSkill = newSkill.trim()
+    
+    if (!trimmedSkill) {
+      alert('Please enter a skill')
+      return
+    }
+
+    if (formData.skills.includes(trimmedSkill)) {
+      alert('This skill already exists')
+      return
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      skills: [...prev.skills, trimmedSkill]
+    }))
+    setNewSkill('')
+  }
+
+  const handleRemoveSkill = (skillToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      skills: prev.skills.filter(skill => skill !== skillToRemove)
+    }))
+  }
+
+  const handleSkillKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      handleAddSkill()
+    }
+  }
+
   const handleSave = async () => {
     try {
       const result = await updateProfile(user.id, {
         about: formData.about,
         isPublic: formData.isPublic,
         community: formData.community,
+        skills: formData.skills
       })
 
       if (result.success === false) {
@@ -102,6 +141,7 @@ const Profile = props => {
         about: result.about || '',
         isPublic: result.isPublic ?? true,
         community: result.community || '',
+        skills: result.skills || []
       })
       alert('Profile saved successfully!')
     } catch (err) {
@@ -151,13 +191,6 @@ const Profile = props => {
 
       <div className="Profile-content">
         <div className="Profile-top">
-          <div className="Profile-picture">
-            {profile.profilePicture ? (
-              <img src={profile.profilePicture} alt="Profile" />
-            ) : (
-              <div className="picture-placeholder">Picture</div>
-            )}
-          </div>
           <div className="Profile-info">
             <h2>{user.username}</h2>
             <p>Community: {formData.community || 'Not set'}</p>
@@ -188,28 +221,46 @@ const Profile = props => {
 
         <div className="Profile-section">
           <label>My skills</label>
-          <div className="Skills-dropdown">
-            <button
-              className="Skills-header"
-              onClick={toggleSkillsDropdown}
-              type="button"
+          
+          {/* Add new skill input */}
+          <div className="skill-input-container">
+            <input
+              type="text"
+              value={newSkill}
+              onChange={(e) => setNewSkill(e.target.value)}
+              onKeyPress={handleSkillKeyPress}
+              placeholder="Add a skill (e.g., Cooking, Guitar, Coding)"
+              className="skill-input"
+            />
+            <button 
+              type="button" 
+              onClick={handleAddSkill}
+              className="add-skill-button"
             >
-              <span>Skills</span>
-              <span className={`arrow ${isSkillsOpen ? 'open' : ''}`}>▼</span>
+              Add
             </button>
-            {isSkillsOpen && (
-              <div className="Skills-list">
-                {(profile.skills || []).map((skill, index) => (
-                  <div key={index} className="skill-item">
-                    {skill}
+          </div>
+
+          {/* Display skills */}
+          <div className="skills-list-container">
+            {formData.skills.length > 0 ? (
+              <div className="skills-tags">
+                {formData.skills.map((skill, index) => (
+                  <div key={index} className="skill-tag">
+                    <span>{skill}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSkill(skill)}
+                      className="remove-skill-button"
+                      aria-label="Remove skill"
+                    >
+                      ×
+                    </button>
                   </div>
                 ))}
-                {profile.skills?.length === 0 && (
-                  <div className="skill-item others">
-                    No skills added yet
-                  </div>
-                )}
               </div>
+            ) : (
+              <p className="no-skills-message">No skills added yet. Add your first skill above!</p>
             )}
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import './CompatibilityFinder.css';
-import { getCurrentUser } from '../api/users.js'
+import { getCurrentUser } from '../api/users'
 
 const CompatibilityFinder = () => {
   const user = getCurrentUser();

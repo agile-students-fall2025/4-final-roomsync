@@ -4,12 +4,24 @@ import PotentialRoommate from '../models/Compatibility/Potential-Roommate.js'
 export default function potentialRoommateRoutes () {
   const router = express.Router()
 
+  const handleServerError = (res, logMessage, err) => {
+    console.error(logMessage, err)
+    res.status(500).json({
+      success: false,
+      message: logMessage
+    })
+  }
+
+  /**
+   * Map a PotentialRoommate mongoose document into the shape
+   * expected by the front-end PotentialRoommates / PotentialRoomProfile pages.
+   */
   const toClientShape = (doc) => ({
     id: doc._id.toString(),
     name: doc.displayName,
     budget: doc.budgetRange,
     areas: doc.locationPreference ? [doc.locationPreference] : [],
-    tags: [], 
+    tags: [],
     blurb: doc.hobbiesInterests || '',
     essay: {
       about: doc.aboutMe,
@@ -25,11 +37,7 @@ export default function potentialRoommateRoutes () {
       const mapped = docs.map(toClientShape)
       res.json(mapped)
     } catch (err) {
-      console.error('Error fetching potential roommates', err)
-      res.status(500).json({
-        success: false,
-        message: 'Error fetching potential roommates'
-      })
+      handleServerError(res, 'Error fetching potential roommates', err)
     }
   })
 
@@ -47,11 +55,7 @@ export default function potentialRoommateRoutes () {
 
       res.json(toClientShape(doc))
     } catch (err) {
-      console.error('Error fetching potential roommate', err)
-      res.status(500).json({
-        success: false,
-        message: 'Error fetching potential roommate'
-      })
+      handleServerError(res, 'Error fetching potential roommate', err)
     }
   })
 
@@ -94,11 +98,7 @@ export default function potentialRoommateRoutes () {
 
       res.status(201).json(toClientShape(doc))
     } catch (err) {
-      console.error('Error creating potential roommate', err)
-      res.status(500).json({
-        success: false,
-        message: 'Error creating potential roommate'
-      })
+      handleServerError(res, 'Error creating potential roommate', err)
     }
   })
 

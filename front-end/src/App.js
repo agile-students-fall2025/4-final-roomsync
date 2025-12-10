@@ -13,6 +13,7 @@ import PaymentDetails from './PaymentDetails.js'
 import Events from './Events';
 import EventDetails from './EventDetails';
 import EventCalendar from './EventCalendar.js';
+import EventCreate from './EventCreate';
 import SkillSwap from './SkillSwap';
 import CompatibilityFinder from './compatibility/CompatibilityFinder';
 import StartEssayForRoommate from './compatibility/StartEssayForRoommate';
@@ -59,6 +60,7 @@ const App = props => {
             <Route path="/events" element={<Events />} />
             <Route path="/events/:eventId" element={<EventDetails />} />
             <Route path="/eventcalendar" element={<EventCalendar />} />
+            <Route path="/events/create" element={<EventCreate />} />
             
 
             {/* compatibility finder hub */}

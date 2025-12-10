@@ -4,6 +4,7 @@ import passport from'passport'
 import mongoose from 'mongoose'
 
 export default function apartmentRoutes () {
+  const requireAuth = passport.authenticate('jwt', { session: false })
   const router = express.Router()
 
   // ========================================
@@ -14,8 +15,9 @@ export default function apartmentRoutes () {
 
   // GET /api/apartments
   // Return all apartment records (newest first)
-  router.get('/apartments',
-    passport.authenticate('jwt', { session: false }),
+  router.get(
+    '/apartments',
+    requireAuth,
     async (req, res) => {
       try {
         const apartments = await Apartment.find().sort({ createdAt: -1 })
@@ -32,8 +34,9 @@ export default function apartmentRoutes () {
 
   // GET /api/apartments/:id
   // Return a single apartment by id
-  router.get('/apartments/:id',
-    passport.authenticate('jwt', { session: false }),
+  router.get(
+    '/apartments/:id',
+    requireAuth,
     async (req, res) => {
       try {
         const { id } = req.params
@@ -58,8 +61,9 @@ export default function apartmentRoutes () {
 
   // POST /api/apartments
   // Create a new apartment document
-  router.post('/apartments', 
-    passport.authenticate('jwt', { session: false }),
+  router.post(
+    '/apartments',
+    requireAuth,
     async (req, res) => {
       try {
         const apartment = new Apartment({
@@ -80,8 +84,9 @@ export default function apartmentRoutes () {
 
   // PUT /api/apartments/:id
   // Update an existing apartment document
-  router.put('/apartments/:id', 
-    passport.authenticate('jwt', { session: false }),
+  router.put(
+    '/apartments/:id',
+    requireAuth,
     async (req, res) => {
       try {
         const { id } = req.params
@@ -110,8 +115,9 @@ export default function apartmentRoutes () {
 
   // DELETE /api/apartments/:id
   // Remove an apartment document
-  router.delete('/apartments/:id', 
-    passport.authenticate('jwt', { session: false }),
+  router.delete(
+    '/apartments/:id',
+    requireAuth,
     async (req, res) => {
       try {
         const { id } = req.params

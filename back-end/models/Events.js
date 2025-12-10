@@ -26,22 +26,28 @@ const EventSchema = new Schema({
     default: ''
   },
   roomId: {
-    type: Number,
+    type: Schema.Types.ObjectId,
+    ref: 'Room',
     required: true
   },
   createdBy: {
-    type: Number,
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
   attendees: [{
-    type: Number
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   }]
 }, {
   timestamps: true,
   toJSON: {
     virtuals: true,
     transform: function(doc, ret) {
-      ret.id = ret._id
+      ret.id = ret._id.toString()
+      ret.createdBy = ret.createdBy.toString()
+      ret.roomId = ret.roomId.toString()
+      ret.attendees = ret.attendees.map(a => a.toString())
       delete ret._id
       delete ret.__v
       return ret
