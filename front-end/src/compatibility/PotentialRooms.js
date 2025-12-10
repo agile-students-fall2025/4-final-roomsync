@@ -12,7 +12,7 @@ const PotentialRooms = () => {
     const fetchRooms = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/potential-rooms`);
+        const response = await fetch(`${API_BASE_URL}/apartments`);
 
         if (!response.ok) {
           throw new Error('Failed to fetch rooms');
@@ -40,13 +40,15 @@ const PotentialRooms = () => {
 
       <div className="rooms-grid">
         {rooms.map(room => (
-          <div key={room.id} className="room-card">
+          <div key={room._id} className="room-card">
             <div className="room-photo" aria-hidden="true" />
             <div className="room-body">
-              <h3 className="room-name">{room.listingName}</h3>
+              <h3 className="room-name">{room.listingTitle}</h3>
               <div className="room-row"><strong>Monthly Rent:</strong> ${room.monthlyRent}</div>
               <div className="room-row"><strong>Location:</strong> {room.location}</div>
-              <p className="room-blurb">{room.owner?.blurb || 'No description available'}</p>
+              <p className="room-blurb">
+                {room.houseRules || room.idealRoommate || 'No description available'}
+              </p>
               <div className="room-tags">
                 {room.amenities?.map(t => <span className="chip" key={t}>{t}</span>)}
               </div>
@@ -55,7 +57,7 @@ const PotentialRooms = () => {
             <div className="room-actions">
               <Link
                 className="compat-btn compat-btn-primary"
-                to={`/compatibility/room/potentialroom/${room.id}`}
+                to={`/compatibility/room/potentialroom/${room._id}`}
                 state={room}
               >
                 View Room
