@@ -62,6 +62,28 @@ const Chores = props => {
       console.error('Error updating chore:', error)
     }
   }
+
+  const deleteChore = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this chore?')) {
+      return
+    }
+
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`${API_BASE_URL}/rooms/${user.roomId}/chores/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      if (response.ok) {
+        setChores(chores.filter(c => c.id !== id))
+      }
+    } catch (error) {
+      console.error('Error deleting chore:', error)
+    }
+  }
   if (!user) {
     return (
       <div style={{
@@ -130,6 +152,12 @@ const Chores = props => {
                   <Link to={`/chores/edit/${chore.id}`}>
                     <button style={{ marginLeft: '10px' }}>Edit</button>
                   </Link>
+                  <button
+                    onClick={() => deleteChore(chore.id)}
+                    style={{ marginLeft: '10px', backgroundColor: '#dc3545', color: 'white' }}
+                  >
+                    Delete
+                  </button>
                 </div>
               </li>
             ))}
@@ -151,6 +179,12 @@ const Chores = props => {
                   <Link to={`/chores/edit/${chore.id}`}>
                     <button style={{ marginLeft: '10px' }}>Edit</button>
                   </Link>
+                  <button
+                    onClick={() => deleteChore(chore.id)}
+                    style={{ marginLeft: '10px', backgroundColor: '#dc3545', color: 'white' }}
+                  >
+                    Delete
+                  </button>
                 </div>
               </li>
             ))}
@@ -158,7 +192,7 @@ const Chores = props => {
         </section>
 
         <p className="Chores-footer">
-          <Link to="/chores/add">Add New Chore</Link> | <Link to="/dashbard">Back to Home</Link>
+          <Link to="/chores/add">Add New Chore</Link> | <Link to="/dashboard">Back to Home</Link>
         </p>
       </div>
     </>
