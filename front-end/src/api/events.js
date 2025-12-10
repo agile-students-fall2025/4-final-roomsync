@@ -10,7 +10,7 @@ export const getRoomEvents = async () => {
       return []
     }
     
-    const response = await fetch(`${API_BASE_URL}/api/rooms/${currentUser.roomId}/events`, {
+    const response = await fetch(`${API_BASE_URL}/rooms/${currentUser.roomId}/events`, {
       headers: getAuthHeaders()
     })
     
@@ -33,7 +33,7 @@ export const getEventsByDate = async (date) => {
       return []
     }
     
-    const response = await fetch(`${API_BASE_URL}/api/rooms/${currentUser.roomId}/events/date/${date}`, {
+    const response = await fetch(`${API_BASE_URL}/rooms/${currentUser.roomId}/events/date/${date}`, {
       headers: getAuthHeaders()
     })
     
@@ -56,7 +56,7 @@ export const getEventsByMonth = async (year, month) => {
       return []
     }
     
-    const response = await fetch(`${API_BASE_URL}/api/rooms/${currentUser.roomId}/events/month/${year}/${month}`, {
+    const response = await fetch(`${API_BASE_URL}/rooms/${currentUser.roomId}/events/month/${year}/${month}`, {
       headers: getAuthHeaders()
     })
     
@@ -78,7 +78,7 @@ export const addEvent = async (eventData) => {
       throw new Error('You need to be in a household to create events')
     }
     
-    const response = await fetch(`${API_BASE_URL}/api/rooms/${currentUser.roomId}/events`, {
+    const response = await fetch(`${API_BASE_URL}/rooms/${currentUser.roomId}/events`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({
@@ -108,7 +108,7 @@ export const updateEvent = async (eventId, eventData) => {
       throw new Error('You need to be in a household to update events')
     }
     
-    const response = await fetch(`${API_BASE_URL}/api/rooms/${currentUser.roomId}/events/${eventId}`, {
+    const response = await fetch(`${API_BASE_URL}/rooms/${currentUser.roomId}/events/${eventId}`, {
       method: 'PUT',
       headers: getAuthHeaders(),
       body: JSON.stringify(eventData)
@@ -135,7 +135,7 @@ export const deleteEvent = async (eventId) => {
       throw new Error('You need to be in a household to delete events')
     }
     
-    const response = await fetch(`${API_BASE_URL}/api/rooms/${currentUser.roomId}/events/${eventId}`, {
+    const response = await fetch(`${API_BASE_URL}/rooms/${currentUser.roomId}/events/${eventId}`, {
       method: 'DELETE',
       headers: getAuthHeaders()
     })
@@ -161,12 +161,12 @@ export const getEventById = async (eventId) => {
       return null
     }
     
-    const response = await fetch(`${API_BASE_URL}/api/rooms/${currentUser.roomId}/events/${eventId}`, {
+    const response = await fetch(`${API_BASE_URL}/rooms/${currentUser.roomId}/events/${eventId}`, {
       headers: getAuthHeaders()
     })
-    
+
     if (!response.ok) return null
-    
+
     const data = await response.json()
     return data
   } catch (error) {
@@ -183,7 +183,7 @@ export const toggleAttendance = async (eventId, userId, isAttending) => {
       throw new Error('You need to be in a household')
     }
     
-    const response = await fetch(`${API_BASE_URL}/api/rooms/${currentUser.roomId}/events/${eventId}/attendance`, {
+    const response = await fetch(`${API_BASE_URL}/rooms/${currentUser.roomId}/events/${eventId}/attendance`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({ userId, isAttending })
