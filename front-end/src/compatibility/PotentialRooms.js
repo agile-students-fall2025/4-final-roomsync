@@ -161,7 +161,7 @@ const PotentialRooms = () => {
                 <div className="room-actions">
                   <Link
                     className="compat-btn compat-btn-primary"
-                    to={`/compatibility/room/apartment/${room._id}`}
+                    to={`/compatibility/room/potentialroom/${room._id}`}
                     state={room}
                   >
                     View Room
