@@ -57,8 +57,6 @@ const PostUserProfile = () => {
         cleanlinessLevel: cleanlinessLevel || null
       };
 
-      console.log('📝 Creating profile:', submitData);
-
       const res = await fetch(`${API_BASE_URL}/potential-roommates`, {
         method: 'POST',
         headers: {
@@ -74,7 +72,6 @@ const PostUserProfile = () => {
       }
 
       const data = await res.json();
-      console.log('✅ Profile created:', data);
 
       // Navigate to next page (adjust route as needed)
       navigate('/compatibility/roommate/profiles');

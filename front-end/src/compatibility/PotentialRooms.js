@@ -93,7 +93,7 @@ const PotentialRooms = () => {
           borderRadius: '8px',
           marginBottom: '20px'
         }}>
-          <h3 style={{ margin: '0 0 10px 0' }}>🔍 Search Filters Applied:</h3>
+          <h3 style={{ margin: '0 0 10px 0' }}>Search Filters Applied:</h3>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
             {filters.location && <span className="chip">📍 {filters.location}</span>}
             {filters.minPrice && <span className="chip">💰 Min: ${filters.minPrice}</span>}
@@ -102,7 +102,7 @@ const PotentialRooms = () => {
             {filters.amenities?.map(a => <span key={a} className="chip">✨ {a}</span>)}
           </div>
           <Link 
-            to="/compatibility/room/start-essay" 
+            to="/compatibility/room/essay" 
             style={{ fontSize: '14px', marginTop: '10px', display: 'inline-block' }}
           >
             ← Modify Search
