@@ -44,7 +44,7 @@ const CompatibilityFinder = () => {
         </Link>
 
         <Link className="compat-btn"
-              to="/compatibility/room/essay">
+              to="/compatibility/room/profile">
           Looking for room
         </Link>
       </div>
