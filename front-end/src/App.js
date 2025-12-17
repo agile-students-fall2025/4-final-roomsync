@@ -26,6 +26,7 @@ import Register from './Register';
 import Profile from './Profile';
 import PotentialRooms from './compatibility/PotentialRooms';
 import PotentialRoomProfile from './compatibility/PotentialRoomProfile';
+import PostUserProfile from './compatibility/PostUserProfile';
 
 
 const App = props => {
@@ -73,6 +74,7 @@ const App = props => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/compatibility/room/potentialrooms" element={<PotentialRooms />} />
             <Route path="/compatibility/room/potentialroom/:id" element={<PotentialRoomProfile />} />
+            <Route path="/compatibility/room/profile" element={<PostUserProfile/>} />
           </Routes>
         </main>
         

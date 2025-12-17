@@ -6,13 +6,6 @@ import mongoose from 'mongoose'
 export default function apartmentRoutes () {
   const requireAuth = passport.authenticate('jwt', { session: false })
   const router = express.Router()
-
-  // ========================================
-  // APARTMENT (AVAILABLE SPACE) MANAGEMENT
-  // Base path will be `/api` in app.js, so
-  // full routes look like `/api/apartments/*`
-  // ========================================
-
   
   // GET /api/apartments/search
   // Search apartments with filters
@@ -29,8 +22,6 @@ export default function apartmentRoutes () {
         roomType,
         amenities
       } = req.query
-
-      console.log('🔍 Search filters received:', req.query)
 
       let query = {}
 
@@ -62,11 +53,9 @@ export default function apartmentRoutes () {
         }
       }
 
-      console.log('📊 MongoDB query:', JSON.stringify(query, null, 2))
-
       const apartments = await Apartment.find(query).sort({ createdAt: -1 })
 
-      console.log(`✅ Found ${apartments.length} matching apartments`)
+      console.log(`Found ${apartments.length} matching apartments`)
 
       res.json({
         success: true,
@@ -75,7 +64,7 @@ export default function apartmentRoutes () {
       })
 
     } catch (err) {
-      console.error('❌ Error searching apartments:', err)
+      console.error('Error searching apartments:', err)
       res.status(500).json({
         success: false,
         message: 'Error searching apartments',

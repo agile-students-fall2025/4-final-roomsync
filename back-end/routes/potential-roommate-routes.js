@@ -1,7 +1,9 @@
 import express from 'express'
 import PotentialRoommate from '../models/Compatibility/Potential-Roommate.js'
+import passport from 'passport'
 
 export default function potentialRoommateRoutes () {
+  const requireAuth = passport.authenticate('jwt', { session: false })
   const router = express.Router()
 
   const handleServerError = (res, logMessage, err) => {
@@ -31,75 +33,81 @@ export default function potentialRoommateRoutes () {
   })
 
   // GET /api/potential-roommates
-  router.get('/potential-roommates', async (req, res) => {
-    try {
-      const docs = await PotentialRoommate.find().sort({ createdAt: -1 }).lean()
-      const mapped = docs.map(toClientShape)
-      res.json(mapped)
-    } catch (err) {
-      handleServerError(res, 'Error fetching potential roommates', err)
-    }
+  router.get('/potential-roommates', 
+    passport.authenticate('jwt', { session: false }),
+    async (req, res) => {
+      try {
+        const docs = await PotentialRoommate.find().sort({ createdAt: -1 }).lean()
+        const mapped = docs.map(toClientShape)
+        res.json(mapped)
+      } catch (err) {
+        handleServerError(res, 'Error fetching potential roommates', err)
+      }
   })
 
   // GET /api/potential-roommates/:id
-  router.get('/potential-roommates/:id', async (req, res) => {
-    try {
-      const { id } = req.params
-      const doc = await PotentialRoommate.findById(id).lean()
+  router.get('/potential-roommates/:id', 
+    passport.authenticate('jwt', { session: false }),
+    async (req, res) => {
+      try {
+        const { id } = req.params
+        const doc = await PotentialRoommate.findById(id).lean()
 
-      if (!doc) {
-        return res
-          .status(404)
-          .json({ success: false, message: 'Potential roommate not found' })
+        if (!doc) {
+          return res
+            .status(404)
+            .json({ success: false, message: 'Potential roommate not found' })
+        }
+
+        res.json(toClientShape(doc))
+      } catch (err) {
+        handleServerError(res, 'Error fetching potential roommate', err)
       }
-
-      res.json(toClientShape(doc))
-    } catch (err) {
-      handleServerError(res, 'Error fetching potential roommate', err)
-    }
   })
 
   // POST /api/potential-roommates
   // For seeding data from curl/Postman
-  router.post('/potential-roommates', async (req, res) => {
-    try {
-      const {
-        displayName,
-        age,
-        locationPreference,
-        budgetRange,
-        aboutMe,
-        livingPreferences,
-        habitsDealBreakers,
-        hobbiesInterests,
-        sleepSchedule,
-        cleanlinessLevel
-      } = req.body
+  router.post('/potential-roommates',
+    passport.authenticate('jwt', { session: false }),
+    async (req, res) => {
+      try {
+        const {
+          displayName,
+          age,
+          locationPreference,
+          budgetRange,
+          aboutMe,
+          livingPreferences,
+          habitsDealBreakers,
+          hobbiesInterests,
+          sleepSchedule,
+          cleanlinessLevel
+        } = req.body
 
-      if (!displayName || !aboutMe) {
-        return res.status(400).json({
-          success: false,
-          message: 'displayName and aboutMe are required'
+        if (!displayName || !aboutMe) {
+          return res.status(400).json({
+            success: false,
+            message: 'displayName and aboutMe are required'
+          })
+        }
+
+        const doc = await PotentialRoommate.create({
+          displayName,
+          age,
+          locationPreference,
+          budgetRange,
+          aboutMe,
+          livingPreferences,
+          habitsDealBreakers,
+          hobbiesInterests,
+          sleepSchedule,
+          cleanlinessLevel
         })
+
+        res.status(201).json(toClientShape(doc))
+      } catch (err) {
+        handleServerError(res, 'Error creating potential roommate', err)
       }
-
-      const doc = await PotentialRoommate.create({
-        displayName,
-        age,
-        locationPreference,
-        budgetRange,
-        aboutMe,
-        livingPreferences,
-        habitsDealBreakers,
-        hobbiesInterests,
-        sleepSchedule,
-        cleanlinessLevel
-      })
-
-      res.status(201).json(toClientShape(doc))
-    } catch (err) {
-      handleServerError(res, 'Error creating potential roommate', err)
-    }
   })
 
   return router
