@@ -23,7 +23,6 @@ const PotentialRooms = () => {
         setLoading(true)
 
         if (searchResults) {
-          console.log('📊 Using search results:', searchResults.length, 'apartments')
           setRooms(Array.isArray(searchResults) ? searchResults : [])
           setLoading(false)
           return

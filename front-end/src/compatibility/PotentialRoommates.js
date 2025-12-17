@@ -26,8 +26,13 @@ const PotentialRoommates = () => {
         setLoading(true);
         setError('');
 
+        const token = localStorage.getItem('token')
         const res = await fetch(`${API_BASE_URL}/potential-roommates`, {
-          signal: controller.signal
+          signal: controller.signal,
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         });
 
         if (!res.ok) {

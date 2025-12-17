@@ -38,10 +38,6 @@ const PostUserProfile = () => {
       setSaving(true);
 
       const token = localStorage.getItem('token');
-      
-      if (!token) {
-        throw new Error('Please login to create a roommate profile');
-      }
 
       // Prepare data
       const submitData = {
